@@ -75,22 +75,9 @@ pub mod format;
 pub mod model;
 pub mod tool;
 
-pub use builders::{
-    extension_models, get_model_structural_tag, maybe_get_model_structural_tag, supported_models,
-    xgrammar_builtin_models,
-};
+pub use builders::{get_model_structural_tag, maybe_get_model_structural_tag, supported_models};
 pub use error::{Error, Result};
-pub use format::{
-    AnyTextFormat, AnyTokensFormat, ConstStringFormat, DispatchFormat, EndBoundary,
-    ExcludeTokenFormat, Format, GrammarFormat, JsonSchemaFormat, JsonSchemaStyle, OrFormat,
-    PlusFormat, QwenXmlParameterFormat, RegexFormat, RepeatFormat, SequenceFormat, StarFormat,
-    StructuralTag, StructuralTagItem, TagBoundary, TagFormat, TagsWithSeparatorFormat,
-    TokenDispatchFormat, TokenFormat, TokenTriggeredTagsFormat, TokenValue,
-};
-pub use model::Model;
+pub use format::StructuralTag;
 pub use tool::{
-    AllowedToolChoiceParam, AllowedToolRef, AllowedToolsParam, BuiltinToolChoiceParam,
-    BuiltinToolParam, FunctionDefinition, FunctionToolParam, NamedToolChoiceFunction,
-    NamedToolChoiceParam, NormalizedToolChoice, SimplifiedToolChoice, ToolChoice, ToolChoiceValue,
-    ToolParam, normalize_tool_choice,
+    AllowedToolRef, BuiltinToolParam, FunctionDefinition, FunctionToolParam, ToolChoice, ToolParam,
 };

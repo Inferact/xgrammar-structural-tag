@@ -265,7 +265,7 @@ mod tests {
     use super::*;
     use crate::{
         AllowedToolRef, FunctionDefinition, FunctionToolParam, ToolChoice, ToolParam,
-        normalize_tool_choice,
+        tool::normalize_tool_choice,
     };
 
     fn tool(name: &str) -> ToolParam {
