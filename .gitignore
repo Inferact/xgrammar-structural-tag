@@ -1,0 +1,14 @@
+# Rust build output
+/target/
+
+# Local editor and OS files
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Local environment files
+.env
+.env.*
+
+# Generated local docs are under target/doc.

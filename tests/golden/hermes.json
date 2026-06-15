@@ -1,0 +1,310 @@
+{
+  "auto_no_tools": {
+    "type": "structural_tag",
+    "format": {
+      "type": "any_text",
+      "excludes": []
+    }
+  },
+  "auto_one_tool": {
+    "type": "structural_tag",
+    "format": {
+      "type": "triggered_tags",
+      "triggers": [
+        "<tool_call>"
+      ],
+      "tags": [
+        {
+          "begin": "<tool_call>\n{\"name\": \"search\", \"arguments\": ",
+          "content": {
+            "type": "json_schema",
+            "json_schema": {
+              "type": "object",
+              "properties": {
+                "q": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "q"
+              ]
+            },
+            "style": "json"
+          },
+          "end": "}\n</tool_call>"
+        },
+        {
+          "begin": "<tool_call>{\"name\": \"search\", \"arguments\": ",
+          "content": {
+            "type": "json_schema",
+            "json_schema": {
+              "type": "object",
+              "properties": {
+                "q": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "q"
+              ]
+            },
+            "style": "json"
+          },
+          "end": "}</tool_call>"
+        }
+      ],
+      "at_least_one": false,
+      "stop_after_first": false,
+      "excludes": []
+    }
+  },
+  "required_two_tools": {
+    "type": "structural_tag",
+    "format": {
+      "type": "tags_with_separator",
+      "tags": [
+        {
+          "begin": "<tool_call>\n{\"name\": \"search\", \"arguments\": ",
+          "content": {
+            "type": "json_schema",
+            "json_schema": {
+              "type": "object",
+              "properties": {
+                "q": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "q"
+              ]
+            },
+            "style": "json"
+          },
+          "end": "}\n</tool_call>"
+        },
+        {
+          "begin": "<tool_call>{\"name\": \"search\", \"arguments\": ",
+          "content": {
+            "type": "json_schema",
+            "json_schema": {
+              "type": "object",
+              "properties": {
+                "q": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "q"
+              ]
+            },
+            "style": "json"
+          },
+          "end": "}</tool_call>"
+        },
+        {
+          "begin": "<tool_call>\n{\"name\": \"alt\", \"arguments\": ",
+          "content": {
+            "type": "json_schema",
+            "json_schema": {
+              "type": "object",
+              "properties": {
+                "q": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "q"
+              ]
+            },
+            "style": "json"
+          },
+          "end": "}\n</tool_call>"
+        },
+        {
+          "begin": "<tool_call>{\"name\": \"alt\", \"arguments\": ",
+          "content": {
+            "type": "json_schema",
+            "json_schema": {
+              "type": "object",
+              "properties": {
+                "q": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "q"
+              ]
+            },
+            "style": "json"
+          },
+          "end": "}</tool_call>"
+        }
+      ],
+      "separator": "",
+      "at_least_one": true,
+      "stop_after_first": false
+    }
+  },
+  "forced_search": {
+    "type": "structural_tag",
+    "format": {
+      "type": "tags_with_separator",
+      "tags": [
+        {
+          "begin": "<tool_call>\n{\"name\": \"search\", \"arguments\": ",
+          "content": {
+            "type": "json_schema",
+            "json_schema": {
+              "type": "object",
+              "properties": {
+                "q": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "q"
+              ]
+            },
+            "style": "json"
+          },
+          "end": "}\n</tool_call>"
+        },
+        {
+          "begin": "<tool_call>{\"name\": \"search\", \"arguments\": ",
+          "content": {
+            "type": "json_schema",
+            "json_schema": {
+              "type": "object",
+              "properties": {
+                "q": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "q"
+              ]
+            },
+            "style": "json"
+          },
+          "end": "}</tool_call>"
+        }
+      ],
+      "separator": "",
+      "at_least_one": true,
+      "stop_after_first": true
+    }
+  },
+  "allowed_required_alt": {
+    "type": "structural_tag",
+    "format": {
+      "type": "tags_with_separator",
+      "tags": [
+        {
+          "begin": "<tool_call>\n{\"name\": \"alt\", \"arguments\": ",
+          "content": {
+            "type": "json_schema",
+            "json_schema": {
+              "type": "object",
+              "properties": {
+                "q": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "q"
+              ]
+            },
+            "style": "json"
+          },
+          "end": "}\n</tool_call>"
+        },
+        {
+          "begin": "<tool_call>{\"name\": \"alt\", \"arguments\": ",
+          "content": {
+            "type": "json_schema",
+            "json_schema": {
+              "type": "object",
+              "properties": {
+                "q": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "q"
+              ]
+            },
+            "style": "json"
+          },
+          "end": "}</tool_call>"
+        }
+      ],
+      "separator": "",
+      "at_least_one": true,
+      "stop_after_first": false
+    }
+  },
+  "strict_false": {
+    "type": "structural_tag",
+    "format": {
+      "type": "triggered_tags",
+      "triggers": [
+        "<tool_call>"
+      ],
+      "tags": [
+        {
+          "begin": "<tool_call>\n{\"name\": \"loose\", \"arguments\": ",
+          "content": {
+            "type": "json_schema",
+            "json_schema": true,
+            "style": "json"
+          },
+          "end": "}\n</tool_call>"
+        },
+        {
+          "begin": "<tool_call>{\"name\": \"loose\", \"arguments\": ",
+          "content": {
+            "type": "json_schema",
+            "json_schema": true,
+            "style": "json"
+          },
+          "end": "}</tool_call>"
+        }
+      ],
+      "at_least_one": false,
+      "stop_after_first": false,
+      "excludes": []
+    }
+  },
+  "missing_parameters": {
+    "type": "structural_tag",
+    "format": {
+      "type": "triggered_tags",
+      "triggers": [
+        "<tool_call>"
+      ],
+      "tags": [
+        {
+          "begin": "<tool_call>\n{\"name\": \"missing\", \"arguments\": ",
+          "content": {
+            "type": "json_schema",
+            "json_schema": true,
+            "style": "json"
+          },
+          "end": "}\n</tool_call>"
+        },
+        {
+          "begin": "<tool_call>{\"name\": \"missing\", \"arguments\": ",
+          "content": {
+            "type": "json_schema",
+            "json_schema": true,
+            "style": "json"
+          },
+          "end": "}</tool_call>"
+        }
+      ],
+      "at_least_one": false,
+      "stop_after_first": false,
+      "excludes": []
+    }
+  }
+}

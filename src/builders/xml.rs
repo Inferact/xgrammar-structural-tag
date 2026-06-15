@@ -1,0 +1,113 @@
+use crate::format::{Format, JsonSchemaStyle, StructuralTag};
+use crate::tool::{FunctionToolParam, SimplifiedToolChoice};
+
+use super::{
+    schema, structural, styled_schema, tag, tools_with_separator, triggered_with_excludes,
+    with_optional_reasoning,
+};
+
+pub(super) fn build_minimax(
+    tools: &[FunctionToolParam],
+    choice: SimplifiedToolChoice,
+    reasoning: bool,
+) -> StructuralTag {
+    const INVOKE_BEGIN_PREFIX: &str = "<invoke name=\"";
+    const INVOKE_BEGIN_SUFFIX: &str = "\">\n";
+    const INVOKE_END: &str = "</invoke>\n";
+    const TOOL_CALL_BEGIN: &str = "<minimax:tool_call>\n";
+    const TOOL_CALL_END: &str = "</minimax:tool_call>";
+    const TOOL_CALL_TRIGGER: &str = "<minimax:tool_call>";
+    const THINK_TAG_END: &str = "</think>";
+    const THINK_SUFFIX: &str = "\n\n";
+    const EMPTY_THINK_CONTENT: &str = "\n</think>\n\n";
+    const THINK_EXCLUDES: &[&str] = &["<think>", "</think>"];
+
+    let tool_tags = || {
+        tools
+            .iter()
+            .map(|tool| {
+                tag(
+                    format!(
+                        "{INVOKE_BEGIN_PREFIX}{}{INVOKE_BEGIN_SUFFIX}",
+                        tool.function.name
+                    ),
+                    styled_schema(schema(&tool.function), JsonSchemaStyle::MinimaxXml),
+                    INVOKE_END,
+                )
+            })
+            .collect::<Vec<_>>()
+    };
+
+    let suffix = match choice {
+        SimplifiedToolChoice::Auto => {
+            let tags = tool_tags();
+            if tags.is_empty() {
+                Format::any_text_excluding(THINK_EXCLUDES)
+            } else {
+                let function_calling = tools_with_separator(tags, "", true);
+                triggered_with_excludes(
+                    &[TOOL_CALL_TRIGGER],
+                    vec![tag(TOOL_CALL_BEGIN, function_calling, TOOL_CALL_END)],
+                    THINK_EXCLUDES,
+                )
+            }
+        }
+        SimplifiedToolChoice::Forced => Format::sequence(vec![
+            Format::const_string(format!("\n{TOOL_CALL_BEGIN}")),
+            Format::Tag(tool_tags().remove(0)),
+            Format::const_string(TOOL_CALL_END),
+        ]),
+        SimplifiedToolChoice::Required => Format::sequence(vec![
+            Format::const_string(format!("\n{TOOL_CALL_BEGIN}")),
+            tools_with_separator(tool_tags(), "", true),
+            Format::const_string(TOOL_CALL_END),
+        ]),
+    };
+
+    let think = if reasoning {
+        Format::tag("", Format::any_text(), THINK_TAG_END)
+    } else {
+        Format::const_string(EMPTY_THINK_CONTENT)
+    };
+    structural(Format::sequence(vec![
+        think,
+        Format::const_string(THINK_SUFFIX),
+        suffix,
+    ]))
+}
+
+pub(super) fn build_glm_47(
+    tools: &[FunctionToolParam],
+    choice: SimplifiedToolChoice,
+    reasoning: bool,
+) -> StructuralTag {
+    const TOOL_CALL_BEGIN_PREFIX: &str = "<tool_call>";
+    const TOOL_CALL_END: &str = "</tool_call>";
+    const TOOL_CALL_TRIGGER: &str = "<tool_call>";
+    const THINK_TAG_END: &str = "</think>";
+    const THINK_EXCLUDES: &[&str] = &["<think>", "</think>"];
+
+    let tool_tag = |tool: &FunctionToolParam| {
+        tag(
+            format!("{TOOL_CALL_BEGIN_PREFIX}{}", tool.function.name),
+            styled_schema(schema(&tool.function), JsonSchemaStyle::GlmXml),
+            TOOL_CALL_END,
+        )
+    };
+    let suffix = match choice {
+        SimplifiedToolChoice::Auto => {
+            let tags = tools.iter().map(tool_tag).collect::<Vec<_>>();
+            if tags.is_empty() {
+                Format::any_text_excluding(THINK_EXCLUDES)
+            } else {
+                triggered_with_excludes(&[TOOL_CALL_TRIGGER], tags, THINK_EXCLUDES)
+            }
+        }
+        SimplifiedToolChoice::Forced => Format::Tag(tool_tag(&tools[0])),
+        SimplifiedToolChoice::Required => {
+            let tags = tools.iter().map(tool_tag).collect::<Vec<_>>();
+            tools_with_separator(tags, "", true)
+        }
+    };
+    with_optional_reasoning(suffix, reasoning, THINK_TAG_END)
+}

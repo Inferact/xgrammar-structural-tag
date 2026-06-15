@@ -1,0 +1,248 @@
+{
+  "auto_no_tools": {
+    "type": "structural_tag",
+    "format": {
+      "type": "any_text",
+      "excludes": [
+        "<think>",
+        "</think>"
+      ]
+    }
+  },
+  "auto_one_tool": {
+    "type": "structural_tag",
+    "format": {
+      "type": "triggered_tags",
+      "triggers": [
+        "<｜tool▁calls▁begin｜>"
+      ],
+      "tags": [
+        {
+          "begin": "<｜tool▁calls▁begin｜>",
+          "content": {
+            "type": "tags_with_separator",
+            "tags": [
+              {
+                "begin": "<｜tool▁call▁begin｜>search<｜tool▁sep｜>",
+                "content": {
+                  "type": "json_schema",
+                  "json_schema": {
+                    "type": "object",
+                    "properties": {
+                      "q": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "q"
+                    ]
+                  },
+                  "style": "json"
+                },
+                "end": "<｜tool▁call▁end｜>"
+              }
+            ],
+            "separator": "",
+            "at_least_one": true,
+            "stop_after_first": false
+          },
+          "end": "<｜tool▁calls▁end｜>"
+        }
+      ],
+      "at_least_one": false,
+      "stop_after_first": false,
+      "excludes": [
+        "<think>",
+        "</think>"
+      ]
+    }
+  },
+  "required_two_tools": {
+    "type": "structural_tag",
+    "format": {
+      "type": "tag",
+      "begin": "<｜tool▁calls▁begin｜>",
+      "content": {
+        "type": "tags_with_separator",
+        "tags": [
+          {
+            "begin": "<｜tool▁call▁begin｜>search<｜tool▁sep｜>",
+            "content": {
+              "type": "json_schema",
+              "json_schema": {
+                "type": "object",
+                "properties": {
+                  "q": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "q"
+                ]
+              },
+              "style": "json"
+            },
+            "end": "<｜tool▁call▁end｜>"
+          },
+          {
+            "begin": "<｜tool▁call▁begin｜>alt<｜tool▁sep｜>",
+            "content": {
+              "type": "json_schema",
+              "json_schema": {
+                "type": "object",
+                "properties": {
+                  "q": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "q"
+                ]
+              },
+              "style": "json"
+            },
+            "end": "<｜tool▁call▁end｜>"
+          }
+        ],
+        "separator": "",
+        "at_least_one": true,
+        "stop_after_first": false
+      },
+      "end": "<｜tool▁calls▁end｜>"
+    }
+  },
+  "forced_search": {
+    "type": "structural_tag",
+    "format": {
+      "type": "tag",
+      "begin": "<｜tool▁calls▁begin｜><｜tool▁call▁begin｜>search<｜tool▁sep｜>",
+      "content": {
+        "type": "json_schema",
+        "json_schema": {
+          "type": "object",
+          "properties": {
+            "q": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "q"
+          ]
+        },
+        "style": "json"
+      },
+      "end": "<｜tool▁call▁end｜><｜tool▁calls▁end｜>"
+    }
+  },
+  "allowed_required_alt": {
+    "type": "structural_tag",
+    "format": {
+      "type": "tag",
+      "begin": "<｜tool▁calls▁begin｜>",
+      "content": {
+        "type": "tags_with_separator",
+        "tags": [
+          {
+            "begin": "<｜tool▁call▁begin｜>alt<｜tool▁sep｜>",
+            "content": {
+              "type": "json_schema",
+              "json_schema": {
+                "type": "object",
+                "properties": {
+                  "q": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "q"
+                ]
+              },
+              "style": "json"
+            },
+            "end": "<｜tool▁call▁end｜>"
+          }
+        ],
+        "separator": "",
+        "at_least_one": true,
+        "stop_after_first": false
+      },
+      "end": "<｜tool▁calls▁end｜>"
+    }
+  },
+  "strict_false": {
+    "type": "structural_tag",
+    "format": {
+      "type": "triggered_tags",
+      "triggers": [
+        "<｜tool▁calls▁begin｜>"
+      ],
+      "tags": [
+        {
+          "begin": "<｜tool▁calls▁begin｜>",
+          "content": {
+            "type": "tags_with_separator",
+            "tags": [
+              {
+                "begin": "<｜tool▁call▁begin｜>loose<｜tool▁sep｜>",
+                "content": {
+                  "type": "json_schema",
+                  "json_schema": true,
+                  "style": "json"
+                },
+                "end": "<｜tool▁call▁end｜>"
+              }
+            ],
+            "separator": "",
+            "at_least_one": true,
+            "stop_after_first": false
+          },
+          "end": "<｜tool▁calls▁end｜>"
+        }
+      ],
+      "at_least_one": false,
+      "stop_after_first": false,
+      "excludes": [
+        "<think>",
+        "</think>"
+      ]
+    }
+  },
+  "missing_parameters": {
+    "type": "structural_tag",
+    "format": {
+      "type": "triggered_tags",
+      "triggers": [
+        "<｜tool▁calls▁begin｜>"
+      ],
+      "tags": [
+        {
+          "begin": "<｜tool▁calls▁begin｜>",
+          "content": {
+            "type": "tags_with_separator",
+            "tags": [
+              {
+                "begin": "<｜tool▁call▁begin｜>missing<｜tool▁sep｜>",
+                "content": {
+                  "type": "json_schema",
+                  "json_schema": true,
+                  "style": "json"
+                },
+                "end": "<｜tool▁call▁end｜>"
+              }
+            ],
+            "separator": "",
+            "at_least_one": true,
+            "stop_after_first": false
+          },
+          "end": "<｜tool▁calls▁end｜>"
+        }
+      ],
+      "at_least_one": false,
+      "stop_after_first": false,
+      "excludes": [
+        "<think>",
+        "</think>"
+      ]
+    }
+  }
+}

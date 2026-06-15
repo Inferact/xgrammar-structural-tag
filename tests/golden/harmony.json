@@ -1,0 +1,522 @@
+{
+  "auto_no_tools": {
+    "type": "structural_tag",
+    "format": {
+      "type": "tags_with_separator",
+      "tags": [
+        {
+          "begin": "<|channel|>final<|message|>",
+          "content": {
+            "type": "any_text",
+            "excludes": []
+          },
+          "end": [
+            "<|end|>",
+            "<|return|>"
+          ]
+        }
+      ],
+      "separator": "<|start|>assistant",
+      "at_least_one": false,
+      "stop_after_first": false
+    }
+  },
+  "auto_one_tool": {
+    "type": "structural_tag",
+    "format": {
+      "type": "tags_with_separator",
+      "tags": [
+        {
+          "begin": "<|channel|>commentary to=functions.search<|constrain|>json<|message|>",
+          "content": {
+            "type": "json_schema",
+            "json_schema": {
+              "type": "object",
+              "properties": {
+                "q": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "q"
+              ]
+            },
+            "style": "json"
+          },
+          "end": "<|call|>"
+        },
+        {
+          "begin": " to=functions.search<|channel|>commentary <|constrain|>json<|message|>",
+          "content": {
+            "type": "json_schema",
+            "json_schema": {
+              "type": "object",
+              "properties": {
+                "q": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "q"
+              ]
+            },
+            "style": "json"
+          },
+          "end": "<|call|>"
+        },
+        {
+          "begin": " to=functions.search<|channel|>commentary json<|message|>",
+          "content": {
+            "type": "json_schema",
+            "json_schema": {
+              "type": "object",
+              "properties": {
+                "q": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "q"
+              ]
+            },
+            "style": "json"
+          },
+          "end": "<|call|>"
+        },
+        {
+          "begin": "<|channel|>final<|message|>",
+          "content": {
+            "type": "any_text",
+            "excludes": []
+          },
+          "end": [
+            "<|end|>",
+            "<|return|>"
+          ]
+        }
+      ],
+      "separator": "<|start|>assistant",
+      "at_least_one": false,
+      "stop_after_first": false
+    }
+  },
+  "required_two_tools": {
+    "type": "structural_tag",
+    "format": {
+      "type": "tags_with_separator",
+      "tags": [
+        {
+          "begin": "<|channel|>commentary to=functions.search<|constrain|>json<|message|>",
+          "content": {
+            "type": "json_schema",
+            "json_schema": {
+              "type": "object",
+              "properties": {
+                "q": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "q"
+              ]
+            },
+            "style": "json"
+          },
+          "end": "<|call|>"
+        },
+        {
+          "begin": " to=functions.search<|channel|>commentary <|constrain|>json<|message|>",
+          "content": {
+            "type": "json_schema",
+            "json_schema": {
+              "type": "object",
+              "properties": {
+                "q": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "q"
+              ]
+            },
+            "style": "json"
+          },
+          "end": "<|call|>"
+        },
+        {
+          "begin": " to=functions.search<|channel|>commentary json<|message|>",
+          "content": {
+            "type": "json_schema",
+            "json_schema": {
+              "type": "object",
+              "properties": {
+                "q": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "q"
+              ]
+            },
+            "style": "json"
+          },
+          "end": "<|call|>"
+        },
+        {
+          "begin": "<|channel|>commentary to=functions.alt<|constrain|>json<|message|>",
+          "content": {
+            "type": "json_schema",
+            "json_schema": {
+              "type": "object",
+              "properties": {
+                "q": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "q"
+              ]
+            },
+            "style": "json"
+          },
+          "end": "<|call|>"
+        },
+        {
+          "begin": " to=functions.alt<|channel|>commentary <|constrain|>json<|message|>",
+          "content": {
+            "type": "json_schema",
+            "json_schema": {
+              "type": "object",
+              "properties": {
+                "q": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "q"
+              ]
+            },
+            "style": "json"
+          },
+          "end": "<|call|>"
+        },
+        {
+          "begin": " to=functions.alt<|channel|>commentary json<|message|>",
+          "content": {
+            "type": "json_schema",
+            "json_schema": {
+              "type": "object",
+              "properties": {
+                "q": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "q"
+              ]
+            },
+            "style": "json"
+          },
+          "end": "<|call|>"
+        }
+      ],
+      "separator": "<|start|>assistant",
+      "at_least_one": false,
+      "stop_after_first": false
+    }
+  },
+  "forced_search": {
+    "type": "structural_tag",
+    "format": {
+      "type": "tags_with_separator",
+      "tags": [
+        {
+          "begin": "<|channel|>commentary to=functions.search<|constrain|>json<|message|>",
+          "content": {
+            "type": "json_schema",
+            "json_schema": {
+              "type": "object",
+              "properties": {
+                "q": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "q"
+              ]
+            },
+            "style": "json"
+          },
+          "end": "<|call|>"
+        },
+        {
+          "begin": " to=functions.search<|channel|>commentary <|constrain|>json<|message|>",
+          "content": {
+            "type": "json_schema",
+            "json_schema": {
+              "type": "object",
+              "properties": {
+                "q": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "q"
+              ]
+            },
+            "style": "json"
+          },
+          "end": "<|call|>"
+        },
+        {
+          "begin": " to=functions.search<|channel|>commentary json<|message|>",
+          "content": {
+            "type": "json_schema",
+            "json_schema": {
+              "type": "object",
+              "properties": {
+                "q": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "q"
+              ]
+            },
+            "style": "json"
+          },
+          "end": "<|call|>"
+        }
+      ],
+      "separator": "<|start|>assistant",
+      "at_least_one": false,
+      "stop_after_first": false
+    }
+  },
+  "allowed_required_alt": {
+    "type": "structural_tag",
+    "format": {
+      "type": "tags_with_separator",
+      "tags": [
+        {
+          "begin": "<|channel|>commentary to=functions.alt<|constrain|>json<|message|>",
+          "content": {
+            "type": "json_schema",
+            "json_schema": {
+              "type": "object",
+              "properties": {
+                "q": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "q"
+              ]
+            },
+            "style": "json"
+          },
+          "end": "<|call|>"
+        },
+        {
+          "begin": " to=functions.alt<|channel|>commentary <|constrain|>json<|message|>",
+          "content": {
+            "type": "json_schema",
+            "json_schema": {
+              "type": "object",
+              "properties": {
+                "q": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "q"
+              ]
+            },
+            "style": "json"
+          },
+          "end": "<|call|>"
+        },
+        {
+          "begin": " to=functions.alt<|channel|>commentary json<|message|>",
+          "content": {
+            "type": "json_schema",
+            "json_schema": {
+              "type": "object",
+              "properties": {
+                "q": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "q"
+              ]
+            },
+            "style": "json"
+          },
+          "end": "<|call|>"
+        }
+      ],
+      "separator": "<|start|>assistant",
+      "at_least_one": false,
+      "stop_after_first": false
+    }
+  },
+  "strict_false": {
+    "type": "structural_tag",
+    "format": {
+      "type": "tags_with_separator",
+      "tags": [
+        {
+          "begin": "<|channel|>commentary to=functions.loose<|constrain|>json<|message|>",
+          "content": {
+            "type": "json_schema",
+            "json_schema": true,
+            "style": "json"
+          },
+          "end": "<|call|>"
+        },
+        {
+          "begin": " to=functions.loose<|channel|>commentary <|constrain|>json<|message|>",
+          "content": {
+            "type": "json_schema",
+            "json_schema": true,
+            "style": "json"
+          },
+          "end": "<|call|>"
+        },
+        {
+          "begin": " to=functions.loose<|channel|>commentary json<|message|>",
+          "content": {
+            "type": "json_schema",
+            "json_schema": true,
+            "style": "json"
+          },
+          "end": "<|call|>"
+        },
+        {
+          "begin": "<|channel|>final<|message|>",
+          "content": {
+            "type": "any_text",
+            "excludes": []
+          },
+          "end": [
+            "<|end|>",
+            "<|return|>"
+          ]
+        }
+      ],
+      "separator": "<|start|>assistant",
+      "at_least_one": false,
+      "stop_after_first": false
+    }
+  },
+  "missing_parameters": {
+    "type": "structural_tag",
+    "format": {
+      "type": "tags_with_separator",
+      "tags": [
+        {
+          "begin": "<|channel|>commentary to=functions.missing<|constrain|>json<|message|>",
+          "content": {
+            "type": "json_schema",
+            "json_schema": true,
+            "style": "json"
+          },
+          "end": "<|call|>"
+        },
+        {
+          "begin": " to=functions.missing<|channel|>commentary <|constrain|>json<|message|>",
+          "content": {
+            "type": "json_schema",
+            "json_schema": true,
+            "style": "json"
+          },
+          "end": "<|call|>"
+        },
+        {
+          "begin": " to=functions.missing<|channel|>commentary json<|message|>",
+          "content": {
+            "type": "json_schema",
+            "json_schema": true,
+            "style": "json"
+          },
+          "end": "<|call|>"
+        },
+        {
+          "begin": "<|channel|>final<|message|>",
+          "content": {
+            "type": "any_text",
+            "excludes": []
+          },
+          "end": [
+            "<|end|>",
+            "<|return|>"
+          ]
+        }
+      ],
+      "separator": "<|start|>assistant",
+      "at_least_one": false,
+      "stop_after_first": false
+    }
+  },
+  "builtin_auto": {
+    "type": "structural_tag",
+    "format": {
+      "type": "tags_with_separator",
+      "tags": [
+        {
+          "begin": "<|channel|>commentary to=browser.search code<|message|>",
+          "content": {
+            "type": "json_schema",
+            "json_schema": {
+              "type": "object",
+              "properties": {
+                "query": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "query"
+              ]
+            },
+            "style": "json"
+          },
+          "end": "<|call|>"
+        },
+        {
+          "begin": " to=browser.search<|channel|>commentary code<|message|>",
+          "content": {
+            "type": "json_schema",
+            "json_schema": {
+              "type": "object",
+              "properties": {
+                "query": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "query"
+              ]
+            },
+            "style": "json"
+          },
+          "end": "<|call|>"
+        },
+        {
+          "begin": "<|channel|>final<|message|>",
+          "content": {
+            "type": "any_text",
+            "excludes": []
+          },
+          "end": [
+            "<|end|>",
+            "<|return|>"
+          ]
+        }
+      ],
+      "separator": "<|start|>assistant",
+      "at_least_one": false,
+      "stop_after_first": false
+    }
+  }
+}
