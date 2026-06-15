@@ -11,21 +11,20 @@ mod deepseek;
 mod extensions;
 mod harmony;
 mod kimi;
+mod llama;
 mod qwen;
 mod xml;
 
 use crate::error::{Error, Result};
 use crate::format::{Format, JsonSchemaStyle, StructuralTag, TagFormat, TriggeredTagsFormat};
 use crate::model::Model;
-use crate::tool::{
-    FunctionToolParam, SimplifiedToolChoice, ToolChoice, ToolParam, function_parameters,
-    normalize_tool_choice,
-};
+use crate::tool::{ToolChoice, ToolParam, function_parameters, normalize_tool_choice};
 
 use deepseek::{build_deepseek_r1, build_deepseek_v4, build_deepseek_v31, build_deepseek_v32};
 use extensions::{build_hermes, build_hy_v3};
 use harmony::build_harmony;
 use kimi::build_kimi;
+use llama::build_llama;
 use qwen::{build_qwen_3, build_qwen_35};
 use xml::{build_glm_47, build_minimax};
 
@@ -194,70 +193,6 @@ pub(super) fn with_optional_reasoning(
     ]))
 }
 
-fn build_llama(
-    tools: &[FunctionToolParam],
-    choice: SimplifiedToolChoice,
-    _reasoning: bool,
-) -> StructuralTag {
-    const TOOL_NAME_PREFIX: &str = "{\"name\": \"";
-    const PARAMETERS_FIELD_PREFIX: &str = "\", \"parameters\": ";
-    const TOOL_OBJECT_BEGIN_PREFIX: &str = "{\"name\": \"";
-    const TOOL_OBJECT_PARAMETERS_PREFIX: &str = "\", \"parameters\": ";
-    const TOOLS_TRIGGER: &str = "{\"name\": ";
-    const THINK_EXCLUDES: &[&str] = &["<think>", "</think>"];
-
-    let suffix = match choice {
-        SimplifiedToolChoice::Auto => {
-            let tags = tools
-                .iter()
-                .map(|tool| {
-                    tag(
-                        format!(
-                            "{TOOL_OBJECT_BEGIN_PREFIX}{}{TOOL_OBJECT_PARAMETERS_PREFIX}",
-                            tool.function.name
-                        ),
-                        json_schema(schema(&tool.function)),
-                        "}",
-                    )
-                })
-                .collect::<Vec<_>>();
-            if tags.is_empty() {
-                Format::any_text_excluding(THINK_EXCLUDES)
-            } else {
-                triggered_with_excludes(&[TOOLS_TRIGGER], tags, THINK_EXCLUDES)
-            }
-        }
-        SimplifiedToolChoice::Forced => {
-            let function = &tools[0].function;
-            Format::tag(
-                format!(
-                    "{TOOL_NAME_PREFIX}{}{PARAMETERS_FIELD_PREFIX}",
-                    function.name
-                ),
-                json_schema(schema(function)),
-                "}",
-            )
-        }
-        SimplifiedToolChoice::Required => {
-            let tags = tools
-                .iter()
-                .map(|tool| {
-                    tag(
-                        format!(
-                            "{TOOL_OBJECT_BEGIN_PREFIX}{}{TOOL_OBJECT_PARAMETERS_PREFIX}",
-                            tool.function.name
-                        ),
-                        json_schema(schema(&tool.function)),
-                        "}",
-                    )
-                })
-                .collect();
-            tools_with_separator(tags, "", true)
-        }
-    };
-    structural(suffix)
-}
-
 #[cfg(test)]
 mod tests {
     use serde_json::{Value, json};
@@ -265,7 +200,7 @@ mod tests {
     use super::*;
     use crate::{
         AllowedToolRef, FunctionDefinition, FunctionToolParam, ToolChoice, ToolParam,
-        tool::normalize_tool_choice,
+        tool::{SimplifiedToolChoice, normalize_tool_choice},
     };
 
     fn tool(name: &str) -> ToolParam {
