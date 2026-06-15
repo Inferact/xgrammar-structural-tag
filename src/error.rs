@@ -8,15 +8,6 @@ pub type Result<T> = std::result::Result<T, Error>;
 /// Errors produced while normalizing tools or building a model structural tag.
 #[derive(Debug, ThisError)]
 pub enum Error {
-    /// The requested model key is not supported by this crate.
-    #[error("unknown structural tag model '{model}', supported models: {supported:?}")]
-    UnknownModel {
-        /// Requested model key.
-        model: String,
-        /// Supported model keys.
-        supported: Vec<&'static str>,
-    },
-
     /// A named tool choice referenced a function absent from `tools`.
     #[error("the tool with name '{name}' is not found in the tools list")]
     ToolNotFound {

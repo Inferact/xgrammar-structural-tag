@@ -20,7 +20,7 @@ mod minimax;
 mod qwen_3;
 mod qwen_35;
 
-use crate::error::{Error, Result};
+use crate::error::Result;
 use crate::format::{Format, JsonSchemaStyle, StructuralTag, TagFormat, TriggeredTagsFormat};
 use crate::model::Model;
 use crate::tool::{ToolChoice, ToolParam, function_parameters, normalize_tool_choice};
@@ -38,42 +38,14 @@ use minimax::build_minimax;
 use qwen_3::build_qwen_3;
 use qwen_35::build_qwen_35;
 
-/// Model keys covered by this crate.
-pub const SUPPORTED_MODEL_KEYS: &[&str] = &[
-    "llama",
-    "kimi",
-    "deepseek_r1",
-    "deepseek_v3_1",
-    "qwen_3_5",
-    "qwen_3_coder",
-    "qwen_3",
-    "harmony",
-    "deepseek_v3_2",
-    "minimax",
-    "glm_4_7",
-    "deepseek_v4",
-    "hermes",
-    "hy_v3",
-];
-
-/// Return every supported model key.
-pub fn supported_models() -> Vec<&'static str> {
-    SUPPORTED_MODEL_KEYS.to_vec()
-}
-
 /// Build a structural tag for a supported model.
 pub fn get_model_structural_tag(
-    model: &str,
+    model: Model,
     tools: &[ToolParam],
     tool_choice: ToolChoice,
     reasoning: bool,
 ) -> Result<StructuralTag> {
     let normalized = normalize_tool_choice(tools, tool_choice)?;
-    let model = Model::parse(model).ok_or_else(|| Error::UnknownModel {
-        model: model.to_string(),
-        supported: supported_models(),
-    })?;
-
     let tag = match model {
         Model::Llama => build_llama(&normalized.function_tools, normalized.choice, reasoning),
         Model::Kimi => build_kimi(&normalized.function_tools, normalized.choice, reasoning),
@@ -112,7 +84,7 @@ pub fn get_model_structural_tag(
 /// This mirrors vLLM frontend behavior: empty tools and `tool_choice=none`
 /// produce `Ok(None)` so the request can continue without structured outputs.
 pub fn maybe_get_model_structural_tag(
-    model: &str,
+    model: Model,
     tools: &[ToolParam],
     tool_choice: ToolChoice,
     reasoning: bool,
@@ -191,6 +163,7 @@ pub(super) fn with_optional_reasoning(
 #[cfg(test)]
 mod tests {
     use serde_json::{Value, json};
+    use strum::VariantArray;
 
     use super::*;
     use crate::{
@@ -209,37 +182,13 @@ mod tests {
     }
 
     #[test]
-    fn registry_lists_all_expected_models() {
-        let models = supported_models();
-        for key in [
-            "llama",
-            "kimi",
-            "deepseek_r1",
-            "deepseek_v3_1",
-            "qwen_3_5",
-            "qwen_3_coder",
-            "qwen_3",
-            "harmony",
-            "deepseek_v3_2",
-            "minimax",
-            "glm_4_7",
-            "deepseek_v4",
-            "hermes",
-            "hy_v3",
-        ] {
-            assert!(models.contains(&key));
-        }
-        assert!(!models.contains(&"gemma_4"));
-    }
-
-    #[test]
     fn every_model_builds_required_and_forced() {
         let tools = vec![tool("search"), tool("alt")];
-        for model in supported_models() {
+        for model in Model::VARIANTS {
             let required =
-                get_model_structural_tag(model, &tools, ToolChoice::required(), false).unwrap();
+                get_model_structural_tag(*model, &tools, ToolChoice::required(), false).unwrap();
             let forced =
-                get_model_structural_tag(model, &tools, ToolChoice::function("search"), false)
+                get_model_structural_tag(*model, &tools, ToolChoice::function("search"), false)
                     .unwrap();
             assert_eq!(
                 serde_json::to_value(required).unwrap()["type"],
@@ -255,14 +204,19 @@ mod tests {
     #[test]
     fn maybe_skips_empty_tools_and_none_choice() {
         assert!(
-            maybe_get_model_structural_tag("llama", &[], ToolChoice::auto(), false)
+            maybe_get_model_structural_tag(Model::Llama, &[], ToolChoice::auto(), false)
                 .unwrap()
                 .is_none()
         );
         assert!(
-            maybe_get_model_structural_tag("llama", &[tool("search")], ToolChoice::none(), false)
-                .unwrap()
-                .is_none()
+            maybe_get_model_structural_tag(
+                Model::Llama,
+                &[tool("search")],
+                ToolChoice::none(),
+                false
+            )
+            .unwrap()
+            .is_none()
         );
     }
 
@@ -294,7 +248,7 @@ mod tests {
     #[test]
     fn qwen_35_required_uses_xml_style() {
         let tag = get_model_structural_tag(
-            "qwen_3_5",
+            Model::Qwen35,
             &[tool("run_sql")],
             ToolChoice::required(),
             false,
@@ -307,9 +261,13 @@ mod tests {
 
     #[test]
     fn hy_v3_required_uses_glm_xml_arguments() {
-        let tag =
-            get_model_structural_tag("hy_v3", &[tool("search")], ToolChoice::required(), false)
-                .unwrap();
+        let tag = get_model_structural_tag(
+            Model::HyV3,
+            &[tool("search")],
+            ToolChoice::required(),
+            false,
+        )
+        .unwrap();
         let value: Value = serde_json::to_value(tag).unwrap();
         assert!(value.to_string().contains("<tool_calls>"));
         assert!(value.to_string().contains("<tool_sep>"));

@@ -31,7 +31,7 @@ unregistered.
 ```rust
 use serde_json::json;
 use xgrammar_structural_tag::{
-    FunctionDefinition, FunctionToolParam, ToolChoice, ToolParam,
+    FunctionDefinition, FunctionToolParam, Model, ToolChoice, ToolParam,
     get_model_structural_tag,
 };
 
@@ -46,7 +46,7 @@ let tools = vec![ToolParam::Function(FunctionToolParam::new(
 ))];
 
 let tag = get_model_structural_tag(
-    "qwen_3_5",
+    Model::Qwen35,
     &tools,
     ToolChoice::required(),
     true,

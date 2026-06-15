@@ -19,7 +19,7 @@
 //! ```
 //! use serde_json::json;
 //! use xgrammar_structural_tag::{
-//!     FunctionDefinition, FunctionToolParam, ToolChoice, ToolParam,
+//!     FunctionDefinition, FunctionToolParam, Model, ToolChoice, ToolParam,
 //!     get_model_structural_tag,
 //! };
 //!
@@ -32,7 +32,7 @@
 //!         })),
 //! ))];
 //!
-//! let tag = get_model_structural_tag("qwen_3_5", &tools, ToolChoice::auto(), true)?;
+//! let tag = get_model_structural_tag(Model::Qwen35, &tools, ToolChoice::auto(), true)?;
 //! let structural_tag_json = tag.to_json_string()?;
 //! assert!(structural_tag_json.contains("structural_tag"));
 //! # Ok::<(), xgrammar_structural_tag::Error>(())
@@ -41,10 +41,10 @@
 //! Require at least one tool call:
 //!
 //! ```
-//! use xgrammar_structural_tag::{ToolChoice, get_model_structural_tag};
+//! use xgrammar_structural_tag::{Model, ToolChoice, get_model_structural_tag};
 //! # use xgrammar_structural_tag::{FunctionDefinition, FunctionToolParam, ToolParam};
 //! # let tools = vec![ToolParam::Function(FunctionToolParam::new(FunctionDefinition::new("ping")))];
-//! let tag = get_model_structural_tag("llama", &tools, ToolChoice::required(), false)?;
+//! let tag = get_model_structural_tag(Model::Llama, &tools, ToolChoice::required(), false)?;
 //! assert!(tag.to_json_string()?.contains("structural_tag"));
 //! # Ok::<(), xgrammar_structural_tag::Error>(())
 //! ```
@@ -52,10 +52,10 @@
 //! Force a named function:
 //!
 //! ```
-//! use xgrammar_structural_tag::{ToolChoice, get_model_structural_tag};
+//! use xgrammar_structural_tag::{Model, ToolChoice, get_model_structural_tag};
 //! # use xgrammar_structural_tag::{FunctionDefinition, FunctionToolParam, ToolParam};
 //! # let tools = vec![ToolParam::Function(FunctionToolParam::new(FunctionDefinition::new("ping")))];
-//! let tag = get_model_structural_tag("qwen_3", &tools, ToolChoice::function("ping"), false)?;
+//! let tag = get_model_structural_tag(Model::Qwen3, &tools, ToolChoice::function("ping"), false)?;
 //! assert!(tag.to_json_string()?.contains("structural_tag"));
 //! # Ok::<(), xgrammar_structural_tag::Error>(())
 //! ```
@@ -63,8 +63,8 @@
 //! Build only when the request actually needs tool constraints:
 //!
 //! ```
-//! use xgrammar_structural_tag::{ToolChoice, maybe_get_model_structural_tag};
-//! let tag = maybe_get_model_structural_tag("llama", &[], ToolChoice::none(), false)?;
+//! use xgrammar_structural_tag::{Model, ToolChoice, maybe_get_model_structural_tag};
+//! let tag = maybe_get_model_structural_tag(Model::Llama, &[], ToolChoice::none(), false)?;
 //! assert!(tag.is_none());
 //! # Ok::<(), xgrammar_structural_tag::Error>(())
 //! ```
@@ -75,9 +75,10 @@ pub mod format;
 pub mod model;
 pub mod tool;
 
-pub use builders::{get_model_structural_tag, maybe_get_model_structural_tag, supported_models};
+pub use builders::{get_model_structural_tag, maybe_get_model_structural_tag};
 pub use error::{Error, Result};
 pub use format::StructuralTag;
+pub use model::Model;
 pub use tool::{
     AllowedToolRef, BuiltinToolParam, FunctionDefinition, FunctionToolParam, ToolChoice, ToolParam,
 };

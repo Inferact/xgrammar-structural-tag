@@ -3,9 +3,10 @@
 use std::{fs, path::Path};
 
 use serde_json::{Map, Value, json};
+use strum::VariantArray;
 use xgrammar_structural_tag::{
-    AllowedToolRef, BuiltinToolParam, FunctionDefinition, FunctionToolParam, ToolChoice, ToolParam,
-    get_model_structural_tag, supported_models,
+    AllowedToolRef, BuiltinToolParam, FunctionDefinition, FunctionToolParam, Model, ToolChoice,
+    ToolParam, get_model_structural_tag,
 };
 
 fn function_tool(name: &str) -> ToolParam {
@@ -44,7 +45,7 @@ fn builtin_tool() -> ToolParam {
     )
 }
 
-fn build_cases(model: &str) -> xgrammar_structural_tag::Result<Value> {
+fn build_cases(model: Model) -> xgrammar_structural_tag::Result<Value> {
     let no_tools: Vec<ToolParam> = vec![];
     let one_tool = vec![function_tool("search")];
     let two_tools = vec![function_tool("search"), function_tool("alt")];
@@ -116,7 +117,7 @@ fn build_cases(model: &str) -> xgrammar_structural_tag::Result<Value> {
         )?)?,
     );
 
-    if model == "harmony" {
+    if model == Model::Harmony {
         cases.insert(
             "builtin_auto".to_string(),
             serde_json::to_value(get_model_structural_tag(
@@ -134,13 +135,13 @@ fn build_cases(model: &str) -> xgrammar_structural_tag::Result<Value> {
 #[test]
 fn generated_structural_tags_match_golden_files() {
     let root = Path::new(env!("CARGO_MANIFEST_DIR"));
-    for model in supported_models() {
+    for model in Model::VARIANTS {
         let path = root
             .join("tests")
             .join("golden")
-            .join(format!("{model}.json"));
+            .join(format!("{}.json", model.key()));
         let expected: Value = serde_json::from_str(&fs::read_to_string(&path).unwrap()).unwrap();
-        let actual = build_cases(model).unwrap();
+        let actual = build_cases(*model).unwrap();
         assert_eq!(actual, expected, "golden mismatch for {model}");
     }
 }

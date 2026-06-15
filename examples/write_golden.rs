@@ -3,9 +3,10 @@
 use std::{env, fs, path::PathBuf};
 
 use serde_json::{Map, Value, json};
+use strum::VariantArray;
 use xgrammar_structural_tag::{
-    AllowedToolRef, BuiltinToolParam, FunctionDefinition, FunctionToolParam, ToolChoice, ToolParam,
-    get_model_structural_tag, supported_models,
+    AllowedToolRef, BuiltinToolParam, FunctionDefinition, FunctionToolParam, Model, ToolChoice,
+    ToolParam, get_model_structural_tag,
 };
 
 fn function_tool(name: &str) -> ToolParam {
@@ -56,7 +57,7 @@ fn builtin_tool() -> ToolParam {
     )
 }
 
-fn build_cases(model: &str) -> xgrammar_structural_tag::Result<Value> {
+fn build_cases(model: Model) -> xgrammar_structural_tag::Result<Value> {
     let no_tools: Vec<ToolParam> = vec![];
     let one_tool = vec![function_tool("search")];
     let two_tools = vec![function_tool("search"), function_tool("alt")];
@@ -128,7 +129,7 @@ fn build_cases(model: &str) -> xgrammar_structural_tag::Result<Value> {
         )?)?,
     );
 
-    if model == "harmony" {
+    if model == Model::Harmony {
         let builtin = vec![builtin_tool()];
         cases.insert(
             "builtin_auto".to_string(),
@@ -152,11 +153,11 @@ fn main() -> xgrammar_structural_tag::Result<()> {
         fs::create_dir_all(&golden_dir).expect("create golden directory");
     }
 
-    for model in supported_models() {
-        let value = build_cases(model)?;
+    for model in Model::VARIANTS {
+        let value = build_cases(*model)?;
         let rendered = serde_json::to_string_pretty(&value)?;
         if write {
-            fs::write(golden_dir.join(format!("{model}.json")), rendered)
+            fs::write(golden_dir.join(format!("{}.json", model.key())), rendered)
                 .expect("write golden fixture");
         } else {
             println!("===== {model}.json =====\n{rendered}");
