@@ -32,10 +32,11 @@ impl From<String> for TokenValue {
 }
 
 /// JSON schema serialization style used inside [`JsonSchemaFormat`].
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "snake_case")]
 pub enum JsonSchemaStyle {
     /// Standard JSON object syntax.
+    #[default]
     Json,
     /// Qwen XML parameters: `<parameter=name>value</parameter>`.
     QwenXml,
@@ -45,12 +46,6 @@ pub enum JsonSchemaStyle {
     DeepseekXml,
     /// GLM/HY3 key-value XML parameters.
     GlmXml,
-}
-
-impl Default for JsonSchemaStyle {
-    fn default() -> Self {
-        Self::Json
-    }
 }
 
 /// A format that matches a constant string.

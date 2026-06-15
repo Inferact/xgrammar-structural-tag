@@ -385,15 +385,12 @@ pub fn normalize_tool_choice(
             }
             SimplifiedToolChoice::Forced
         }
-        ToolChoice::AllowedTools(choice) => {
-            let mode = filter_allowed_tools(
-                &mut function_tools,
-                &mut builtin_tools,
-                &choice.allowed_tools.mode,
-                &choice.allowed_tools.tools,
-            )?;
-            mode
-        }
+        ToolChoice::AllowedTools(choice) => filter_allowed_tools(
+            &mut function_tools,
+            &mut builtin_tools,
+            &choice.allowed_tools.mode,
+            &choice.allowed_tools.tools,
+        )?,
         ToolChoice::FlatAllowedTools(choice) => filter_allowed_tools(
             &mut function_tools,
             &mut builtin_tools,
