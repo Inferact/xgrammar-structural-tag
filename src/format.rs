@@ -83,8 +83,7 @@ pub struct TokenFormat {
 /// A token boundary object used in tag begin/end fields.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct TokenBoundary {
-    #[serde(rename = "type")]
-    kind: TokenBoundaryKind,
+    r#type: TokenBoundaryKind,
     /// Token ID or token string.
     pub token: TokenValue,
 }
@@ -99,7 +98,7 @@ impl TokenBoundary {
     /// Build a token boundary.
     pub fn new(token: impl Into<TokenValue>) -> Self {
         Self {
-            kind: TokenBoundaryKind::Token,
+            r#type: TokenBoundaryKind::Token,
             token: token.into(),
         }
     }
@@ -334,8 +333,8 @@ pub struct DispatchFormat {
     /// `(pattern, format)` rules.
     pub rules: Vec<(String, Format)>,
     /// Whether matching continues after one dispatched format.
-    #[serde(rename = "loop", default = "default_true")]
-    pub loop_: bool,
+    #[serde(default = "default_true")]
+    pub r#loop: bool,
     /// Strings excluded from free text regions.
     #[serde(default)]
     pub excludes: Vec<String>,
@@ -347,8 +346,8 @@ pub struct TokenDispatchFormat {
     /// `(token, format)` rules.
     pub rules: Vec<(TokenValue, Format)>,
     /// Whether matching continues after one dispatched format.
-    #[serde(rename = "loop", default = "default_true")]
-    pub loop_: bool,
+    #[serde(default = "default_true")]
+    pub r#loop: bool,
     /// Tokens excluded from free token regions.
     #[serde(default)]
     pub exclude_tokens: Vec<TokenValue>,
@@ -372,7 +371,6 @@ pub enum Format {
     /// Match a constant string.
     ConstString(ConstStringFormat),
     /// Match a JSON schema.
-    #[serde(rename = "json_schema")]
     JsonSchema(JsonSchemaFormat),
     /// Match arbitrary text.
     AnyText(AnyTextFormat),
@@ -411,7 +409,6 @@ pub enum Format {
     /// Dispatch on token patterns.
     TokenDispatch(TokenDispatchFormat),
     /// Deprecated Qwen XML parameter format.
-    #[serde(rename = "qwen_xml_parameter")]
     QwenXmlParameter(QwenXmlParameterFormat),
 }
 
@@ -507,7 +504,6 @@ pub struct StructuralTagItem {
     /// Begin tag.
     pub begin: String,
     /// JSON schema payload.
-    #[serde(rename = "schema")]
     pub schema: Value,
     /// End tag.
     pub end: String,
@@ -516,8 +512,7 @@ pub struct StructuralTagItem {
 /// Top-level structural tag object accepted by xgrammar.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct StructuralTag {
-    #[serde(rename = "type")]
-    kind: StructuralTagKind,
+    r#type: StructuralTagKind,
     /// Structural tag format.
     pub format: Format,
 }
@@ -532,7 +527,7 @@ impl StructuralTag {
     /// Build a top-level structural tag from a format.
     pub fn new(format: Format) -> Self {
         Self {
-            kind: StructuralTagKind::StructuralTag,
+            r#type: StructuralTagKind::StructuralTag,
             format,
         }
     }
@@ -619,7 +614,7 @@ mod tests {
         }));
         round_trip(Format::Dispatch(DispatchFormat {
             rules: vec![("<x>".to_string(), Format::Tag(tag.clone()))],
-            loop_: true,
+            r#loop: true,
             excludes: vec!["</x>".to_string()],
         }));
         round_trip(Format::TokenDispatch(TokenDispatchFormat {
@@ -627,7 +622,7 @@ mod tests {
                 TokenValue::Text("<x>".to_string()),
                 Format::const_string("x"),
             )],
-            loop_: true,
+            r#loop: true,
             exclude_tokens: vec![TokenValue::Id(3)],
         }));
         round_trip(Format::QwenXmlParameter(QwenXmlParameterFormat {
@@ -639,7 +634,7 @@ mod tests {
     fn dispatch_uses_xgrammar_loop_field_name() {
         let value = serde_json::to_value(Format::Dispatch(DispatchFormat {
             rules: vec![],
-            loop_: false,
+            r#loop: false,
             excludes: vec![],
         }))
         .unwrap();

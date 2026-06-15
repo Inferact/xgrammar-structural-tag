@@ -57,8 +57,7 @@ impl FunctionDefinition {
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct FunctionToolParam {
     /// Tool type, always `function`.
-    #[serde(rename = "type")]
-    pub tool_type: FunctionToolType,
+    pub r#type: FunctionToolType,
     /// Function definition.
     pub function: FunctionDefinition,
 }
@@ -67,7 +66,7 @@ impl FunctionToolParam {
     /// Build a function tool.
     pub fn new(function: FunctionDefinition) -> Self {
         Self {
-            tool_type: FunctionToolType::Function,
+            r#type: FunctionToolType::Function,
             function,
         }
     }
@@ -85,8 +84,7 @@ pub enum FunctionToolType {
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct BuiltinToolParam {
     /// Provider-facing builtin tool type.
-    #[serde(rename = "type")]
-    pub tool_type: String,
+    pub r#type: String,
     /// Optional model-output tool name.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
@@ -99,7 +97,7 @@ impl BuiltinToolParam {
     /// Build a builtin tool declaration.
     pub fn new(tool_type: impl Into<String>) -> Self {
         Self {
-            tool_type: tool_type.into(),
+            r#type: tool_type.into(),
             name: None,
             parameters: None,
         }
@@ -163,8 +161,7 @@ pub struct NamedToolChoiceFunction {
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct NamedToolChoiceParam {
     /// Choice type, normally `function`.
-    #[serde(rename = "type")]
-    pub tool_type: String,
+    pub r#type: String,
     /// Function reference.
     pub function: NamedToolChoiceFunction,
 }
@@ -173,8 +170,7 @@ pub struct NamedToolChoiceParam {
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct BuiltinToolChoiceParam {
     /// Builtin tool type.
-    #[serde(rename = "type")]
-    pub tool_type: String,
+    pub r#type: String,
     /// Optional model-output tool name.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
@@ -184,8 +180,7 @@ pub struct BuiltinToolChoiceParam {
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct AllowedToolRef {
     /// Tool type, usually `function` or a builtin tool type.
-    #[serde(rename = "type")]
-    pub tool_type: String,
+    pub r#type: String,
     /// Nested function reference for Chat Completions shape.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub function: Option<NamedToolChoiceFunction>,
@@ -198,7 +193,7 @@ impl AllowedToolRef {
     /// Build a function reference.
     pub fn function(name: impl Into<String>) -> Self {
         Self {
-            tool_type: "function".to_string(),
+            r#type: "function".to_string(),
             function: Some(NamedToolChoiceFunction { name: name.into() }),
             name: None,
         }
@@ -207,14 +202,14 @@ impl AllowedToolRef {
     /// Build a builtin tool reference.
     pub fn builtin(tool_type: impl Into<String>) -> Self {
         Self {
-            tool_type: tool_type.into(),
+            r#type: tool_type.into(),
             function: None,
             name: None,
         }
     }
 
     fn function_name(&self) -> Option<&str> {
-        if self.tool_type != "function" {
+        if self.r#type != "function" {
             return None;
         }
         self.function
@@ -237,8 +232,7 @@ pub struct AllowedToolsParam {
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct AllowedToolChoiceParam {
     /// Choice type, always `allowed_tools`.
-    #[serde(rename = "type")]
-    pub tool_type: String,
+    pub r#type: String,
     /// Nested allowed-tools payload.
     pub allowed_tools: AllowedToolsParam,
 }
@@ -247,8 +241,7 @@ pub struct AllowedToolChoiceParam {
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct FlatAllowedToolChoiceParam {
     /// Choice type, always `allowed_tools`.
-    #[serde(rename = "type")]
-    pub tool_type: String,
+    pub r#type: String,
     /// Allowed-tools mode, `auto` or `required`.
     pub mode: String,
     /// Allowed tool references.
@@ -296,7 +289,7 @@ impl ToolChoice {
     /// Build a named function tool choice.
     pub fn function(name: impl Into<String>) -> Self {
         Self::NamedFunction(NamedToolChoiceParam {
-            tool_type: "function".to_string(),
+            r#type: "function".to_string(),
             function: NamedToolChoiceFunction { name: name.into() },
         })
     }
@@ -304,7 +297,7 @@ impl ToolChoice {
     /// Build a builtin tool choice.
     pub fn builtin(tool_type: impl Into<String>) -> Self {
         Self::Builtin(BuiltinToolChoiceParam {
-            tool_type: tool_type.into(),
+            r#type: tool_type.into(),
             name: None,
         })
     }
@@ -312,7 +305,7 @@ impl ToolChoice {
     /// Build a nested allowed-tools choice.
     pub fn allowed_tools(mode: impl Into<String>, tools: Vec<AllowedToolRef>) -> Self {
         Self::AllowedTools(AllowedToolChoiceParam {
-            tool_type: "allowed_tools".to_string(),
+            r#type: "allowed_tools".to_string(),
             allowed_tools: AllowedToolsParam {
                 mode: mode.into(),
                 tools,
@@ -376,10 +369,10 @@ pub fn normalize_tool_choice(
         }
         ToolChoice::Builtin(choice) => {
             function_tools.clear();
-            builtin_tools.retain(|tool| tool.tool_type == choice.tool_type);
+            builtin_tools.retain(|tool| tool.r#type == choice.r#type);
             if builtin_tools.len() != 1 {
                 return Err(Error::BuiltinToolChoiceAmbiguous {
-                    tool_type: choice.tool_type,
+                    tool_type: choice.r#type,
                     matches: builtin_tools.len(),
                 });
             }
@@ -437,12 +430,12 @@ fn filter_allowed_tools(
     let mut allowed_function_names = BTreeSet::new();
     let mut allowed_builtin_types = BTreeSet::new();
     for allowed in allowed_tools {
-        if allowed.tool_type == "function" {
+        if allowed.r#type == "function" {
             if let Some(name) = allowed.function_name() {
                 allowed_function_names.insert(name.to_string());
             }
         } else {
-            allowed_builtin_types.insert(allowed.tool_type.clone());
+            allowed_builtin_types.insert(allowed.r#type.clone());
         }
     }
 
@@ -452,7 +445,7 @@ fn filter_allowed_tools(
         .collect::<BTreeSet<_>>();
     let available_builtin_types = builtin_tools
         .iter()
-        .map(|tool| tool.tool_type.clone())
+        .map(|tool| tool.r#type.clone())
         .collect::<BTreeSet<_>>();
 
     let mut missing = Vec::new();
@@ -467,7 +460,7 @@ fn filter_allowed_tools(
     }
 
     function_tools.retain(|tool| allowed_function_names.contains(&tool.function.name));
-    builtin_tools.retain(|tool| allowed_builtin_types.contains(&tool.tool_type));
+    builtin_tools.retain(|tool| allowed_builtin_types.contains(&tool.r#type));
     Ok(choice)
 }
 
@@ -486,5 +479,5 @@ pub fn builtin_parameters(tool: &BuiltinToolParam) -> Value {
 
 /// Return the model-output name for a builtin tool.
 pub fn builtin_tool_name(tool: &BuiltinToolParam) -> &str {
-    tool.name.as_deref().unwrap_or(&tool.tool_type)
+    tool.name.as_deref().unwrap_or(&tool.r#type)
 }
