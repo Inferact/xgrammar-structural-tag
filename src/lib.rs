@@ -45,7 +45,7 @@
 //! # use xgrammar_structural_tag::{FunctionDefinition, FunctionToolParam, ToolParam};
 //! # let tools = vec![ToolParam::Function(FunctionToolParam::new(FunctionDefinition::new("ping")))];
 //! let tag = get_model_structural_tag("llama", &tools, ToolChoice::required(), false)?;
-//! assert_eq!(tag.kind(), "structural_tag");
+//! assert!(tag.to_json_string()?.contains("structural_tag"));
 //! # Ok::<(), xgrammar_structural_tag::Error>(())
 //! ```
 //!
@@ -56,7 +56,7 @@
 //! # use xgrammar_structural_tag::{FunctionDefinition, FunctionToolParam, ToolParam};
 //! # let tools = vec![ToolParam::Function(FunctionToolParam::new(FunctionDefinition::new("ping")))];
 //! let tag = get_model_structural_tag("qwen_3", &tools, ToolChoice::function("ping"), false)?;
-//! assert_eq!(tag.kind(), "structural_tag");
+//! assert!(tag.to_json_string()?.contains("structural_tag"));
 //! # Ok::<(), xgrammar_structural_tag::Error>(())
 //! ```
 //!

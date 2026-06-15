@@ -241,8 +241,14 @@ mod tests {
             let forced =
                 get_model_structural_tag(model, &tools, ToolChoice::function("search"), false)
                     .unwrap();
-            assert_eq!(required.kind(), "structural_tag");
-            assert_eq!(forced.kind(), "structural_tag");
+            assert_eq!(
+                serde_json::to_value(required).unwrap()["type"],
+                "structural_tag"
+            );
+            assert_eq!(
+                serde_json::to_value(forced).unwrap()["type"],
+                "structural_tag"
+            );
         }
     }
 

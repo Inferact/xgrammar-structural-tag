@@ -532,11 +532,6 @@ impl StructuralTag {
         }
     }
 
-    /// Return the top-level type string.
-    pub fn kind(&self) -> &'static str {
-        "structural_tag"
-    }
-
     /// Serialize this tag into the JSON string expected by vLLM engine-core.
     pub fn to_json_string(&self) -> crate::Result<String> {
         Ok(serde_json::to_string(self)?)
