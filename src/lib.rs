@@ -8,9 +8,9 @@
 //! `StructuredOutputsParams.structural_tag`, then let their existing xgrammar
 //! backend perform constrained decoding.
 //!
-//! The model templates are ported from xgrammar's Apache-2.0 builtin structural
-//! tag builders at commit `4d145cc13d878c751ebeed36af1c013074be76bc`, with
-//! small vLLM/Rust-frontend extensions for `hermes` and `hy_v3`.
+//! The model templates are ported from xgrammar's Apache-2.0 structural tag
+//! builders at commit `4d145cc13d878c751ebeed36af1c013074be76bc`, with
+//! vLLM/Rust frontend extensions for `hermes` and `hy_v3`.
 //!
 //! # Examples
 //!

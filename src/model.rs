@@ -27,9 +27,9 @@ pub enum Model {
     Glm47,
     /// DeepSeek V4 DSML tool calling.
     DeepSeekV4,
-    /// vLLM Hermes extension.
+    /// Hermes tool calling.
     Hermes,
-    /// Rust frontend HY3 XML extension.
+    /// HY3 XML tool calling.
     HyV3,
 }
 

@@ -7,29 +7,39 @@
 //! `vllm/tool_parsers/structural_tag_registry.py`, and `hy_v3` follows the
 //! Rust frontend HY3 tool parser syntax.
 
-mod deepseek;
-mod extensions;
+mod deepseek_dsml;
+mod deepseek_r1;
+mod deepseek_v31;
+mod glm_47;
 mod harmony;
+mod hermes;
+mod hy_v3;
 mod kimi;
 mod llama;
-mod qwen;
-mod xml;
+mod minimax;
+mod qwen_3;
+mod qwen_35;
 
 use crate::error::{Error, Result};
 use crate::format::{Format, JsonSchemaStyle, StructuralTag, TagFormat, TriggeredTagsFormat};
 use crate::model::Model;
 use crate::tool::{ToolChoice, ToolParam, function_parameters, normalize_tool_choice};
 
-use deepseek::{build_deepseek_r1, build_deepseek_v4, build_deepseek_v31, build_deepseek_v32};
-use extensions::{build_hermes, build_hy_v3};
+use deepseek_dsml::{build_deepseek_v4, build_deepseek_v32};
+use deepseek_r1::build_deepseek_r1;
+use deepseek_v31::build_deepseek_v31;
+use glm_47::build_glm_47;
 use harmony::build_harmony;
+use hermes::build_hermes;
+use hy_v3::build_hy_v3;
 use kimi::build_kimi;
 use llama::build_llama;
-use qwen::{build_qwen_3, build_qwen_35};
-use xml::{build_glm_47, build_minimax};
+use minimax::build_minimax;
+use qwen_3::build_qwen_3;
+use qwen_35::build_qwen_35;
 
-/// xgrammar builtin model keys covered by this crate.
-pub const XGRAMMAR_BUILTIN_MODELS: &[&str] = &[
+/// Model keys covered by this crate.
+pub const SUPPORTED_MODEL_KEYS: &[&str] = &[
     "llama",
     "kimi",
     "deepseek_r1",
@@ -42,28 +52,13 @@ pub const XGRAMMAR_BUILTIN_MODELS: &[&str] = &[
     "minimax",
     "glm_4_7",
     "deepseek_v4",
+    "hermes",
+    "hy_v3",
 ];
-
-/// vLLM/Rust frontend extension model keys covered by this crate.
-pub const EXTENSION_MODELS: &[&str] = &["hermes", "hy_v3"];
-
-/// Return xgrammar builtin model keys.
-pub fn xgrammar_builtin_models() -> &'static [&'static str] {
-    XGRAMMAR_BUILTIN_MODELS
-}
-
-/// Return extension model keys.
-pub fn extension_models() -> &'static [&'static str] {
-    EXTENSION_MODELS
-}
 
 /// Return every supported model key.
 pub fn supported_models() -> Vec<&'static str> {
-    XGRAMMAR_BUILTIN_MODELS
-        .iter()
-        .chain(EXTENSION_MODELS.iter())
-        .copied()
-        .collect()
+    SUPPORTED_MODEL_KEYS.to_vec()
 }
 
 /// Build a structural tag for a supported model.

@@ -8,8 +8,6 @@ xgrammar and does not compile grammars or parse model output.
 
 ## Supported models
 
-XGrammar builtin keys:
-
 - `llama`
 - `kimi`
 - `deepseek_r1`
@@ -22,9 +20,6 @@ XGrammar builtin keys:
 - `minimax`
 - `glm_4_7`
 - `deepseek_v4`
-
-Extensions:
-
 - `hermes`
 - `hy_v3`
 
