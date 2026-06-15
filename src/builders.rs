@@ -1,11 +1,4 @@
 //! Model-specific structural tag builders.
-//!
-//! Most builders in this module tree are direct Rust ports of xgrammar's
-//! `python/xgrammar/builtin_structural_tag.py` at commit
-//! `4d145cc13d878c751ebeed36af1c013074be76bc`.
-//! The `hermes` builder is adapted from vLLM's Apache-2.0
-//! `vllm/tool_parsers/structural_tag_registry.py`, and `hy_v3` follows the
-//! Rust frontend HY3 tool parser syntax.
 
 mod deepseek_dsml;
 mod deepseek_r1;

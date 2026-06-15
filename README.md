@@ -23,9 +23,6 @@ xgrammar and does not compile grammars or parse model output.
 - `hermes`
 - `hy_v3`
 
-`gemma_4` is excluded because upstream xgrammar currently keeps that builder
-unregistered.
-
 ## Usage
 
 ```rust
@@ -80,6 +77,6 @@ available:
 python3 scripts/generate_python_golden.py
 ```
 
-The source templates are ported from xgrammar commit
-`4d145cc13d878c751ebeed36af1c013074be76bc`, with vLLM/Rust frontend extensions
-for `hermes` and `hy_v3`.
+The crate version build metadata records the xgrammar source version used for
+the structural tag templates. The crate also includes vLLM/Rust frontend
+extensions for `hermes` and `hy_v3`.
