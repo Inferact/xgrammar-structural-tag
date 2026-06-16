@@ -353,13 +353,6 @@ pub struct TokenDispatchFormat {
     pub exclude_tokens: Vec<TokenValue>,
 }
 
-/// Deprecated Qwen XML parameter format retained for wire compatibility.
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
-pub struct QwenXmlParameterFormat {
-    /// JSON schema object or `true` for unconstrained JSON.
-    pub json_schema: Value,
-}
-
 fn default_true() -> bool {
     true
 }
@@ -408,8 +401,6 @@ pub enum Format {
     Dispatch(DispatchFormat),
     /// Dispatch on token patterns.
     TokenDispatch(TokenDispatchFormat),
-    /// Deprecated Qwen XML parameter format.
-    QwenXmlParameter(QwenXmlParameterFormat),
 }
 
 impl Format {
@@ -496,17 +487,6 @@ impl Format {
             stop_after_first,
         })
     }
-}
-
-/// Deprecated structural tag item shape.
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
-pub struct StructuralTagItem {
-    /// Begin tag.
-    pub begin: String,
-    /// JSON schema payload.
-    pub schema: Value,
-    /// End tag.
-    pub end: String,
 }
 
 /// Top-level structural tag object accepted by xgrammar.
@@ -619,9 +599,6 @@ mod tests {
             )],
             r#loop: true,
             exclude_tokens: vec![TokenValue::Id(3)],
-        }));
-        round_trip(Format::QwenXmlParameter(QwenXmlParameterFormat {
-            json_schema: json!(true),
         }));
     }
 

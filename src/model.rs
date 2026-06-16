@@ -54,8 +54,8 @@ pub enum Model {
 }
 
 impl Model {
-    /// Return the public model key.
-    pub fn key(self) -> &'static str {
+    /// Return the public model key string.
+    pub fn as_str(self) -> &'static str {
         match self {
             Self::Llama => "llama",
             Self::Kimi => "kimi",
@@ -77,7 +77,7 @@ impl Model {
 
 impl fmt::Display for Model {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        f.write_str(self.key())
+        f.write_str(self.as_str())
     }
 }
 

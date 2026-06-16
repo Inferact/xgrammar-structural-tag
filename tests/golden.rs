@@ -139,7 +139,7 @@ fn generated_structural_tags_match_golden_files() {
         let path = root
             .join("tests")
             .join("golden")
-            .join(format!("{}.json", model.key()));
+            .join(format!("{}.json", model.as_str()));
         let expected: Value = serde_json::from_str(&fs::read_to_string(&path).unwrap()).unwrap();
         let actual = build_cases(*model).unwrap();
         assert_eq!(actual, expected, "golden mismatch for {model}");

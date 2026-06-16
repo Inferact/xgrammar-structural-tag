@@ -316,7 +316,7 @@ impl ToolChoice {
 
 /// Internal simplified tool-choice value used by model builders.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
-pub enum SimplifiedToolChoice {
+pub(crate) enum SimplifiedToolChoice {
     /// Allow text or tool calls.
     Auto,
     /// Require at least one tool call.
@@ -327,7 +327,7 @@ pub enum SimplifiedToolChoice {
 
 /// Normalized inputs for model-specific builders.
 #[derive(Debug, Clone, PartialEq)]
-pub struct NormalizedToolChoice {
+pub(crate) struct NormalizedToolChoice {
     /// Function tools remaining after tool-choice filtering.
     pub function_tools: Vec<FunctionToolParam>,
     /// Builtin tools remaining after tool-choice filtering.
@@ -337,7 +337,7 @@ pub struct NormalizedToolChoice {
 }
 
 /// Normalize public tools and tool choice into builder-ready inputs.
-pub fn normalize_tool_choice(
+pub(crate) fn normalize_tool_choice(
     tools: &[ToolParam],
     tool_choice: ToolChoice,
 ) -> Result<NormalizedToolChoice> {
@@ -465,7 +465,7 @@ fn filter_allowed_tools(
 }
 
 /// Return the JSON schema used to constrain a function's emitted arguments.
-pub fn function_parameters(function: &FunctionDefinition) -> Value {
+pub(crate) fn function_parameters(function: &FunctionDefinition) -> Value {
     if function.strict == Some(false) {
         return json!(true);
     }
@@ -473,11 +473,11 @@ pub fn function_parameters(function: &FunctionDefinition) -> Value {
 }
 
 /// Return the JSON schema used to constrain a builtin tool's emitted arguments.
-pub fn builtin_parameters(tool: &BuiltinToolParam) -> Value {
+pub(crate) fn builtin_parameters(tool: &BuiltinToolParam) -> Value {
     tool.parameters.clone().unwrap_or_else(|| json!(true))
 }
 
 /// Return the model-output name for a builtin tool.
-pub fn builtin_tool_name(tool: &BuiltinToolParam) -> &str {
+pub(crate) fn builtin_tool_name(tool: &BuiltinToolParam) -> &str {
     tool.name.as_deref().unwrap_or(&tool.r#type)
 }

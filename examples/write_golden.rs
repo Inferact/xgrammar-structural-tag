@@ -157,8 +157,11 @@ fn main() -> xgrammar_structural_tag::Result<()> {
         let value = build_cases(*model)?;
         let rendered = serde_json::to_string_pretty(&value)?;
         if write {
-            fs::write(golden_dir.join(format!("{}.json", model.key())), rendered)
-                .expect("write golden fixture");
+            fs::write(
+                golden_dir.join(format!("{}.json", model.as_str())),
+                rendered,
+            )
+            .expect("write golden fixture");
         } else {
             println!("===== {model}.json =====\n{rendered}");
         }
