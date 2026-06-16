@@ -160,7 +160,8 @@ mod tests {
 
     use super::*;
     use crate::{
-        AllowedToolRef, FunctionDefinition, FunctionToolParam, ToolChoice, ToolParam,
+        AllowedToolRef, AllowedToolsMode, FunctionDefinition, FunctionToolParam, ToolChoice,
+        ToolParam,
         tool::{SimplifiedToolChoice, normalize_tool_choice},
     };
 
@@ -230,7 +231,10 @@ mod tests {
         let tools = vec![tool("search"), tool("alt")];
         let normalized = normalize_tool_choice(
             &tools,
-            ToolChoice::allowed_tools("required", vec![AllowedToolRef::function("alt")]),
+            ToolChoice::allowed_tools(
+                AllowedToolsMode::Required,
+                vec![AllowedToolRef::function("alt")],
+            ),
         )
         .unwrap();
         assert_eq!(normalized.choice, SimplifiedToolChoice::Required);

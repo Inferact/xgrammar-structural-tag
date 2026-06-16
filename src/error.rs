@@ -42,13 +42,6 @@ pub enum Error {
         names: Vec<String>,
     },
 
-    /// The allowed-tools mode is not one of xgrammar's supported modes.
-    #[error("allowed_tools.mode must be 'auto' or 'required', got '{mode}'")]
-    InvalidAllowedToolsMode {
-        /// Invalid mode value.
-        mode: String,
-    },
-
     /// JSON serialization failed.
     #[error("failed to serialize structural tag: {0}")]
     Serialize(#[from] serde_json::Error),

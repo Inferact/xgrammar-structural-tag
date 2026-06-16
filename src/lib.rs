@@ -79,5 +79,6 @@ pub use error::{Error, Result};
 pub use format::StructuralTag;
 pub use model::Model;
 pub use tool::{
-    AllowedToolRef, BuiltinToolParam, FunctionDefinition, FunctionToolParam, ToolChoice, ToolParam,
+    AllowedToolRef, AllowedToolsMode, BuiltinToolParam, FunctionDefinition, FunctionToolParam,
+    ToolChoice, ToolParam,
 };

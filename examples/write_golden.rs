@@ -5,8 +5,8 @@ use std::{env, fs, path::PathBuf};
 use serde_json::{Map, Value, json};
 use strum::VariantArray;
 use xgrammar_structural_tag::{
-    AllowedToolRef, BuiltinToolParam, FunctionDefinition, FunctionToolParam, Model, ToolChoice,
-    ToolParam, get_model_structural_tag,
+    AllowedToolRef, AllowedToolsMode, BuiltinToolParam, FunctionDefinition, FunctionToolParam,
+    Model, ToolChoice, ToolParam, get_model_structural_tag,
 };
 
 fn function_tool(name: &str) -> ToolParam {
@@ -106,7 +106,10 @@ fn build_cases(model: Model) -> xgrammar_structural_tag::Result<Value> {
         serde_json::to_value(get_model_structural_tag(
             model,
             &two_tools,
-            ToolChoice::allowed_tools("required", vec![AllowedToolRef::function("alt")]),
+            ToolChoice::allowed_tools(
+                AllowedToolsMode::Required,
+                vec![AllowedToolRef::function("alt")],
+            ),
             false,
         )?)?,
     );
