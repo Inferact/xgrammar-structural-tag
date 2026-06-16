@@ -6,7 +6,7 @@ use serde_json::{Map, Value, json};
 use strum::VariantArray;
 use xgrammar_structural_tag::{
     AllowedToolRef, AllowedToolsMode, BuiltinToolParam, FunctionDefinition, FunctionToolParam,
-    Model, ToolChoice, ToolParam, get_model_structural_tag,
+    Model, ToolChoice, ToolParam, build_structural_tag,
 };
 
 fn function_tool(name: &str) -> ToolParam {
@@ -55,7 +55,7 @@ fn build_cases(model: Model) -> xgrammar_structural_tag::Result<Value> {
     let mut cases = Map::new();
     cases.insert(
         "auto_no_tools".to_string(),
-        serde_json::to_value(get_model_structural_tag(
+        serde_json::to_value(build_structural_tag(
             model,
             &no_tools,
             ToolChoice::auto(),
@@ -64,7 +64,7 @@ fn build_cases(model: Model) -> xgrammar_structural_tag::Result<Value> {
     );
     cases.insert(
         "auto_one_tool".to_string(),
-        serde_json::to_value(get_model_structural_tag(
+        serde_json::to_value(build_structural_tag(
             model,
             &one_tool,
             ToolChoice::auto(),
@@ -73,7 +73,7 @@ fn build_cases(model: Model) -> xgrammar_structural_tag::Result<Value> {
     );
     cases.insert(
         "required_two_tools".to_string(),
-        serde_json::to_value(get_model_structural_tag(
+        serde_json::to_value(build_structural_tag(
             model,
             &two_tools,
             ToolChoice::required(),
@@ -82,7 +82,7 @@ fn build_cases(model: Model) -> xgrammar_structural_tag::Result<Value> {
     );
     cases.insert(
         "reasoning_required_one_tool".to_string(),
-        serde_json::to_value(get_model_structural_tag(
+        serde_json::to_value(build_structural_tag(
             model,
             &one_tool,
             ToolChoice::required(),
@@ -91,7 +91,7 @@ fn build_cases(model: Model) -> xgrammar_structural_tag::Result<Value> {
     );
     cases.insert(
         "forced_search".to_string(),
-        serde_json::to_value(get_model_structural_tag(
+        serde_json::to_value(build_structural_tag(
             model,
             &two_tools,
             ToolChoice::function("search"),
@@ -100,7 +100,7 @@ fn build_cases(model: Model) -> xgrammar_structural_tag::Result<Value> {
     );
     cases.insert(
         "allowed_required_alt".to_string(),
-        serde_json::to_value(get_model_structural_tag(
+        serde_json::to_value(build_structural_tag(
             model,
             &two_tools,
             ToolChoice::allowed_tools(
@@ -112,7 +112,7 @@ fn build_cases(model: Model) -> xgrammar_structural_tag::Result<Value> {
     );
     cases.insert(
         "strict_false".to_string(),
-        serde_json::to_value(get_model_structural_tag(
+        serde_json::to_value(build_structural_tag(
             model,
             &strict_false,
             ToolChoice::auto(),
@@ -121,7 +121,7 @@ fn build_cases(model: Model) -> xgrammar_structural_tag::Result<Value> {
     );
     cases.insert(
         "missing_parameters".to_string(),
-        serde_json::to_value(get_model_structural_tag(
+        serde_json::to_value(build_structural_tag(
             model,
             &missing_params,
             ToolChoice::auto(),
@@ -132,7 +132,7 @@ fn build_cases(model: Model) -> xgrammar_structural_tag::Result<Value> {
     if model == Model::Harmony {
         cases.insert(
             "builtin_auto".to_string(),
-            serde_json::to_value(get_model_structural_tag(
+            serde_json::to_value(build_structural_tag(
                 model,
                 &[builtin_tool()],
                 ToolChoice::auto(),

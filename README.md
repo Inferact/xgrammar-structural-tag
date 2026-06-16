@@ -2,9 +2,9 @@
 
 Rust builders for xgrammar-compatible `structural_tag` tool-calling constraints.
 
-This crate generates the JSON string that a vLLM-style frontend can place into
-`StructuredOutputsParams.structural_tag`. It has no runtime dependency on
-xgrammar and does not compile grammars or parse model output.
+This crate generates the JSON string that a serving frontend can pass to an
+xgrammar structural-tag backend. It has no runtime dependency on xgrammar and
+does not compile grammars or parse model output.
 
 ## Supported models
 
@@ -29,7 +29,7 @@ xgrammar and does not compile grammars or parse model output.
 use serde_json::json;
 use xgrammar_structural_tag::{
     FunctionDefinition, FunctionToolParam, Model, ToolChoice, ToolParam,
-    get_model_structural_tag,
+    build_structural_tag,
 };
 
 let tools = vec![ToolParam::Function(FunctionToolParam::new(
@@ -42,7 +42,7 @@ let tools = vec![ToolParam::Function(FunctionToolParam::new(
     })),
 ))];
 
-let tag = get_model_structural_tag(
+let tag = build_structural_tag(
     Model::Qwen35,
     &tools,
     ToolChoice::required(),
@@ -53,7 +53,7 @@ let structural_tag_json = tag.to_json_string()?;
 # Ok::<(), xgrammar_structural_tag::Error>(())
 ```
 
-For vLLM-style request lowering, use `maybe_get_model_structural_tag`. It
+For serving request lowering, use `build_optional_structural_tag`. It
 returns `Ok(None)` for empty tools or `tool_choice=none`.
 
 ## Development
@@ -78,5 +78,5 @@ python3 scripts/generate_python_golden.py
 ```
 
 The crate version build metadata records the xgrammar source version used for
-the structural tag templates. The crate also includes vLLM/Rust frontend
-extensions for `hermes` and `hy_v3`.
+the structural tag templates. The crate also includes extra model templates for
+`hermes` and `hy_v3`.

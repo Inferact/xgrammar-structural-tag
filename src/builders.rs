@@ -32,7 +32,8 @@ use qwen_3::build_qwen_3;
 use qwen_35::build_qwen_35;
 
 /// Build a structural tag for a supported model.
-pub fn get_model_structural_tag(
+#[doc(alias = "get_model_structural_tag")]
+pub fn build_structural_tag(
     model: Model,
     tools: &[ToolParam],
     tool_choice: ToolChoice,
@@ -74,9 +75,10 @@ pub fn get_model_structural_tag(
 
 /// Build a structural tag only when tool constraints should be sent downstream.
 ///
-/// This mirrors vLLM frontend behavior: empty tools and `tool_choice=none`
+/// This mirrors serving request lowering: empty tools and `tool_choice=none`
 /// produce `Ok(None)` so the request can continue without structured outputs.
-pub fn maybe_get_model_structural_tag(
+#[doc(alias = "maybe_get_model_structural_tag")]
+pub fn build_optional_structural_tag(
     model: Model,
     tools: &[ToolParam],
     tool_choice: ToolChoice,
@@ -90,7 +92,7 @@ pub fn maybe_get_model_structural_tag(
     {
         return Ok(None);
     }
-    get_model_structural_tag(model, tools, tool_choice, reasoning).map(Some)
+    build_structural_tag(model, tools, tool_choice, reasoning).map(Some)
 }
 
 pub(super) fn schema(function: &crate::tool::FunctionDefinition) -> serde_json::Value {
@@ -180,9 +182,9 @@ mod tests {
         let tools = vec![tool("search"), tool("alt")];
         for model in Model::VARIANTS {
             let required =
-                get_model_structural_tag(*model, &tools, ToolChoice::required(), false).unwrap();
+                build_structural_tag(*model, &tools, ToolChoice::required(), false).unwrap();
             let forced =
-                get_model_structural_tag(*model, &tools, ToolChoice::function("search"), false)
+                build_structural_tag(*model, &tools, ToolChoice::function("search"), false)
                     .unwrap();
             assert_eq!(
                 serde_json::to_value(required).unwrap()["type"],
@@ -196,14 +198,14 @@ mod tests {
     }
 
     #[test]
-    fn maybe_skips_empty_tools_and_none_choice() {
+    fn optional_skips_empty_tools_and_none_choice() {
         assert!(
-            maybe_get_model_structural_tag(Model::Llama, &[], ToolChoice::auto(), false)
+            build_optional_structural_tag(Model::Llama, &[], ToolChoice::auto(), false)
                 .unwrap()
                 .is_none()
         );
         assert!(
-            maybe_get_model_structural_tag(
+            build_optional_structural_tag(
                 Model::Llama,
                 &[tool("search")],
                 ToolChoice::none(),
@@ -244,7 +246,7 @@ mod tests {
 
     #[test]
     fn qwen_35_required_uses_xml_style() {
-        let tag = get_model_structural_tag(
+        let tag = build_structural_tag(
             Model::Qwen35,
             &[tool("run_sql")],
             ToolChoice::required(),
@@ -258,7 +260,7 @@ mod tests {
 
     #[test]
     fn hy_v3_required_uses_glm_xml_arguments() {
-        let tag = get_model_structural_tag(
+        let tag = build_structural_tag(
             Model::HyV3,
             &[tool("search")],
             ToolChoice::required(),

@@ -512,7 +512,7 @@ impl StructuralTag {
         }
     }
 
-    /// Serialize this tag into the JSON string expected by vLLM engine-core.
+    /// Serialize this tag into the JSON string expected by structural-output backends.
     pub fn to_json_string(&self) -> crate::Result<String> {
         Ok(serde_json::to_string(self)?)
     }
