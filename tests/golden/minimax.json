@@ -158,6 +158,67 @@
       ]
     }
   },
+  "reasoning_required_one_tool": {
+    "type": "structural_tag",
+    "format": {
+      "type": "sequence",
+      "elements": [
+        {
+          "type": "tag",
+          "begin": "",
+          "content": {
+            "type": "any_text",
+            "excludes": []
+          },
+          "end": "</think>"
+        },
+        {
+          "type": "const_string",
+          "value": "\n\n"
+        },
+        {
+          "type": "sequence",
+          "elements": [
+            {
+              "type": "const_string",
+              "value": "\n<minimax:tool_call>\n"
+            },
+            {
+              "type": "tags_with_separator",
+              "tags": [
+                {
+                  "begin": "<invoke name=\"search\">\n",
+                  "content": {
+                    "type": "json_schema",
+                    "json_schema": {
+                      "type": "object",
+                      "properties": {
+                        "q": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "q"
+                      ]
+                    },
+                    "style": "minimax_xml"
+                  },
+                  "end": "</invoke>\n"
+                }
+              ],
+              "separator": "",
+              "at_least_one": true,
+              "stop_after_first": false
+            },
+            {
+              "type": "const_string",
+              "value": "</minimax:tool_call>"
+            }
+          ]
+        }
+      ]
+    }
+  },
   "forced_search": {
     "type": "structural_tag",
     "format": {

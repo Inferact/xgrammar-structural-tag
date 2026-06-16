@@ -81,6 +81,15 @@ fn build_cases(model: Model) -> xgrammar_structural_tag::Result<Value> {
         )?)?,
     );
     cases.insert(
+        "reasoning_required_one_tool".to_string(),
+        serde_json::to_value(get_model_structural_tag(
+            model,
+            &one_tool,
+            ToolChoice::required(),
+            true,
+        )?)?,
+    );
+    cases.insert(
         "forced_search".to_string(),
         serde_json::to_value(get_model_structural_tag(
             model,

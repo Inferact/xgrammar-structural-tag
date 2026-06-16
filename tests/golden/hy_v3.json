@@ -113,6 +113,49 @@
       ]
     }
   },
+  "reasoning_required_one_tool": {
+    "type": "structural_tag",
+    "format": {
+      "type": "sequence",
+      "elements": [
+        {
+          "type": "const_string",
+          "value": "<tool_calls>\n"
+        },
+        {
+          "type": "tags_with_separator",
+          "tags": [
+            {
+              "begin": "<tool_call>search<tool_sep>",
+              "content": {
+                "type": "json_schema",
+                "json_schema": {
+                  "type": "object",
+                  "properties": {
+                    "q": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "q"
+                  ]
+                },
+                "style": "glm_xml"
+              },
+              "end": "</tool_call>"
+            }
+          ],
+          "separator": "\n",
+          "at_least_one": true,
+          "stop_after_first": false
+        },
+        {
+          "type": "const_string",
+          "value": "\n</tool_calls>"
+        }
+      ]
+    }
+  },
   "forced_search": {
     "type": "structural_tag",
     "format": {

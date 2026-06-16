@@ -159,6 +159,76 @@
       ]
     }
   },
+  "reasoning_required_one_tool": {
+    "type": "structural_tag",
+    "format": {
+      "type": "sequence",
+      "elements": [
+        {
+          "type": "tag",
+          "begin": "",
+          "content": {
+            "type": "any_text",
+            "excludes": []
+          },
+          "end": "</think>"
+        },
+        {
+          "type": "sequence",
+          "elements": [
+            {
+              "type": "const_string",
+              "value": "<|tool_calls_section_begin|>"
+            },
+            {
+              "type": "tags_with_separator",
+              "tags": [
+                {
+                  "begin": "<|tool_call_begin|>functions.search:",
+                  "content": {
+                    "type": "sequence",
+                    "elements": [
+                      {
+                        "type": "regex",
+                        "pattern": "\\d+"
+                      },
+                      {
+                        "type": "const_string",
+                        "value": "<|tool_call_argument_begin|>"
+                      },
+                      {
+                        "type": "json_schema",
+                        "json_schema": {
+                          "type": "object",
+                          "properties": {
+                            "q": {
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "q"
+                          ]
+                        },
+                        "style": "json"
+                      }
+                    ]
+                  },
+                  "end": "<|tool_call_end|>"
+                }
+              ],
+              "separator": "",
+              "at_least_one": true,
+              "stop_after_first": false
+            },
+            {
+              "type": "const_string",
+              "value": "<|tool_calls_section_end|>"
+            }
+          ]
+        }
+      ]
+    }
+  },
   "forced_search": {
     "type": "structural_tag",
     "format": {

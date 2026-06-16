@@ -145,6 +145,55 @@
       "stop_after_first": false
     }
   },
+  "reasoning_required_one_tool": {
+    "type": "structural_tag",
+    "format": {
+      "type": "tags_with_separator",
+      "tags": [
+        {
+          "begin": "<tool_call>\n{\"name\": \"search\", \"arguments\": ",
+          "content": {
+            "type": "json_schema",
+            "json_schema": {
+              "type": "object",
+              "properties": {
+                "q": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "q"
+              ]
+            },
+            "style": "json"
+          },
+          "end": "}\n</tool_call>"
+        },
+        {
+          "begin": "<tool_call>{\"name\": \"search\", \"arguments\": ",
+          "content": {
+            "type": "json_schema",
+            "json_schema": {
+              "type": "object",
+              "properties": {
+                "q": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "q"
+              ]
+            },
+            "style": "json"
+          },
+          "end": "}</tool_call>"
+        }
+      ],
+      "separator": "",
+      "at_least_one": true,
+      "stop_after_first": false
+    }
+  },
   "forced_search": {
     "type": "structural_tag",
     "format": {

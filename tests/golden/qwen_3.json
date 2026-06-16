@@ -94,6 +94,59 @@
       "stop_after_first": false
     }
   },
+  "reasoning_required_one_tool": {
+    "type": "structural_tag",
+    "format": {
+      "type": "sequence",
+      "elements": [
+        {
+          "type": "sequence",
+          "elements": [
+            {
+              "type": "tag",
+              "begin": "",
+              "content": {
+                "type": "any_text",
+                "excludes": []
+              },
+              "end": "</think>"
+            },
+            {
+              "type": "const_string",
+              "value": "\n\n"
+            }
+          ]
+        },
+        {
+          "type": "tags_with_separator",
+          "tags": [
+            {
+              "begin": "<tool_call>\n{\"name\": \"search\", \"arguments\": ",
+              "content": {
+                "type": "json_schema",
+                "json_schema": {
+                  "type": "object",
+                  "properties": {
+                    "q": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "q"
+                  ]
+                },
+                "style": "json"
+              },
+              "end": "}\n</tool_call>"
+            }
+          ],
+          "separator": "\n",
+          "at_least_one": true,
+          "stop_after_first": false
+        }
+      ]
+    }
+  },
   "forced_search": {
     "type": "structural_tag",
     "format": {
