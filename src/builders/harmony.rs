@@ -45,6 +45,12 @@ fn builtin_tool_tags(name: &str, parameters: serde_json::Value) -> Vec<TagFormat
     ]
 }
 
+/// Build a Harmony (gpt-oss) structural tag.
+///
+/// Reference: <https://developers.openai.com/cookbook/articles/openai-harmony>
+///
+/// Used by gpt-oss. Unlike the other builders this also accepts builtin tools,
+/// and `reasoning` enables the analysis channel.
 pub(super) fn build_harmony(
     tools: &[FunctionToolParam],
     builtin_tools: &[BuiltinToolParam],

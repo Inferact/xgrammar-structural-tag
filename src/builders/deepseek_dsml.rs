@@ -22,6 +22,10 @@ fn dsml_tool_tag(
     )
 }
 
+/// Build a DeepSeek DSML structural tag, shared by V3.2 and V4.
+///
+/// Both wrap each tool call in `<｜DSML｜invoke name="…">…</｜DSML｜invoke>` with
+/// DeepSeek XML arguments, differing only in the outer function-calls markers.
 fn build_deepseek_dsml(
     tools: &[FunctionToolParam],
     choice: SimplifiedToolChoice,
@@ -81,6 +85,9 @@ fn build_deepseek_dsml(
     with_optional_reasoning(suffix, reasoning, THINK_TAG_END)
 }
 
+/// Build a DeepSeek-V3.2-style structural tag (DSML format).
+///
+/// Supports DeepSeek-V3.2.
 pub(super) fn build_deepseek_v32(
     tools: &[FunctionToolParam],
     choice: SimplifiedToolChoice,
@@ -96,6 +103,9 @@ pub(super) fn build_deepseek_v32(
     )
 }
 
+/// Build a DeepSeek-V4-style structural tag (DSML format).
+///
+/// Supports DeepSeek-V4.
 pub(super) fn build_deepseek_v4(
     tools: &[FunctionToolParam],
     choice: SimplifiedToolChoice,

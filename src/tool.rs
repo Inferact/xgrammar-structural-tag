@@ -1,4 +1,8 @@
 //! OpenAI-style tool and tool-choice DTOs.
+//!
+//! These types model the OpenAI Chat Completions tool-call shape. The
+//! Responses API uses flatter tool and tool-choice shapes; where the two
+//! differ, the wire shape is noted on the individual types.
 
 use std::collections::BTreeSet;
 
@@ -42,18 +46,30 @@ impl std::fmt::Display for BuiltinToolType {
     }
 }
 
-/// One function definition nested under a function tool.
+/// A JSON-Schema-based function definition.
+///
+/// In the Chat Completions shape this is nested under `tools[].function`; in
+/// the Responses API the same fields are flattened onto the tool object.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct FunctionDefinition {
     /// Function name emitted by the model.
+    ///
+    /// Must be `a-z`, `A-Z`, `0-9`, underscores, or dashes, with a maximum
+    /// length of 64.
     pub name: String,
-    /// Optional natural-language description.
+    /// Description of what the function does, used by the model to decide when
+    /// and how to call it.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub description: Option<String>,
-    /// JSON schema for function arguments.
+    /// JSON schema for the function arguments.
+    ///
+    /// When omitted, the generated arguments are unconstrained.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub parameters: Option<Value>,
-    /// Whether strict schema adherence is requested by the caller.
+    /// Whether strict schema adherence is requested.
+    ///
+    /// When `true`, the model follows the exact `parameters` schema. When
+    /// `false`, the arguments are treated as unconstrained.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub strict: Option<bool>,
 }
@@ -88,7 +104,10 @@ impl FunctionDefinition {
     }
 }
 
-/// One OpenAI Chat Completions function tool.
+/// One OpenAI Chat Completions function tool: `{"type": "function", "function": {...}}`.
+///
+/// The Responses API uses a flat shape with the function fields directly on
+/// the tool object.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct FunctionToolParam {
     /// Tool type, always `function`.
@@ -115,15 +134,27 @@ pub enum FunctionToolType {
     Function,
 }
 
-/// A provider/server builtin tool declaration.
+/// A provider/server builtin tool whose output should be constrained.
+///
+/// Mirrors hosted tool declarations from APIs such as OpenAI Responses or
+/// Anthropic Messages. `type` is the provider-facing builtin tool type; `name`
+/// and `parameters` are xgrammar-specific fields needed for constrained
+/// decoding.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct BuiltinToolParam {
     /// Provider-facing builtin tool type.
     pub r#type: BuiltinToolType,
-    /// Optional model-output tool name.
+    /// Tool name as it appears in model output.
+    ///
+    /// Use this when the emitted name differs from `type` — for example an
+    /// OpenAI `web_search_preview` builtin emitted as `browser.search` by a
+    /// Harmony-style model. Defaults to `type` when omitted.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
-    /// JSON schema for builtin tool arguments.
+    /// Argument schema used to constrain the builtin tool's output.
+    ///
+    /// Hosted tool APIs often omit this, but xgrammar needs it to constrain
+    /// the emitted arguments.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub parameters: Option<Value>,
 }
@@ -193,14 +224,19 @@ pub enum NamedToolChoiceType {
     Function,
 }
 
-/// Nested function reference used by named tool choice.
+/// The nested function reference used by Chat Completions named tool choice.
+///
+/// The Responses API uses a flat `{"type": "function", "name": "..."}` shape
+/// without this nested object.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct NamedToolChoiceFunction {
     /// Function name.
     pub name: String,
 }
 
-/// Named function tool choice.
+/// Forces the model to call a specific function.
+///
+/// Chat Completions shape: `{"type": "function", "function": {"name": "..."}}`.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct NamedToolChoiceParam {
     /// Choice type, always `function`.
@@ -209,12 +245,15 @@ pub struct NamedToolChoiceParam {
     pub function: NamedToolChoiceFunction,
 }
 
-/// Builtin tool choice.
+/// Forces the model to use a specific builtin tool.
+///
+/// Matching is by `type`; `name` is accepted for API compatibility but is not
+/// used for matching.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct BuiltinToolChoiceParam {
     /// Builtin tool type.
     pub r#type: BuiltinToolType,
-    /// Optional model-output tool name.
+    /// Optional model-output tool name. Builtin choices are matched by `type`.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
 }
@@ -247,7 +286,12 @@ impl AllowedToolsMode {
     }
 }
 
-/// One allowed function or builtin tool reference.
+/// A reference to a function or builtin tool allowed in this turn.
+///
+/// Chat Completions refs nest the function name
+/// (`{"type": "function", "function": {"name": "..."}}`); Responses API refs
+/// are flat (`{"type": "function", "name": "..."}`). Builtin refs are matched
+/// by `type`.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct AllowedToolRef {
     /// Tool type, usually `function` or a builtin tool type.
@@ -291,7 +335,7 @@ impl AllowedToolRef {
     }
 }
 
-/// Nested allowed-tools payload.
+/// Constrains the available tools to a predefined set (Chat Completions nested payload).
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct AllowedToolsParam {
     /// Allowed-tools mode, `auto` or `required`.
@@ -300,7 +344,7 @@ pub struct AllowedToolsParam {
     pub tools: Vec<AllowedToolRef>,
 }
 
-/// Chat Completions shaped allowed-tools choice.
+/// Chat Completions allowed-tools choice: `{"type": "allowed_tools", "allowed_tools": {...}}`.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct AllowedToolChoiceParam {
     /// Choice type, always `allowed_tools`.
@@ -309,7 +353,7 @@ pub struct AllowedToolChoiceParam {
     pub allowed_tools: AllowedToolsParam,
 }
 
-/// Flat Responses-style allowed-tools choice.
+/// Responses-style flat allowed-tools choice: `{"type": "allowed_tools", "mode": ..., "tools": [...]}`.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct FlatAllowedToolChoiceParam {
     /// Choice type, always `allowed_tools`.
@@ -320,7 +364,12 @@ pub struct FlatAllowedToolChoiceParam {
     pub tools: Vec<AllowedToolRef>,
 }
 
-/// Tool choice accepted by structural tag builders.
+/// Controls which (if any) tool the model calls.
+///
+/// `none` disables tools and generates a message, `auto` lets the model
+/// choose between a message and tool calls, and `required` forces at least one
+/// tool call. The named, builtin, and allowed-tools variants restrict the set
+/// further, down to forcing a single tool.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum ToolChoice {
@@ -406,6 +455,12 @@ pub(crate) struct NormalizedToolChoice {
 }
 
 /// Normalize public tools and tool choice into builder-ready inputs.
+///
+/// Splits tools into function and builtin lists and simplifies the public tool
+/// choice to one of `Auto`, `Required`, or `Forced`: `none` clears the tools
+/// and yields `Auto` (builders treat auto-with-no-tools as text-only); named
+/// and builtin choices filter to a single tool and yield `Forced`; allowed
+/// tools filter to the referenced set and carry the nested mode through.
 pub(crate) fn normalize_tool_choice(
     tools: &[ToolParam],
     tool_choice: ToolChoice,
@@ -527,6 +582,9 @@ fn filter_allowed_tools(
 }
 
 /// Return the JSON schema used to constrain a function's emitted arguments.
+///
+/// Missing `parameters` and non-strict functions map to `true`, so the
+/// arguments stay syntactically valid JSON but schema-unconstrained.
 pub(crate) fn function_parameters(function: &FunctionDefinition) -> Value {
     if function.strict == Some(false) {
         return json!(true);

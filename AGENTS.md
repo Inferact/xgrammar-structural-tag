@@ -32,6 +32,27 @@ When recording upstream provenance, use Cargo version build metadata such as
 `0.1.0+xgrammar.0.2.2.4d145cc`. Keep upstream commit hashes and release versions
 out of source comments and rustdoc, where they become stale quickly.
 
+## Documentation Style
+
+Rustdoc tracks the upstream Python docstrings but stays Rust-idiomatic: prose
+sentences, not Sphinx-style `Parameters`/`Returns` blocks, and links via
+intra-doc `[`Item`]` references. Port the substantive content (semantics,
+wire-shape notes, accepted-output illustrations) rather than the structure, and
+do not re-document Rust-specific redesigns (`TokenValue`, `EndBoundary`, the
+`AllowedTools`/`FlatAllowedTools` split, the typed `Model` enum) as if they were
+the Python `Union` shapes.
+
+- Per-model reference URLs and supported-model lists live on the builder
+  functions in `src/builders/`, mirroring where upstream keeps them on
+  `get_<model>_structural_tag`. Keep `Model` variant docs to a concise line.
+- `hermes` and `hy_v3` have no upstream docstring; label them as local
+  extensions.
+- Migrate worthwhile examples as compiling doctests when they use the public
+  API; keep accepted-output illustrations as ```text``` blocks so they are not
+  run.
+- Skip deprecated upstream surface absent here (`force_reasoning`,
+  `QwenXMLParameterFormat`, `StructuralTagItem`, the string registry).
+
 ## Syncing With Upstream
 
 1. Identify the upstream xgrammar release/tag/commit to sync against.
@@ -45,16 +66,18 @@ out of source comments and rustdoc, where they become stale quickly.
 4. Update `src/model.rs`, `src/builders.rs`, and the relevant files under
    `src/builders/` when upstream adds, removes, or changes active model keys.
    Keep one model family/style per builder file where practical.
-5. Update `scripts/generate_python_golden.py` when the upstream model list or
+5. Align rustdoc with the upstream docstrings touched by the sync, following
+   the Documentation Style above.
+6. Update `scripts/generate_python_golden.py` when the upstream model list or
    golden case matrix changes. This script depends on an installed Python
    xgrammar package and covers upstream xgrammar models only.
-6. Regenerate Rust fixtures with:
+7. Regenerate Rust fixtures with:
 
    ```bash
    cargo run --example write_golden -- --write
    ```
 
-7. When Python xgrammar for the target upstream version is available, compare
+8. When Python xgrammar for the target upstream version is available, compare
    upstream fixtures with:
 
    ```bash
@@ -62,9 +85,9 @@ out of source comments and rustdoc, where they become stale quickly.
    ```
 
    Reconcile intentional local extensions separately.
-8. Update `Cargo.toml` package version build metadata to record the upstream
+9. Update `Cargo.toml` package version build metadata to record the upstream
    source version used for the templates.
-9. Run the full local validation set:
+10. Run the full local validation set:
 
    ```bash
    cargo fmt --all --check

@@ -6,6 +6,11 @@ use super::{
     with_optional_reasoning,
 };
 
+/// Build a DeepSeek-R1-style structural tag.
+///
+/// Reference: <https://huggingface.co/deepseek-ai/DeepSeek-R1/blob/main/tokenizer_config.json>
+///
+/// Supports DeepSeek-R1 and DeepSeek-R1-0528.
 pub(super) fn build_deepseek_r1(
     tools: &[FunctionToolParam],
     choice: SimplifiedToolChoice,

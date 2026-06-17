@@ -6,6 +6,12 @@ use super::{
     with_optional_reasoning,
 };
 
+/// Build a DeepSeek-V3.1-style structural tag.
+///
+/// Reference: <https://huggingface.co/deepseek-ai/DeepSeek-V3.1/blob/main/tokenizer_config.json>
+///
+/// Supports DeepSeek-V3.1 and DeepSeek-V3.2-Exp. (DeepSeek-V3.2 itself uses the
+/// DSML format built by `build_deepseek_v32`.)
 pub(super) fn build_deepseek_v31(
     tools: &[FunctionToolParam],
     choice: SimplifiedToolChoice,

@@ -5,6 +5,9 @@ use super::{
     schema, structural, styled_schema, tag, tools_with_separator, triggered_with_excludes,
 };
 
+/// Build a MiniMax-style structural tag.
+///
+/// Supports MiniMax-M2.5 and MiniMax-M2.7.
 pub(super) fn build_minimax(
     tools: &[FunctionToolParam],
     choice: SimplifiedToolChoice,

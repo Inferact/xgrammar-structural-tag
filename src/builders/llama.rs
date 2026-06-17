@@ -3,6 +3,12 @@ use crate::tool::{FunctionToolParam, SimplifiedToolChoice};
 
 use super::{json_schema, schema, structural, tag, tools_with_separator, triggered_with_excludes};
 
+/// Build a Llama-style structural tag.
+///
+/// Reference: <https://www.llama.com/docs/model-cards-and-prompt-formats/llama3_1/>
+///
+/// Supports Meta-Llama-3, Llama-3.1, and Llama-3.2. This format has no
+/// reasoning part, so `reasoning` is ignored.
 pub(super) fn build_llama(
     tools: &[FunctionToolParam],
     choice: SimplifiedToolChoice,

@@ -6,6 +6,12 @@ use super::{
     with_optional_reasoning,
 };
 
+/// Build a GLM-4.7 / GLM-5 structural tag.
+///
+/// The GLM tool-call format uses XML-like tags:
+/// `<tool_call>name<arg_key>key</arg_key><arg_value>value</arg_value></tool_call>`.
+///
+/// Supports GLM-5 and GLM-4.7.
 pub(super) fn build_glm_47(
     tools: &[FunctionToolParam],
     choice: SimplifiedToolChoice,

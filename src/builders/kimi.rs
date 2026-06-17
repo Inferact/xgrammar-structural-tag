@@ -22,6 +22,12 @@ fn kimi_tool_tag(tool: &FunctionToolParam) -> TagFormat {
     )
 }
 
+/// Build a Kimi-K2-style structural tag.
+///
+/// Reference: <https://huggingface.co/moonshotai/Kimi-K2-Instruct/blob/main/docs/tool_call_guidance.md>
+///
+/// Supports Kimi-K2 and Kimi-K2.5. When `reasoning` is `false`, the reasoning
+/// prefix is dropped and only the tool/text part is constrained.
 pub(super) fn build_kimi(
     tools: &[FunctionToolParam],
     choice: SimplifiedToolChoice,

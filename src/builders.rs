@@ -31,7 +31,36 @@ use minimax::build_minimax;
 use qwen_3::build_qwen_3;
 use qwen_35::build_qwen_35;
 
-/// Build a structural tag for a supported model.
+/// Build a structural tag for a model's reasoning and tool-call output format.
+///
+/// Use this when a serving engine needs a structural tag that matches a
+/// model's tool-call syntax. The API resembles an OpenAI Chat Completions
+/// request: pass the model template, the available `tools`, and a `tool_choice`
+/// policy.
+///
+/// `tool_choice` controls whether the model may or must call tools:
+///
+/// - [`ToolChoice::auto`] lets the model choose between text and tool calls.
+/// - [`ToolChoice::none`] disables all tools.
+/// - [`ToolChoice::required`] requires at least one available tool.
+/// - [`ToolChoice::function`] forces one named function tool.
+/// - [`ToolChoice::builtin`] forces one builtin tool, matched by type.
+/// - [`ToolChoice::allowed_tools`] restricts the tools before applying its mode.
+///
+/// `reasoning` toggles the reasoning part for models that support both modes
+/// (e.g. Qwen 3.6, DeepSeek V4). It has no effect on models without a reasoning
+/// part, and for reasoning-only models `false` keeps the reasoning section with
+/// empty content.
+///
+/// A tool whose `parameters` are omitted, or a function tool with
+/// `strict = false`, produces unconstrained-JSON arguments.
+///
+/// # Errors
+///
+/// Returns an [`Error`](crate::Error) when the tools or tool choice are
+/// inconsistent — for example a named tool is missing, a builtin choice does
+/// not match exactly one tool, `required` leaves no tools, or a forced choice
+/// does not resolve to exactly one tool.
 #[doc(alias = "get_model_structural_tag")]
 pub fn build_structural_tag(
     model: Model,

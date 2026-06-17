@@ -19,6 +19,13 @@ fn qwen_35_tool_tag(tool: &FunctionToolParam) -> TagFormat {
     )
 }
 
+/// Build a Qwen XML tool-call structural tag.
+///
+/// Reference: <https://huggingface.co/Qwen/Qwen3-Coder-480B-A35B-Instruct-FP8/blob/main/chat_template.jinja>
+///
+/// Backs the `qwen_3_5` and `qwen_3_coder` model keys. Supports Qwen3.5,
+/// Qwen3.6, Qwen3-Coder, and Qwen3-Coder-Next. When `reasoning` is `true`, a
+/// `</think>` reasoning prefix precedes the tool/text part.
 pub(super) fn build_qwen_35(
     tools: &[FunctionToolParam],
     choice: SimplifiedToolChoice,

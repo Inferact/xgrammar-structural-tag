@@ -5,6 +5,11 @@ use super::{
     schema, structural, styled_schema, tag, tools_with_separator, triggered_with_excludes,
 };
 
+/// Build an HY3-style structural tag.
+///
+/// Local extension not present in upstream xgrammar. Uses GLM-style XML
+/// arguments wrapped in `<tool_calls>` / `<tool_call>` / `<tool_sep>` markers,
+/// with no reasoning part.
 pub(super) fn build_hy_v3(
     tools: &[FunctionToolParam],
     choice: SimplifiedToolChoice,

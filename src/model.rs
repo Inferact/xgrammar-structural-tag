@@ -29,7 +29,7 @@ pub enum Model {
     Kimi,
     /// DeepSeek R1 tool calling.
     DeepSeekR1,
-    /// DeepSeek V3.1 tool calling.
+    /// DeepSeek V3.1 / V3.2-Exp tool calling.
     DeepSeekV31,
     /// Qwen 3.5 / Qwen 3 Coder XML tool calling.
     Qwen35,

@@ -3,6 +3,11 @@ use crate::tool::{FunctionToolParam, SimplifiedToolChoice};
 
 use super::{json_schema, schema, structural, tag, tools_with_separator, triggered_with_excludes};
 
+/// Build a Qwen3-style structural tag.
+///
+/// Reference: <https://qwen.readthedocs.io/en/latest/framework/function_call.html>
+///
+/// Supports Qwen3 and Qwen3-Next.
 pub(super) fn build_qwen_3(
     tools: &[FunctionToolParam],
     choice: SimplifiedToolChoice,

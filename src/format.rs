@@ -31,20 +31,23 @@ impl From<String> for TokenValue {
     }
 }
 
-/// JSON schema serialization style used inside [`JsonSchemaFormat`].
+/// How the schema-constrained content of a [`JsonSchemaFormat`] is rendered.
+///
+/// Most models emit JSON arguments, but several tool-call syntaxes wrap the
+/// arguments in model-specific XML instead.
 #[derive(Debug, Clone, Copy, Default, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "snake_case")]
 pub enum JsonSchemaStyle {
     /// Standard JSON object syntax.
     #[default]
     Json,
-    /// Qwen XML parameters: `<parameter=name>value</parameter>`.
+    /// Qwen XML: `<parameter=key>value</parameter>`.
     QwenXml,
-    /// MiniMax XML parameters: `<parameter name="name">value</parameter>`.
+    /// MiniMax XML: `<parameter name="key">value</parameter>`.
     MinimaxXml,
-    /// DeepSeek DSML parameters.
+    /// DeepSeek DSML: `<…parameter name="key" string="true|false">value</…parameter>`.
     DeepseekXml,
-    /// GLM/HY3 key-value XML parameters.
+    /// GLM key-value XML: `<arg_key>key</arg_key><arg_value>value</arg_value>`.
     GlmXml,
 }
 
@@ -73,7 +76,7 @@ pub struct AnyTextFormat {
     pub excludes: Vec<String>,
 }
 
-/// A format that matches a single token.
+/// A format that matches a single token, by ID or string representation.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct TokenFormat {
     /// Token ID or token string.
@@ -218,7 +221,27 @@ impl From<TokenBoundary> for EndBoundary {
     }
 }
 
-/// A format that matches `begin + content + end`.
+/// A format that matches `begin`, then `content`, then `end`.
+///
+/// The end boundary may be a single string, one of several strings (any of
+/// which closes the tag), or a token; see [`EndBoundary`].
+///
+/// # Examples
+///
+/// ```
+/// use xgrammar_structural_tag::format::{Format, TagFormat};
+///
+/// // A single end string.
+/// let tag = TagFormat::new("<response>", Format::any_text(), "</response>");
+///
+/// // Either end string closes the tag.
+/// let tag = TagFormat::new(
+///     "<response>",
+///     Format::any_text(),
+///     vec!["</response>", "</answer>"],
+/// );
+/// # let _ = tag;
+/// ```
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct TagFormat {
     /// Begin boundary.
@@ -244,7 +267,23 @@ impl TagFormat {
     }
 }
 
-/// A format that dispatches to tags after seeing trigger strings.
+/// A format that allows free text until a trigger string appears, then
+/// dispatches to the matching tag; after the tag's end boundary it resumes
+/// free text until the next trigger.
+///
+/// Each tag must be matched by exactly one trigger, where the trigger is a
+/// prefix of the tag's begin string. Tags must use string begin boundaries;
+/// for token-level dispatch use [`TokenTriggeredTagsFormat`].
+///
+/// # Examples
+///
+/// With triggers `["<function="]` and one tag per function, accepted outputs
+/// include:
+///
+/// ```text
+/// <function=func1>{"name": "John", "age": 30}</function>
+/// text<function=func1>{...}</function>more<function=func2>{...}</function>tail
+/// ```
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct TriggeredTagsFormat {
     /// Trigger strings.
@@ -263,6 +302,9 @@ pub struct TriggeredTagsFormat {
 }
 
 /// A token-level triggered tag dispatcher.
+///
+/// Like [`TriggeredTagsFormat`] but dispatches on trigger token IDs or strings
+/// instead of free text. Tags must use token begin boundaries ([`TokenBoundary`]).
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct TokenTriggeredTagsFormat {
     /// Trigger token IDs or strings.
@@ -280,7 +322,18 @@ pub struct TokenTriggeredTagsFormat {
     pub stop_after_first: bool,
 }
 
-/// A format that matches tags separated by a fixed separator.
+/// A format that matches zero, one, or more tags separated by a fixed
+/// separator, with no other text allowed.
+///
+/// # Examples
+///
+/// With two function tags and separator `","`, the empty string is accepted,
+/// as well as:
+///
+/// ```text
+/// <function=func1>{...}</function>
+/// <function=func1>{...}</function>,<function=func2>{...}</function>
+/// ```
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct TagsWithSeparatorFormat {
     /// Candidate tag formats.
@@ -295,28 +348,28 @@ pub struct TagsWithSeparatorFormat {
     pub stop_after_first: bool,
 }
 
-/// Optional child format.
+/// A format that matches its child 0 or 1 time (EBNF optional).
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct OptionalFormat {
     /// Child format.
     pub content: Box<Format>,
 }
 
-/// One-or-more child format.
+/// A format that matches its child 1 or more times (EBNF plus).
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct PlusFormat {
     /// Child format.
     pub content: Box<Format>,
 }
 
-/// Zero-or-more child format.
+/// A format that matches its child 0 or more times (EBNF star).
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct StarFormat {
     /// Child format.
     pub content: Box<Format>,
 }
 
-/// Repeated child format.
+/// A format that matches its child between `min` and `max` times, inclusive.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct RepeatFormat {
     /// Minimum number of repetitions.
@@ -328,6 +381,14 @@ pub struct RepeatFormat {
 }
 
 /// A string-pattern dispatcher used inside free text.
+///
+/// The model may emit any free text, but once one of the `rules` patterns
+/// appears, the following output must match that rule's format. When `loop`
+/// is set, matching continues afterwards, alternating free text and pattern
+/// detection; otherwise the format ends after the first dispatched rule.
+/// `excludes` lists strings that may not appear in the free-text regions; it
+/// can also terminate the format, e.g. wrapping the dispatch in a tag with an
+/// empty end boundary.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct DispatchFormat {
     /// `(pattern, format)` rules.
@@ -341,6 +402,11 @@ pub struct DispatchFormat {
 }
 
 /// A token-pattern dispatcher used inside free token regions.
+///
+/// The token-level analogue of [`DispatchFormat`]: free tokens are allowed
+/// until one of the `rules` trigger tokens appears, after which the output
+/// must match that rule's format. `loop` and `exclude_tokens` behave like
+/// their string counterparts on [`DispatchFormat`].
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct TokenDispatchFormat {
     /// `(token, format)` rules.
@@ -490,6 +556,9 @@ impl Format {
 }
 
 /// Top-level structural tag object accepted by xgrammar.
+///
+/// Corresponds to `{"type": "structural_tag", "format": {...}}` in the
+/// `response_format` API field.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct StructuralTag {
     r#type: StructuralTagKind,

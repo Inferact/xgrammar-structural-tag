@@ -3,6 +3,11 @@ use crate::tool::{FunctionToolParam, SimplifiedToolChoice};
 
 use super::{json_schema, schema, structural, tag, tools_with_separator};
 
+/// Build a Hermes-style structural tag.
+///
+/// Local extension not present in upstream xgrammar. Hermes emits tool calls as
+/// `<tool_call>{"name": ..., "arguments": {...}}</tool_call>`, and the format
+/// has no reasoning part.
 pub(super) fn build_hermes(
     tools: &[FunctionToolParam],
     choice: SimplifiedToolChoice,
