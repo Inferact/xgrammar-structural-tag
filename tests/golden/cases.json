@@ -1,0 +1,139 @@
+{
+  "models": {
+    "upstream": [
+      "llama",
+      "kimi",
+      "deepseek_r1",
+      "deepseek_v3_1",
+      "qwen_3_5",
+      "qwen_3_coder",
+      "qwen_3",
+      "harmony",
+      "deepseek_v3_2",
+      "minimax",
+      "glm_4_7",
+      "deepseek_v4"
+    ],
+    "rust_only": ["hermes", "hy_v3"]
+  },
+  "tools": {
+    "search": {
+      "type": "function",
+      "function": {
+        "name": "search",
+        "parameters": {
+          "type": "object",
+          "properties": { "q": { "type": "string" } },
+          "required": ["q"]
+        }
+      }
+    },
+    "alt": {
+      "type": "function",
+      "function": {
+        "name": "alt",
+        "parameters": {
+          "type": "object",
+          "properties": { "q": { "type": "string" } },
+          "required": ["q"]
+        }
+      }
+    },
+    "loose": {
+      "type": "function",
+      "function": {
+        "name": "loose",
+        "parameters": {
+          "type": "object",
+          "properties": { "q": { "type": "string" } },
+          "required": ["q"]
+        },
+        "strict": false
+      }
+    },
+    "missing": {
+      "type": "function",
+      "function": { "name": "missing" }
+    },
+    "web_search_preview": {
+      "type": "web_search_preview",
+      "name": "browser.search",
+      "parameters": {
+        "type": "object",
+        "properties": { "query": { "type": "string" } },
+        "required": ["query"]
+      }
+    }
+  },
+  "cases": [
+    {
+      "name": "auto_no_tools",
+      "tools": [],
+      "tool_choice": "auto",
+      "reasoning": false
+    },
+    {
+      "name": "auto_one_tool",
+      "tools": ["search"],
+      "tool_choice": "auto",
+      "reasoning": false
+    },
+    {
+      "name": "required_two_tools",
+      "tools": ["search", "alt"],
+      "tool_choice": "required",
+      "reasoning": false
+    },
+    {
+      "name": "reasoning_required_one_tool",
+      "tools": ["search"],
+      "tool_choice": "required",
+      "reasoning": true
+    },
+    {
+      "name": "forced_search",
+      "tools": ["search", "alt"],
+      "tool_choice": {
+        "type": "function",
+        "function": { "name": "search" }
+      },
+      "reasoning": false
+    },
+    {
+      "name": "allowed_required_alt",
+      "tools": ["search", "alt"],
+      "tool_choice": {
+        "type": "allowed_tools",
+        "allowed_tools": {
+          "mode": "required",
+          "tools": [
+            {
+              "type": "function",
+              "function": { "name": "alt" }
+            }
+          ]
+        }
+      },
+      "reasoning": false
+    },
+    {
+      "name": "strict_false",
+      "tools": ["loose"],
+      "tool_choice": "auto",
+      "reasoning": false
+    },
+    {
+      "name": "missing_parameters",
+      "tools": ["missing"],
+      "tool_choice": "auto",
+      "reasoning": false
+    },
+    {
+      "name": "builtin_auto",
+      "models": ["harmony"],
+      "tools": ["web_search_preview"],
+      "tool_choice": "auto",
+      "reasoning": false
+    }
+  ]
+}

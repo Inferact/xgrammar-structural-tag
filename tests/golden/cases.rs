@@ -1,142 +1,90 @@
 #![allow(missing_docs)]
 
-use serde_json::{Map, Value, json};
-use xgrammar_structural_tag::{
-    AllowedToolRef, AllowedToolsMode, BuiltinToolParam, FunctionDefinition, FunctionToolParam,
-    Model, ToolChoice, ToolParam, build_structural_tag,
-};
+use std::{collections::BTreeMap, sync::OnceLock};
 
-fn function_tool(name: &str) -> ToolParam {
-    ToolParam::Function(FunctionToolParam::new(
-        FunctionDefinition::new(name).with_parameters(json!({
-            "type": "object",
-            "properties": { "q": { "type": "string" } },
-            "required": ["q"]
-        })),
-    ))
+use serde::Deserialize;
+use serde_json::{Map, Value};
+use xgrammar_structural_tag::{Model, ToolChoice, ToolParam, build_structural_tag};
+
+#[derive(Deserialize)]
+struct RawCaseSpec {
+    tools: BTreeMap<String, Value>,
+    cases: Vec<RawCase>,
 }
 
-fn strict_false_tool(name: &str) -> ToolParam {
-    ToolParam::Function(FunctionToolParam::new(
-        FunctionDefinition::new(name)
-            .with_parameters(json!({
-                "type": "object",
-                "properties": { "q": { "type": "string" } },
-                "required": ["q"]
-            }))
-            .with_strict(false),
-    ))
+#[derive(Deserialize)]
+struct RawCase {
+    name: String,
+    #[serde(default)]
+    models: Vec<String>,
+    tools: Vec<String>,
+    tool_choice: Value,
+    reasoning: bool,
 }
 
-fn missing_parameters_tool(name: &str) -> ToolParam {
-    ToolParam::Function(FunctionToolParam::new(FunctionDefinition::new(name)))
+struct PreparedSpec {
+    cases: Vec<PreparedCase>,
 }
 
-fn builtin_tool() -> ToolParam {
-    ToolParam::Builtin(
-        BuiltinToolParam::new("web_search_preview")
-            .with_name("browser.search")
-            .with_parameters(json!({
-                "type": "object",
-                "properties": { "query": { "type": "string" } },
-                "required": ["query"]
-            })),
-    )
+struct PreparedCase {
+    name: String,
+    models: Vec<String>,
+    tools: Vec<ToolParam>,
+    tool_choice: ToolChoice,
+    reasoning: bool,
+}
+
+fn spec() -> &'static PreparedSpec {
+    static SPEC: OnceLock<PreparedSpec> = OnceLock::new();
+    SPEC.get_or_init(|| {
+        let raw: RawCaseSpec =
+            serde_json::from_str(include_str!("cases.json")).expect("golden case spec is valid");
+        let cases = raw
+            .cases
+            .into_iter()
+            .map(|case| {
+                let tools = case
+                    .tools
+                    .into_iter()
+                    .map(|name| {
+                        let value = raw.tools.get(&name).unwrap_or_else(|| {
+                            panic!("golden case references unknown tool '{name}'")
+                        });
+                        serde_json::from_value::<ToolParam>(value.clone())
+                            .expect("golden tool fixture deserializes")
+                    })
+                    .collect();
+                let tool_choice = serde_json::from_value::<ToolChoice>(case.tool_choice)
+                    .expect("golden tool choice fixture deserializes");
+                PreparedCase {
+                    name: case.name,
+                    models: case.models,
+                    tools,
+                    tool_choice,
+                    reasoning: case.reasoning,
+                }
+            })
+            .collect();
+        PreparedSpec { cases }
+    })
 }
 
 pub fn build_cases(model: Model) -> xgrammar_structural_tag::Result<Value> {
-    let no_tools: Vec<ToolParam> = vec![];
-    let one_tool = vec![function_tool("search")];
-    let two_tools = vec![function_tool("search"), function_tool("alt")];
-    let strict_false = vec![strict_false_tool("loose")];
-    let missing_params = vec![missing_parameters_tool("missing")];
-
+    let spec = spec();
     let mut cases = Map::new();
-    cases.insert(
-        "auto_no_tools".to_string(),
-        serde_json::to_value(build_structural_tag(
-            model,
-            &no_tools,
-            ToolChoice::auto(),
-            false,
-        )?)?,
-    );
-    cases.insert(
-        "auto_one_tool".to_string(),
-        serde_json::to_value(build_structural_tag(
-            model,
-            &one_tool,
-            ToolChoice::auto(),
-            false,
-        )?)?,
-    );
-    cases.insert(
-        "required_two_tools".to_string(),
-        serde_json::to_value(build_structural_tag(
-            model,
-            &two_tools,
-            ToolChoice::required(),
-            false,
-        )?)?,
-    );
-    cases.insert(
-        "reasoning_required_one_tool".to_string(),
-        serde_json::to_value(build_structural_tag(
-            model,
-            &one_tool,
-            ToolChoice::required(),
-            true,
-        )?)?,
-    );
-    cases.insert(
-        "forced_search".to_string(),
-        serde_json::to_value(build_structural_tag(
-            model,
-            &two_tools,
-            ToolChoice::function("search"),
-            false,
-        )?)?,
-    );
-    cases.insert(
-        "allowed_required_alt".to_string(),
-        serde_json::to_value(build_structural_tag(
-            model,
-            &two_tools,
-            ToolChoice::allowed_tools(
-                AllowedToolsMode::Required,
-                vec![AllowedToolRef::function("alt")],
-            ),
-            false,
-        )?)?,
-    );
-    cases.insert(
-        "strict_false".to_string(),
-        serde_json::to_value(build_structural_tag(
-            model,
-            &strict_false,
-            ToolChoice::auto(),
-            false,
-        )?)?,
-    );
-    cases.insert(
-        "missing_parameters".to_string(),
-        serde_json::to_value(build_structural_tag(
-            model,
-            &missing_params,
-            ToolChoice::auto(),
-            false,
-        )?)?,
-    );
 
-    if model == Model::Harmony {
-        let builtin = vec![builtin_tool()];
+    for case in &spec.cases {
+        if !case.models.is_empty() && !case.models.iter().any(|name| name == model.as_str()) {
+            continue;
+        }
+
         cases.insert(
-            "builtin_auto".to_string(),
+            case.name.clone(),
             serde_json::to_value(build_structural_tag(
                 model,
-                &builtin,
-                ToolChoice::auto(),
-                false,
+                &case.tools,
+                case.tool_choice.clone(),
+                case.reasoning,
             )?)?,
         );
     }

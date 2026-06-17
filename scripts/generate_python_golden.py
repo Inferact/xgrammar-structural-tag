@@ -16,97 +16,60 @@ from typing import Any
 from xgrammar import get_model_structural_tag
 
 
-MODELS = [
-    "llama",
-    "kimi",
-    "deepseek_r1",
-    "deepseek_v3_1",
-    "qwen_3_5",
-    "qwen_3_coder",
-    "qwen_3",
-    "harmony",
-    "deepseek_v3_2",
-    "minimax",
-    "glm_4_7",
-    "deepseek_v4",
-]
+SPEC_PATH = Path(__file__).resolve().parents[1] / "tests" / "golden" / "cases.json"
 
 
-def function_tool(name: str) -> dict[str, Any]:
-    return {
-        "type": "function",
-        "function": {
-            "name": name,
-            "parameters": {
-                "type": "object",
-                "properties": {"q": {"type": "string"}},
-                "required": ["q"],
-            },
-        },
-    }
+def load_spec() -> dict[str, Any]:
+    return json.loads(SPEC_PATH.read_text(encoding="utf-8"))
 
 
-def strict_false_tool(name: str) -> dict[str, Any]:
-    tool = function_tool(name)
-    tool["function"]["strict"] = False
-    return tool
+SPEC = load_spec()
+MODELS = SPEC["models"]["upstream"]
 
 
-def missing_parameters_tool(name: str) -> dict[str, Any]:
-    return {"type": "function", "function": {"name": name}}
+def prepare_cases() -> list[dict[str, Any]]:
+    cases = []
+    for case in SPEC["cases"]:
+        cases.append(
+            {
+                "name": case["name"],
+                "models": case.get("models", []),
+                "tools": [SPEC["tools"][name] for name in case["tools"]],
+                "tool_choice": case["tool_choice"],
+                "reasoning": case["reasoning"],
+            }
+        )
+    return cases
 
 
-def builtin_tool() -> dict[str, Any]:
-    return {
-        "type": "web_search_preview",
-        "name": "browser.search",
-        "parameters": {
-            "type": "object",
-            "properties": {"query": {"type": "string"}},
-            "required": ["query"],
-        },
-    }
+CASES = prepare_cases()
 
 
-def dump_tag(model: str, tools: list[dict[str, Any]], tool_choice: Any) -> dict[str, Any]:
+def dump_tag(
+    model: str,
+    tools: list[dict[str, Any]],
+    tool_choice: Any,
+    reasoning: bool,
+) -> dict[str, Any]:
     return get_model_structural_tag(
         model,
         tools=tools,
         tool_choice=tool_choice,
-        reasoning=False,
+        reasoning=reasoning,
     ).model_dump()
 
 
 def build_cases(model: str) -> dict[str, Any]:
-    one_tool = [function_tool("search")]
-    two_tools = [function_tool("search"), function_tool("alt")]
-    cases = {
-        "auto_no_tools": dump_tag(model, [], "auto"),
-        "auto_one_tool": dump_tag(model, one_tool, "auto"),
-        "required_two_tools": dump_tag(model, two_tools, "required"),
-        "forced_search": dump_tag(
+    cases = {}
+    for case in CASES:
+        if case["models"] and model not in case["models"]:
+            continue
+        cases[case["name"]] = dump_tag(
             model,
-            two_tools,
-            {"type": "function", "function": {"name": "search"}},
-        ),
-        "allowed_required_alt": dump_tag(
-            model,
-            two_tools,
-            {
-                "type": "allowed_tools",
-                "allowed_tools": {
-                    "mode": "required",
-                    "tools": [
-                        {"type": "function", "function": {"name": "alt"}},
-                    ],
-                },
-            },
-        ),
-        "strict_false": dump_tag(model, [strict_false_tool("loose")], "auto"),
-        "missing_parameters": dump_tag(model, [missing_parameters_tool("missing")], "auto"),
-    }
-    if model == "harmony":
-        cases["builtin_auto"] = dump_tag(model, [builtin_tool()], "auto")
+            case["tools"],
+            case["tool_choice"],
+            case["reasoning"],
+        )
     return cases
 
 
@@ -130,4 +93,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-
