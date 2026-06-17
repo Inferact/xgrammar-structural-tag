@@ -80,3 +80,9 @@ python3 scripts/generate_python_golden.py
 The crate version build metadata records the xgrammar source version used for
 the structural tag templates. The crate also includes extra model templates for
 `hermes` and `hy_v3`.
+
+## Credits
+
+This crate ports the `structural_tag` builders and schema shapes from
+[XGrammar](https://github.com/mlc-ai/xgrammar) (Apache-2.0), with a more typed
+Rust API and additional local model templates. See [`NOTICE`](NOTICE).
