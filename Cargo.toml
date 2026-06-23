@@ -2,10 +2,14 @@
 name = "xgrammar-structural-tag"
 version = "0.1.0+xgrammar.0.2.2.4d145cc"
 edition = "2024"
+rust-version = "1.85"
+authors = ["Bugen Zhao <i@bugenzhao.com>"]
 license = "Apache-2.0"
 description = "Rust builders for xgrammar structural_tag tool-calling constraints"
 repository = "https://github.com/Inferact/xgrammar-structural-tag"
-publish = false
+documentation = "https://docs.rs/xgrammar-structural-tag"
+keywords = ["xgrammar", "llm", "tool-calling", "json-schema", "structured-output"]
+publish = true
 
 [dependencies]
 auto_impl = "1.3"

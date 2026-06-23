@@ -32,25 +32,28 @@ use xgrammar_structural_tag::{
     build_structural_tag,
 };
 
-let tools = vec![ToolParam::Function(FunctionToolParam::new(
-    FunctionDefinition::new("get_weather").with_parameters(json!({
-        "type": "object",
-        "properties": {
-            "city": { "type": "string" }
-        },
-        "required": ["city"]
-    })),
-))];
+fn main() -> xgrammar_structural_tag::Result<()> {
+    let tools = vec![ToolParam::Function(FunctionToolParam::new(
+        FunctionDefinition::new("get_weather").with_parameters(json!({
+            "type": "object",
+            "properties": {
+                "city": { "type": "string" }
+            },
+            "required": ["city"]
+        })),
+    ))];
 
-let tag = build_structural_tag(
-    Model::Qwen35,
-    &tools,
-    ToolChoice::required(),
-    true,
-)?;
+    let tag = build_structural_tag(
+        Model::Qwen35,
+        &tools,
+        ToolChoice::required(),
+        true,
+    )?;
 
-let structural_tag_json = tag.to_json_string()?;
-# Ok::<(), xgrammar_structural_tag::Error>(())
+    let structural_tag_json = tag.to_json_string()?;
+    assert!(structural_tag_json.contains("structural_tag"));
+    Ok(())
+}
 ```
 
 `Model` is the built-in catalog. Callers can also pass a concrete
