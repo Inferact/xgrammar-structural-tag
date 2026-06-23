@@ -1,3 +1,4 @@
+use crate::Result;
 use crate::format::{Format, JsonSchemaStyle, StructuralTag};
 use crate::tool::{BuilderToolChoice, FunctionToolParam};
 
@@ -11,8 +12,8 @@ use super::{
 pub struct HyV3Builder;
 
 impl StructuralTagBuilder for HyV3Builder {
-    fn build(&self, ctx: StructuralTagContext<'_>) -> StructuralTag {
-        build_hy_v3(ctx.function_tools, ctx.tool_choice)
+    fn build(&self, ctx: StructuralTagContext<'_>) -> Result<StructuralTag> {
+        Ok(build_hy_v3(ctx.function_tools, ctx.tool_choice))
     }
 }
 

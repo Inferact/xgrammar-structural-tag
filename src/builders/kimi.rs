@@ -1,3 +1,4 @@
+use crate::Result;
 use crate::format::{Format, StructuralTag, TagFormat};
 use crate::tool::{BuilderToolChoice, FunctionToolParam};
 
@@ -11,8 +12,12 @@ use super::{
 pub struct KimiBuilder;
 
 impl StructuralTagBuilder for KimiBuilder {
-    fn build(&self, ctx: StructuralTagContext<'_>) -> StructuralTag {
-        build_kimi(ctx.function_tools, ctx.tool_choice, ctx.reasoning)
+    fn build(&self, ctx: StructuralTagContext<'_>) -> Result<StructuralTag> {
+        Ok(build_kimi(
+            ctx.function_tools,
+            ctx.tool_choice,
+            ctx.reasoning,
+        ))
     }
 }
 

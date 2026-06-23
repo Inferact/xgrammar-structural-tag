@@ -58,7 +58,7 @@ pub struct StructuralTagContext<'a> {
 #[auto_impl::auto_impl(&, Box)]
 pub trait StructuralTagBuilder {
     /// Build a structural tag from normalized tools and request flags.
-    fn build(&self, ctx: StructuralTagContext<'_>) -> StructuralTag;
+    fn build(&self, ctx: StructuralTagContext<'_>) -> Result<StructuralTag>;
 }
 
 /// Build a structural tag for a model's reasoning and tool-call output format.
@@ -99,12 +99,12 @@ pub fn build_structural_tag(
     reasoning: bool,
 ) -> Result<StructuralTag> {
     let normalized = normalize_tool_choice(tools, tool_choice)?;
-    Ok(builder.build(StructuralTagContext {
+    builder.build(StructuralTagContext {
         function_tools: &normalized.function_tools,
         builtin_tools: &normalized.builtin_tools,
         tool_choice: normalized.choice,
         reasoning,
-    }))
+    })
 }
 
 /// Build a structural tag only when tool constraints should be sent downstream.
@@ -310,7 +310,7 @@ mod tests {
     struct CustomXmlBuilder;
 
     impl StructuralTagBuilder for CustomXmlBuilder {
-        fn build(&self, ctx: StructuralTagContext<'_>) -> StructuralTag {
+        fn build(&self, ctx: StructuralTagContext<'_>) -> Result<StructuralTag> {
             let tags = ctx
                 .function_tools
                 .iter()
@@ -322,11 +322,11 @@ mod tests {
                     )
                 })
                 .collect();
-            structural(tools_with_separator(
+            Ok(structural(tools_with_separator(
                 tags,
                 "",
                 ctx.tool_choice.requires_tool_call(),
-            ))
+            )))
         }
     }
 
@@ -346,6 +346,26 @@ mod tests {
             "<call name=\"search\">"
         );
         assert_eq!(value["format"]["tags"].as_array().unwrap().len(), 1);
+    }
+
+    struct FailingBuilder;
+
+    impl StructuralTagBuilder for FailingBuilder {
+        fn build(&self, _ctx: StructuralTagContext<'_>) -> Result<StructuralTag> {
+            Err(crate::Error::Custom("unsupported template".into()))
+        }
+    }
+
+    #[test]
+    fn custom_builder_error_is_propagated() {
+        let error = build_structural_tag(
+            FailingBuilder,
+            &[tool("search")],
+            ToolChoice::required(),
+            false,
+        )
+        .unwrap_err();
+        assert_eq!(error.to_string(), "unsupported template");
     }
 
     #[test]

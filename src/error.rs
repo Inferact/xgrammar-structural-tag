@@ -1,5 +1,7 @@
 //! Error types returned by structural tag builders.
 
+use std::error::Error as StdError;
+
 use thiserror::Error as ThisError;
 
 /// Result alias used by this crate.
@@ -45,4 +47,8 @@ pub enum Error {
     /// JSON serialization failed.
     #[error("failed to serialize structural tag")]
     Serialize(#[from] serde_json::Error),
+
+    /// A caller-provided builder failed.
+    #[error(transparent)]
+    Custom(#[from] Box<dyn StdError + Send + Sync + 'static>),
 }

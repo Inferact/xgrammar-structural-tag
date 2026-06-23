@@ -1,3 +1,4 @@
+use crate::Result;
 use crate::format::{Format, StructuralTag, TagFormat};
 use crate::tool::{
     BuilderToolChoice, BuiltinToolParam, FunctionToolParam, builtin_parameters, builtin_tool_name,
@@ -15,13 +16,13 @@ const CALL_END: &str = "<|call|>";
 pub struct HarmonyBuilder;
 
 impl StructuralTagBuilder for HarmonyBuilder {
-    fn build(&self, ctx: StructuralTagContext<'_>) -> StructuralTag {
-        build_harmony(
+    fn build(&self, ctx: StructuralTagContext<'_>) -> Result<StructuralTag> {
+        Ok(build_harmony(
             ctx.function_tools,
             ctx.builtin_tools,
             ctx.tool_choice,
             ctx.reasoning,
-        )
+        ))
     }
 }
 

@@ -14,7 +14,10 @@ use xgrammar_structural_tag::{
 struct CustomXmlBuilder;
 
 impl StructuralTagBuilder for CustomXmlBuilder {
-    fn build(&self, ctx: StructuralTagContext<'_>) -> StructuralTag {
+    fn build(
+        &self,
+        ctx: StructuralTagContext<'_>,
+    ) -> xgrammar_structural_tag::Result<StructuralTag> {
         let tags = ctx
             .function_tools
             .iter()
@@ -27,12 +30,12 @@ impl StructuralTagBuilder for CustomXmlBuilder {
             })
             .collect();
 
-        StructuralTag::new(Format::tags_with_separator(
+        Ok(StructuralTag::new(Format::tags_with_separator(
             tags,
             "\n",
             ctx.tool_choice.requires_tool_call(),
             ctx.tool_choice.is_forced(),
-        ))
+        )))
     }
 }
 

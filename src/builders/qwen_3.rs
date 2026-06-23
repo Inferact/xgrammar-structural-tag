@@ -1,3 +1,4 @@
+use crate::Result;
 use crate::format::{Format, StructuralTag};
 use crate::tool::{BuilderToolChoice, FunctionToolParam};
 
@@ -11,8 +12,12 @@ use super::{
 pub struct Qwen3Builder;
 
 impl StructuralTagBuilder for Qwen3Builder {
-    fn build(&self, ctx: StructuralTagContext<'_>) -> StructuralTag {
-        build_qwen_3(ctx.function_tools, ctx.tool_choice, ctx.reasoning)
+    fn build(&self, ctx: StructuralTagContext<'_>) -> Result<StructuralTag> {
+        Ok(build_qwen_3(
+            ctx.function_tools,
+            ctx.tool_choice,
+            ctx.reasoning,
+        ))
     }
 }
 

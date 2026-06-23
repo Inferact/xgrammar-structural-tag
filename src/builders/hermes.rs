@@ -1,3 +1,4 @@
+use crate::Result;
 use crate::format::{Format, StructuralTag, TagFormat};
 use crate::tool::{BuilderToolChoice, FunctionToolParam};
 
@@ -11,8 +12,8 @@ use super::{
 pub struct HermesBuilder;
 
 impl StructuralTagBuilder for HermesBuilder {
-    fn build(&self, ctx: StructuralTagContext<'_>) -> StructuralTag {
-        build_hermes(ctx.function_tools, ctx.tool_choice)
+    fn build(&self, ctx: StructuralTagContext<'_>) -> Result<StructuralTag> {
+        Ok(build_hermes(ctx.function_tools, ctx.tool_choice))
     }
 }
 

@@ -1,3 +1,4 @@
+use crate::Result;
 use crate::format::{Format, JsonSchemaStyle, StructuralTag, TagFormat};
 use crate::tool::{BuilderToolChoice, FunctionToolParam};
 
@@ -11,8 +12,12 @@ use super::{
 pub struct DeepSeekV32Builder;
 
 impl StructuralTagBuilder for DeepSeekV32Builder {
-    fn build(&self, ctx: StructuralTagContext<'_>) -> StructuralTag {
-        build_deepseek_v32(ctx.function_tools, ctx.tool_choice, ctx.reasoning)
+    fn build(&self, ctx: StructuralTagContext<'_>) -> Result<StructuralTag> {
+        Ok(build_deepseek_v32(
+            ctx.function_tools,
+            ctx.tool_choice,
+            ctx.reasoning,
+        ))
     }
 }
 
@@ -21,8 +26,12 @@ impl StructuralTagBuilder for DeepSeekV32Builder {
 pub struct DeepSeekV4Builder;
 
 impl StructuralTagBuilder for DeepSeekV4Builder {
-    fn build(&self, ctx: StructuralTagContext<'_>) -> StructuralTag {
-        build_deepseek_v4(ctx.function_tools, ctx.tool_choice, ctx.reasoning)
+    fn build(&self, ctx: StructuralTagContext<'_>) -> Result<StructuralTag> {
+        Ok(build_deepseek_v4(
+            ctx.function_tools,
+            ctx.tool_choice,
+            ctx.reasoning,
+        ))
     }
 }
 

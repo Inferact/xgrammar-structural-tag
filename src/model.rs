@@ -100,7 +100,7 @@ impl Model {
 // Implement the structural-tag builder for the built-in model enum so that it can be directly
 // passed to functions that take a `StructuralTagBuilder`.
 impl StructuralTagBuilder for Model {
-    fn build(&self, ctx: StructuralTagContext<'_>) -> StructuralTag {
+    fn build(&self, ctx: StructuralTagContext<'_>) -> crate::Result<StructuralTag> {
         (*self).builder().build(ctx)
     }
 }
