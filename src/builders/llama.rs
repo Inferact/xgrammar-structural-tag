@@ -1,7 +1,20 @@
 use crate::format::{Format, StructuralTag};
-use crate::tool::{FunctionToolParam, SimplifiedToolChoice};
+use crate::tool::{BuilderToolChoice, FunctionToolParam};
 
-use super::{json_schema, schema, structural, tag, tools_with_separator, triggered_with_excludes};
+use super::{
+    StructuralTagBuilder, StructuralTagContext, json_schema, schema, structural, tag,
+    tools_with_separator, triggered_with_excludes,
+};
+
+/// Llama JSON function-calling structural-tag builder.
+#[derive(Debug, Clone, Copy, Default)]
+pub struct LlamaBuilder;
+
+impl StructuralTagBuilder for LlamaBuilder {
+    fn build(&self, ctx: StructuralTagContext<'_>) -> StructuralTag {
+        build_llama(ctx.function_tools, ctx.tool_choice, ctx.reasoning)
+    }
+}
 
 /// Build a Llama-style structural tag.
 ///
@@ -11,7 +24,7 @@ use super::{json_schema, schema, structural, tag, tools_with_separator, triggere
 /// reasoning part, so `reasoning` is ignored.
 pub(super) fn build_llama(
     tools: &[FunctionToolParam],
-    choice: SimplifiedToolChoice,
+    choice: BuilderToolChoice,
     _reasoning: bool,
 ) -> StructuralTag {
     const TOOL_NAME_PREFIX: &str = "{\"name\": \"";
@@ -22,7 +35,7 @@ pub(super) fn build_llama(
     const THINK_EXCLUDES: &[&str] = &["<think>", "</think>"];
 
     let suffix = match choice {
-        SimplifiedToolChoice::Auto => {
+        BuilderToolChoice::Auto => {
             let tags = tools
                 .iter()
                 .map(|tool| {
@@ -42,7 +55,7 @@ pub(super) fn build_llama(
                 triggered_with_excludes(&[TOOLS_TRIGGER], tags, THINK_EXCLUDES)
             }
         }
-        SimplifiedToolChoice::Forced => {
+        BuilderToolChoice::Forced => {
             let function = &tools[0].function;
             Format::tag(
                 format!(
@@ -53,7 +66,7 @@ pub(super) fn build_llama(
                 "}",
             )
         }
-        SimplifiedToolChoice::Required => {
+        BuilderToolChoice::Required => {
             let tags = tools
                 .iter()
                 .map(|tool| {

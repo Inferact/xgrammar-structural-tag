@@ -1,7 +1,20 @@
 use crate::format::{Format, StructuralTag, TagFormat};
-use crate::tool::{FunctionToolParam, SimplifiedToolChoice};
+use crate::tool::{BuilderToolChoice, FunctionToolParam};
 
-use super::{json_schema, schema, structural, tag, tools_with_separator};
+use super::{
+    StructuralTagBuilder, StructuralTagContext, json_schema, schema, structural, tag,
+    tools_with_separator,
+};
+
+/// Hermes tool-calling structural-tag builder.
+#[derive(Debug, Clone, Copy, Default)]
+pub struct HermesBuilder;
+
+impl StructuralTagBuilder for HermesBuilder {
+    fn build(&self, ctx: StructuralTagContext<'_>) -> StructuralTag {
+        build_hermes(ctx.function_tools, ctx.tool_choice)
+    }
+}
 
 /// Build a Hermes-style structural tag.
 ///
@@ -10,7 +23,7 @@ use super::{json_schema, schema, structural, tag, tools_with_separator};
 /// has no reasoning part.
 pub(super) fn build_hermes(
     tools: &[FunctionToolParam],
-    choice: SimplifiedToolChoice,
+    choice: BuilderToolChoice,
 ) -> StructuralTag {
     fn hermes_tool_tags(tools: &[FunctionToolParam]) -> Vec<TagFormat> {
         const ARGUMENTS_FIELD_PREFIX: &str = "\", \"arguments\": ";
@@ -33,7 +46,7 @@ pub(super) fn build_hermes(
     }
 
     let suffix = match choice {
-        SimplifiedToolChoice::Auto => {
+        BuilderToolChoice::Auto => {
             let tags = hermes_tool_tags(tools);
             if tags.is_empty() {
                 Format::any_text()
@@ -41,10 +54,10 @@ pub(super) fn build_hermes(
                 Format::triggered_tags(&["<tool_call>"], tags)
             }
         }
-        SimplifiedToolChoice::Forced => {
+        BuilderToolChoice::Forced => {
             Format::tags_with_separator(hermes_tool_tags(tools), "", true, true)
         }
-        SimplifiedToolChoice::Required => tools_with_separator(hermes_tool_tags(tools), "", true),
+        BuilderToolChoice::Required => tools_with_separator(hermes_tool_tags(tools), "", true),
     };
     structural(suffix)
 }

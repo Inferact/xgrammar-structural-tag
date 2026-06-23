@@ -278,10 +278,10 @@ pub enum AllowedToolsMode {
 }
 
 impl AllowedToolsMode {
-    fn simplified(self) -> SimplifiedToolChoice {
+    fn simplified(self) -> BuilderToolChoice {
         match self {
-            Self::Auto => SimplifiedToolChoice::Auto,
-            Self::Required => SimplifiedToolChoice::Required,
+            Self::Auto => BuilderToolChoice::Auto,
+            Self::Required => BuilderToolChoice::Required,
         }
     }
 }
@@ -432,15 +432,32 @@ impl ToolChoice {
     }
 }
 
-/// Internal simplified tool-choice value used by model builders.
+/// Normalized tool-choice value passed to structural-tag builders.
+///
+/// Public request shapes such as `none`, named function choices, builtin
+/// choices, and allowed-tools filters are normalized before a builder sees
+/// them. At this layer builders only need to distinguish text-or-tool output,
+/// at-least-one tool output, and one forced remaining tool.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
-pub(crate) enum SimplifiedToolChoice {
+pub enum BuilderToolChoice {
     /// Allow text or tool calls.
     Auto,
     /// Require at least one tool call.
     Required,
     /// Force exactly one tool.
     Forced,
+}
+
+impl BuilderToolChoice {
+    /// Return whether this choice requires a tool-call output.
+    pub fn requires_tool_call(self) -> bool {
+        matches!(self, Self::Required | Self::Forced)
+    }
+
+    /// Return whether this choice was forced to exactly one remaining tool.
+    pub fn is_forced(self) -> bool {
+        matches!(self, Self::Forced)
+    }
 }
 
 /// Normalized inputs for model-specific builders.
@@ -451,7 +468,7 @@ pub(crate) struct NormalizedToolChoice {
     /// Builtin tools remaining after tool-choice filtering.
     pub builtin_tools: Vec<BuiltinToolParam>,
     /// Simplified builder choice.
-    pub choice: SimplifiedToolChoice,
+    pub choice: BuilderToolChoice,
 }
 
 /// Normalize public tools and tool choice into builder-ready inputs.
@@ -478,10 +495,10 @@ pub(crate) fn normalize_tool_choice(
         ToolChoice::Value(ToolChoiceValue::None) => {
             function_tools.clear();
             builtin_tools.clear();
-            SimplifiedToolChoice::Auto
+            BuilderToolChoice::Auto
         }
-        ToolChoice::Value(ToolChoiceValue::Auto) => SimplifiedToolChoice::Auto,
-        ToolChoice::Value(ToolChoiceValue::Required) => SimplifiedToolChoice::Required,
+        ToolChoice::Value(ToolChoiceValue::Auto) => BuilderToolChoice::Auto,
+        ToolChoice::Value(ToolChoiceValue::Required) => BuilderToolChoice::Required,
         ToolChoice::NamedFunction(choice) => {
             let tool_name = choice.function.name;
             function_tools.retain(|tool| tool.function.name == tool_name);
@@ -489,7 +506,7 @@ pub(crate) fn normalize_tool_choice(
                 return Err(Error::ToolNotFound { name: tool_name });
             }
             builtin_tools.clear();
-            SimplifiedToolChoice::Forced
+            BuilderToolChoice::Forced
         }
         ToolChoice::Builtin(choice) => {
             function_tools.clear();
@@ -501,7 +518,7 @@ pub(crate) fn normalize_tool_choice(
                     matches: builtin_tools.len(),
                 });
             }
-            SimplifiedToolChoice::Forced
+            BuilderToolChoice::Forced
         }
         ToolChoice::AllowedTools(choice) => filter_allowed_tools(
             &mut function_tools,
@@ -517,13 +534,13 @@ pub(crate) fn normalize_tool_choice(
         )?,
     };
 
-    if choice == SimplifiedToolChoice::Required
+    if choice == BuilderToolChoice::Required
         && function_tools.is_empty()
         && builtin_tools.is_empty()
     {
         return Err(Error::RequiredWithoutTools);
     }
-    if choice == SimplifiedToolChoice::Forced && function_tools.len() + builtin_tools.len() != 1 {
+    if choice == BuilderToolChoice::Forced && function_tools.len() + builtin_tools.len() != 1 {
         return Err(Error::ForcedToolChoiceInvalid {
             count: function_tools.len() + builtin_tools.len(),
         });
@@ -541,7 +558,7 @@ fn filter_allowed_tools(
     builtin_tools: &mut Vec<BuiltinToolParam>,
     mode: AllowedToolsMode,
     allowed_tools: &[AllowedToolRef],
-) -> Result<SimplifiedToolChoice> {
+) -> Result<BuilderToolChoice> {
     let choice = mode.simplified();
 
     let mut allowed_function_names = BTreeSet::new();
@@ -585,7 +602,7 @@ fn filter_allowed_tools(
 ///
 /// Missing `parameters` and non-strict functions map to `true`, so the
 /// arguments stay syntactically valid JSON but schema-unconstrained.
-pub(crate) fn function_parameters(function: &FunctionDefinition) -> Value {
+pub fn function_parameters(function: &FunctionDefinition) -> Value {
     if function.strict == Some(false) {
         return json!(true);
     }
@@ -593,12 +610,12 @@ pub(crate) fn function_parameters(function: &FunctionDefinition) -> Value {
 }
 
 /// Return the JSON schema used to constrain a builtin tool's emitted arguments.
-pub(crate) fn builtin_parameters(tool: &BuiltinToolParam) -> Value {
+pub fn builtin_parameters(tool: &BuiltinToolParam) -> Value {
     tool.parameters.clone().unwrap_or_else(|| json!(true))
 }
 
 /// Return the model-output name for a builtin tool.
-pub(crate) fn builtin_tool_name(tool: &BuiltinToolParam) -> &str {
+pub fn builtin_tool_name(tool: &BuiltinToolParam) -> &str {
     tool.name.as_deref().unwrap_or(tool.r#type.as_str())
 }
 

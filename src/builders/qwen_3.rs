@@ -1,7 +1,20 @@
 use crate::format::{Format, StructuralTag};
-use crate::tool::{FunctionToolParam, SimplifiedToolChoice};
+use crate::tool::{BuilderToolChoice, FunctionToolParam};
 
-use super::{json_schema, schema, structural, tag, tools_with_separator, triggered_with_excludes};
+use super::{
+    StructuralTagBuilder, StructuralTagContext, json_schema, schema, structural, tag,
+    tools_with_separator, triggered_with_excludes,
+};
+
+/// Qwen 3 JSON-in-tag tool-calling structural-tag builder.
+#[derive(Debug, Clone, Copy, Default)]
+pub struct Qwen3Builder;
+
+impl StructuralTagBuilder for Qwen3Builder {
+    fn build(&self, ctx: StructuralTagContext<'_>) -> StructuralTag {
+        build_qwen_3(ctx.function_tools, ctx.tool_choice, ctx.reasoning)
+    }
+}
 
 /// Build a Qwen3-style structural tag.
 ///
@@ -10,7 +23,7 @@ use super::{json_schema, schema, structural, tag, tools_with_separator, triggere
 /// Supports Qwen3 and Qwen3-Next.
 pub(super) fn build_qwen_3(
     tools: &[FunctionToolParam],
-    choice: SimplifiedToolChoice,
+    choice: BuilderToolChoice,
     reasoning: bool,
 ) -> StructuralTag {
     const TOOL_CALL_BEGIN_PREFIX: &str = "<tool_call>\n{\"name\": \"";
@@ -32,7 +45,7 @@ pub(super) fn build_qwen_3(
         )
     };
     let suffix = match choice {
-        SimplifiedToolChoice::Auto => {
+        BuilderToolChoice::Auto => {
             let tags = tools.iter().map(tool_tag).collect::<Vec<_>>();
             if tags.is_empty() {
                 Format::any_text_excluding(THINK_EXCLUDES)
@@ -40,8 +53,8 @@ pub(super) fn build_qwen_3(
                 triggered_with_excludes(&[TOOL_CALL_TRIGGER], tags, THINK_EXCLUDES)
             }
         }
-        SimplifiedToolChoice::Forced => Format::Tag(tool_tag(&tools[0])),
-        SimplifiedToolChoice::Required => {
+        BuilderToolChoice::Forced => Format::Tag(tool_tag(&tools[0])),
+        BuilderToolChoice::Required => {
             let tags = tools.iter().map(tool_tag).collect::<Vec<_>>();
             tools_with_separator(tags, "\n", true)
         }

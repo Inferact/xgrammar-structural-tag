@@ -53,14 +53,22 @@ let structural_tag_json = tag.to_json_string()?;
 # Ok::<(), xgrammar_structural_tag::Error>(())
 ```
 
+`Model` is the built-in catalog. Callers can also pass a concrete
+builder such as `Qwen35Builder`, `Model::Qwen35.builder()`, or their own
+`StructuralTagBuilder` implementation.
+
 For serving request lowering, use `build_optional_structural_tag`. It
 returns `Ok(None)` for empty tools or `tool_choice=none`.
+
+See `examples/custom_builder.rs` for a custom `StructuralTagBuilder`
+implementation.
 
 ## Development
 
 ```bash
 cargo fmt --all --check
 cargo test
+cargo run --example custom_builder
 RUSTDOCFLAGS="-D warnings" cargo doc --no-deps
 ```
 

@@ -1,4 +1,7 @@
-#![allow(missing_docs)]
+//! Generate Rust structural-tag golden fixtures.
+//!
+//! Run with `--write` to refresh files under `tests/golden/`; without it the
+//! generated JSON is printed to stdout.
 
 use std::{env, fs, path::PathBuf};
 

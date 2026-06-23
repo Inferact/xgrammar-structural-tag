@@ -43,6 +43,6 @@ pub enum Error {
     },
 
     /// JSON serialization failed.
-    #[error("failed to serialize structural tag: {0}")]
+    #[error("failed to serialize structural tag")]
     Serialize(#[from] serde_json::Error),
 }

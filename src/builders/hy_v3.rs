@@ -1,19 +1,27 @@
 use crate::format::{Format, JsonSchemaStyle, StructuralTag};
-use crate::tool::{FunctionToolParam, SimplifiedToolChoice};
+use crate::tool::{BuilderToolChoice, FunctionToolParam};
 
 use super::{
-    schema, structural, styled_schema, tag, tools_with_separator, triggered_with_excludes,
+    StructuralTagBuilder, StructuralTagContext, schema, structural, styled_schema, tag,
+    tools_with_separator, triggered_with_excludes,
 };
+
+/// HY3 XML tool-calling structural-tag builder.
+#[derive(Debug, Clone, Copy, Default)]
+pub struct HyV3Builder;
+
+impl StructuralTagBuilder for HyV3Builder {
+    fn build(&self, ctx: StructuralTagContext<'_>) -> StructuralTag {
+        build_hy_v3(ctx.function_tools, ctx.tool_choice)
+    }
+}
 
 /// Build an HY3-style structural tag.
 ///
 /// Local extension not present in upstream xgrammar. Uses GLM-style XML
 /// arguments wrapped in `<tool_calls>` / `<tool_call>` / `<tool_sep>` markers,
 /// with no reasoning part.
-pub(super) fn build_hy_v3(
-    tools: &[FunctionToolParam],
-    choice: SimplifiedToolChoice,
-) -> StructuralTag {
+pub(super) fn build_hy_v3(tools: &[FunctionToolParam], choice: BuilderToolChoice) -> StructuralTag {
     const TOOL_CALLS_BEGIN: &str = "<tool_calls>\n";
     const TOOL_CALLS_TRIGGER: &str = "<tool_calls>";
     const TOOL_CALLS_END: &str = "</tool_calls>";
@@ -29,7 +37,7 @@ pub(super) fn build_hy_v3(
         )
     };
     let suffix = match choice {
-        SimplifiedToolChoice::Auto => {
+        BuilderToolChoice::Auto => {
             let tags = tools.iter().map(tool_tag).collect::<Vec<_>>();
             if tags.is_empty() {
                 Format::any_text()
@@ -42,12 +50,12 @@ pub(super) fn build_hy_v3(
                 triggered_with_excludes(&[TOOL_CALLS_TRIGGER], vec![outer], &[])
             }
         }
-        SimplifiedToolChoice::Forced => Format::sequence(vec![
+        BuilderToolChoice::Forced => Format::sequence(vec![
             Format::const_string(TOOL_CALLS_BEGIN),
             Format::Tag(tool_tag(&tools[0])),
             Format::const_string(format!("\n{TOOL_CALLS_END}")),
         ]),
-        SimplifiedToolChoice::Required => {
+        BuilderToolChoice::Required => {
             let tags = tools.iter().map(tool_tag).collect::<Vec<_>>();
             Format::sequence(vec![
                 Format::const_string(TOOL_CALLS_BEGIN),

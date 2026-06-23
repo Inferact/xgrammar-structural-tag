@@ -74,11 +74,17 @@ pub mod format;
 pub mod model;
 pub mod tool;
 
-pub use builders::{build_optional_structural_tag, build_structural_tag};
+pub use builders::{
+    DeepSeekR1Builder, DeepSeekV4Builder, DeepSeekV31Builder, DeepSeekV32Builder, Glm47Builder,
+    HarmonyBuilder, HermesBuilder, HyV3Builder, KimiBuilder, LlamaBuilder, MinimaxBuilder,
+    Qwen3Builder, Qwen35Builder, StructuralTagBuilder, StructuralTagContext,
+    build_optional_structural_tag, build_structural_tag,
+};
 pub use error::{Error, Result};
 pub use format::StructuralTag;
 pub use model::Model;
 pub use tool::{
-    AllowedToolRef, AllowedToolsMode, BuiltinToolParam, FunctionDefinition, FunctionToolParam,
-    ToolChoice, ToolParam,
+    AllowedToolRef, AllowedToolsMode, BuilderToolChoice, BuiltinToolParam, FunctionDefinition,
+    FunctionToolParam, ToolChoice, ToolParam, builtin_parameters, builtin_tool_name,
+    function_parameters,
 };

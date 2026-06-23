@@ -1,10 +1,20 @@
 use crate::format::{Format, JsonSchemaStyle, StructuralTag};
-use crate::tool::{FunctionToolParam, SimplifiedToolChoice};
+use crate::tool::{BuilderToolChoice, FunctionToolParam};
 
 use super::{
-    schema, styled_schema, tag, tools_with_separator, triggered_with_excludes,
-    with_optional_reasoning,
+    StructuralTagBuilder, StructuralTagContext, schema, styled_schema, tag, tools_with_separator,
+    triggered_with_excludes, with_optional_reasoning,
 };
+
+/// GLM XML tool-calling structural-tag builder.
+#[derive(Debug, Clone, Copy, Default)]
+pub struct Glm47Builder;
+
+impl StructuralTagBuilder for Glm47Builder {
+    fn build(&self, ctx: StructuralTagContext<'_>) -> StructuralTag {
+        build_glm_47(ctx.function_tools, ctx.tool_choice, ctx.reasoning)
+    }
+}
 
 /// Build a GLM-4.7 / GLM-5 structural tag.
 ///
@@ -14,7 +24,7 @@ use super::{
 /// Supports GLM-5 and GLM-4.7.
 pub(super) fn build_glm_47(
     tools: &[FunctionToolParam],
-    choice: SimplifiedToolChoice,
+    choice: BuilderToolChoice,
     reasoning: bool,
 ) -> StructuralTag {
     const TOOL_CALL_BEGIN_PREFIX: &str = "<tool_call>";
@@ -31,7 +41,7 @@ pub(super) fn build_glm_47(
         )
     };
     let suffix = match choice {
-        SimplifiedToolChoice::Auto => {
+        BuilderToolChoice::Auto => {
             let tags = tools.iter().map(tool_tag).collect::<Vec<_>>();
             if tags.is_empty() {
                 Format::any_text_excluding(THINK_EXCLUDES)
@@ -39,8 +49,8 @@ pub(super) fn build_glm_47(
                 triggered_with_excludes(&[TOOL_CALL_TRIGGER], tags, THINK_EXCLUDES)
             }
         }
-        SimplifiedToolChoice::Forced => Format::Tag(tool_tag(&tools[0])),
-        SimplifiedToolChoice::Required => {
+        BuilderToolChoice::Forced => Format::Tag(tool_tag(&tools[0])),
+        BuilderToolChoice::Required => {
             let tags = tools.iter().map(tool_tag).collect::<Vec<_>>();
             tools_with_separator(tags, "", true)
         }

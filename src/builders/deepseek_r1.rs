@@ -1,10 +1,20 @@
 use crate::format::{Format, StructuralTag};
-use crate::tool::{FunctionToolParam, SimplifiedToolChoice};
+use crate::tool::{BuilderToolChoice, FunctionToolParam};
 
 use super::{
-    json_schema, schema, tag, tools_with_separator, triggered_with_excludes,
-    with_optional_reasoning,
+    StructuralTagBuilder, StructuralTagContext, json_schema, schema, tag, tools_with_separator,
+    triggered_with_excludes, with_optional_reasoning,
 };
+
+/// DeepSeek R1 tool-calling structural-tag builder.
+#[derive(Debug, Clone, Copy, Default)]
+pub struct DeepSeekR1Builder;
+
+impl StructuralTagBuilder for DeepSeekR1Builder {
+    fn build(&self, ctx: StructuralTagContext<'_>) -> StructuralTag {
+        build_deepseek_r1(ctx.function_tools, ctx.tool_choice, ctx.reasoning)
+    }
+}
 
 /// Build a DeepSeek-R1-style structural tag.
 ///
@@ -13,7 +23,7 @@ use super::{
 /// Supports DeepSeek-R1 and DeepSeek-R1-0528.
 pub(super) fn build_deepseek_r1(
     tools: &[FunctionToolParam],
-    choice: SimplifiedToolChoice,
+    choice: BuilderToolChoice,
     reasoning: bool,
 ) -> StructuralTag {
     const TOOL_CALLS_BEGIN: &str = "<｜tool▁calls▁begin｜>";
@@ -38,7 +48,7 @@ pub(super) fn build_deepseek_r1(
     };
 
     let suffix = match choice {
-        SimplifiedToolChoice::Auto => {
+        BuilderToolChoice::Auto => {
             let tags = tools.iter().map(tool_tag).collect::<Vec<_>>();
             if tags.is_empty() {
                 Format::any_text_excluding(THINK_EXCLUDES)
@@ -48,7 +58,7 @@ pub(super) fn build_deepseek_r1(
                 triggered_with_excludes(&[TOOL_CALLS_BEGIN], vec![tool_calls], THINK_EXCLUDES)
             }
         }
-        SimplifiedToolChoice::Forced => {
+        BuilderToolChoice::Forced => {
             let function = &tools[0].function;
             Format::tag(
                 format!(
@@ -59,7 +69,7 @@ pub(super) fn build_deepseek_r1(
                 format!("{JSON_RENDER_END}{TOOL_CALL_END}{TOOL_CALLS_END}"),
             )
         }
-        SimplifiedToolChoice::Required => {
+        BuilderToolChoice::Required => {
             let tags = tools.iter().map(tool_tag).collect::<Vec<_>>();
             Format::tag(
                 TOOL_CALLS_BEGIN,

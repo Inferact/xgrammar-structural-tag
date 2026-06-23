@@ -1,10 +1,30 @@
 use crate::format::{Format, JsonSchemaStyle, StructuralTag, TagFormat};
-use crate::tool::{FunctionToolParam, SimplifiedToolChoice};
+use crate::tool::{BuilderToolChoice, FunctionToolParam};
 
 use super::{
-    schema, styled_schema, tag, tools_with_separator, triggered_with_excludes,
-    with_optional_reasoning,
+    StructuralTagBuilder, StructuralTagContext, schema, styled_schema, tag, tools_with_separator,
+    triggered_with_excludes, with_optional_reasoning,
 };
+
+/// DeepSeek V3.2 DSML structural-tag builder.
+#[derive(Debug, Clone, Copy, Default)]
+pub struct DeepSeekV32Builder;
+
+impl StructuralTagBuilder for DeepSeekV32Builder {
+    fn build(&self, ctx: StructuralTagContext<'_>) -> StructuralTag {
+        build_deepseek_v32(ctx.function_tools, ctx.tool_choice, ctx.reasoning)
+    }
+}
+
+/// DeepSeek V4 DSML structural-tag builder.
+#[derive(Debug, Clone, Copy, Default)]
+pub struct DeepSeekV4Builder;
+
+impl StructuralTagBuilder for DeepSeekV4Builder {
+    fn build(&self, ctx: StructuralTagContext<'_>) -> StructuralTag {
+        build_deepseek_v4(ctx.function_tools, ctx.tool_choice, ctx.reasoning)
+    }
+}
 
 fn dsml_tool_tag(
     tool: &FunctionToolParam,
@@ -28,7 +48,7 @@ fn dsml_tool_tag(
 /// DeepSeek XML arguments, differing only in the outer function-calls markers.
 fn build_deepseek_dsml(
     tools: &[FunctionToolParam],
-    choice: SimplifiedToolChoice,
+    choice: BuilderToolChoice,
     reasoning: bool,
     function_calls_begin: &str,
     function_calls_end: &str,
@@ -43,7 +63,7 @@ fn build_deepseek_dsml(
     const THINK_EXCLUDES: &[&str] = &["<think>", "</think>"];
 
     let suffix = match choice {
-        SimplifiedToolChoice::Auto => {
+        BuilderToolChoice::Auto => {
             let tags = tools
                 .iter()
                 .map(|tool| {
@@ -58,7 +78,7 @@ fn build_deepseek_dsml(
                 triggered_with_excludes(&[function_calls_trigger], vec![outer], THINK_EXCLUDES)
             }
         }
-        SimplifiedToolChoice::Forced => Format::sequence(vec![
+        BuilderToolChoice::Forced => Format::sequence(vec![
             Format::const_string(format!("{TOOL_CALLS_PREFIX}{function_calls_begin}")),
             Format::Tag(dsml_tool_tag(
                 &tools[0],
@@ -68,7 +88,7 @@ fn build_deepseek_dsml(
             )),
             Format::const_string(function_calls_end),
         ]),
-        SimplifiedToolChoice::Required => {
+        BuilderToolChoice::Required => {
             let tags = tools
                 .iter()
                 .map(|tool| {
@@ -90,7 +110,7 @@ fn build_deepseek_dsml(
 /// Supports DeepSeek-V3.2.
 pub(super) fn build_deepseek_v32(
     tools: &[FunctionToolParam],
-    choice: SimplifiedToolChoice,
+    choice: BuilderToolChoice,
     reasoning: bool,
 ) -> StructuralTag {
     build_deepseek_dsml(
@@ -108,7 +128,7 @@ pub(super) fn build_deepseek_v32(
 /// Supports DeepSeek-V4.
 pub(super) fn build_deepseek_v4(
     tools: &[FunctionToolParam],
-    choice: SimplifiedToolChoice,
+    choice: BuilderToolChoice,
     reasoning: bool,
 ) -> StructuralTag {
     build_deepseek_dsml(

@@ -1,12 +1,29 @@
 use crate::format::{Format, StructuralTag, TagFormat};
 use crate::tool::{
-    BuiltinToolParam, FunctionToolParam, SimplifiedToolChoice, builtin_parameters,
-    builtin_tool_name,
+    BuilderToolChoice, BuiltinToolParam, FunctionToolParam, builtin_parameters, builtin_tool_name,
 };
 
-use super::{json_schema, schema, structural, tag, tools_with_separator};
+use super::{
+    StructuralTagBuilder, StructuralTagContext, json_schema, schema, structural, tag,
+    tools_with_separator,
+};
 
 const CALL_END: &str = "<|call|>";
+
+/// Harmony / GPT-OSS structural-tag builder.
+#[derive(Debug, Clone, Copy, Default)]
+pub struct HarmonyBuilder;
+
+impl StructuralTagBuilder for HarmonyBuilder {
+    fn build(&self, ctx: StructuralTagContext<'_>) -> StructuralTag {
+        build_harmony(
+            ctx.function_tools,
+            ctx.builtin_tools,
+            ctx.tool_choice,
+            ctx.reasoning,
+        )
+    }
+}
 
 fn function_tool_tags(name: &str, parameters: serde_json::Value) -> Vec<TagFormat> {
     let content = json_schema(parameters);
@@ -54,7 +71,7 @@ fn builtin_tool_tags(name: &str, parameters: serde_json::Value) -> Vec<TagFormat
 pub(super) fn build_harmony(
     tools: &[FunctionToolParam],
     builtin_tools: &[BuiltinToolParam],
-    choice: SimplifiedToolChoice,
+    choice: BuilderToolChoice,
     reasoning: bool,
 ) -> StructuralTag {
     const FINAL_BEGIN: &str = "<|channel|>final<|message|>";
@@ -63,7 +80,7 @@ pub(super) fn build_harmony(
 
     let mut tags = Vec::new();
     match choice {
-        SimplifiedToolChoice::Auto => {
+        BuilderToolChoice::Auto => {
             for tool in tools {
                 tags.extend(function_tool_tags(
                     &tool.function.name,
@@ -82,7 +99,7 @@ pub(super) fn build_harmony(
                 vec!["<|end|>", "<|return|>"],
             ));
         }
-        SimplifiedToolChoice::Forced => {
+        BuilderToolChoice::Forced => {
             if let Some(tool) = builtin_tools.first() {
                 tags.extend(builtin_tool_tags(
                     builtin_tool_name(tool),
@@ -93,7 +110,7 @@ pub(super) fn build_harmony(
                 tags.extend(function_tool_tags(&function.name, schema(function)));
             }
         }
-        SimplifiedToolChoice::Required => {
+        BuilderToolChoice::Required => {
             for tool in builtin_tools {
                 tags.extend(builtin_tool_tags(
                     builtin_tool_name(tool),

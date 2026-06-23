@@ -1,9 +1,12 @@
-//! Model keys supported by the structural tag registry.
+//! Built-in model keys supported by the structural tag catalog.
 
 use std::{fmt, str::FromStr};
 
 use strum::VariantArray;
 use thiserror::Error as ThisError;
+
+use crate::builders::*;
+use crate::format::StructuralTag;
 
 /// Error returned when parsing an unknown model key.
 #[derive(Debug, Clone, PartialEq, Eq, ThisError)]
@@ -19,7 +22,7 @@ impl ParseModelError {
     }
 }
 
-/// One supported model structural-tag template.
+/// One built-in model structural-tag template.
 #[non_exhaustive]
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, VariantArray)]
 pub enum Model {
@@ -72,6 +75,33 @@ impl Model {
             Self::Hermes => "hermes",
             Self::HyV3 => "hy_v3",
         }
+    }
+
+    /// Return the builder for this built-in model template.
+    pub fn builder(self) -> &'static dyn StructuralTagBuilder {
+        match self {
+            Self::Llama => &LlamaBuilder,
+            Self::Kimi => &KimiBuilder,
+            Self::DeepSeekR1 => &DeepSeekR1Builder,
+            Self::DeepSeekV31 => &DeepSeekV31Builder,
+            Self::Qwen35 | Self::Qwen3Coder => &Qwen35Builder,
+            Self::Qwen3 => &Qwen3Builder,
+            Self::Harmony => &HarmonyBuilder,
+            Self::DeepSeekV32 => &DeepSeekV32Builder,
+            Self::Minimax => &MinimaxBuilder,
+            Self::Glm47 => &Glm47Builder,
+            Self::DeepSeekV4 => &DeepSeekV4Builder,
+            Self::Hermes => &HermesBuilder,
+            Self::HyV3 => &HyV3Builder,
+        }
+    }
+}
+
+// Implement the structural-tag builder for the built-in model enum so that it can be directly
+// passed to functions that take a `StructuralTagBuilder`.
+impl StructuralTagBuilder for Model {
+    fn build(&self, ctx: StructuralTagContext<'_>) -> StructuralTag {
+        (*self).builder().build(ctx)
     }
 }
 

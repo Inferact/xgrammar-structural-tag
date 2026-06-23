@@ -1,16 +1,27 @@
 use crate::format::{Format, JsonSchemaStyle, StructuralTag};
-use crate::tool::{FunctionToolParam, SimplifiedToolChoice};
+use crate::tool::{BuilderToolChoice, FunctionToolParam};
 
 use super::{
-    schema, structural, styled_schema, tag, tools_with_separator, triggered_with_excludes,
+    StructuralTagBuilder, StructuralTagContext, schema, structural, styled_schema, tag,
+    tools_with_separator, triggered_with_excludes,
 };
+
+/// MiniMax XML tool-calling structural-tag builder.
+#[derive(Debug, Clone, Copy, Default)]
+pub struct MinimaxBuilder;
+
+impl StructuralTagBuilder for MinimaxBuilder {
+    fn build(&self, ctx: StructuralTagContext<'_>) -> StructuralTag {
+        build_minimax(ctx.function_tools, ctx.tool_choice, ctx.reasoning)
+    }
+}
 
 /// Build a MiniMax-style structural tag.
 ///
 /// Supports MiniMax-M2.5 and MiniMax-M2.7.
 pub(super) fn build_minimax(
     tools: &[FunctionToolParam],
-    choice: SimplifiedToolChoice,
+    choice: BuilderToolChoice,
     reasoning: bool,
 ) -> StructuralTag {
     const INVOKE_BEGIN_PREFIX: &str = "<invoke name=\"";
@@ -41,7 +52,7 @@ pub(super) fn build_minimax(
     };
 
     let suffix = match choice {
-        SimplifiedToolChoice::Auto => {
+        BuilderToolChoice::Auto => {
             let tags = tool_tags();
             if tags.is_empty() {
                 Format::any_text_excluding(THINK_EXCLUDES)
@@ -54,12 +65,12 @@ pub(super) fn build_minimax(
                 )
             }
         }
-        SimplifiedToolChoice::Forced => Format::sequence(vec![
+        BuilderToolChoice::Forced => Format::sequence(vec![
             Format::const_string(format!("\n{TOOL_CALL_BEGIN}")),
             Format::Tag(tool_tags().remove(0)),
             Format::const_string(TOOL_CALL_END),
         ]),
-        SimplifiedToolChoice::Required => Format::sequence(vec![
+        BuilderToolChoice::Required => Format::sequence(vec![
             Format::const_string(format!("\n{TOOL_CALL_BEGIN}")),
             tools_with_separator(tool_tags(), "", true),
             Format::const_string(TOOL_CALL_END),

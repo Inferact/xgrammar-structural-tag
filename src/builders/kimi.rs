@@ -1,7 +1,20 @@
 use crate::format::{Format, StructuralTag, TagFormat};
-use crate::tool::{FunctionToolParam, SimplifiedToolChoice};
+use crate::tool::{BuilderToolChoice, FunctionToolParam};
 
-use super::{json_schema, schema, structural, tag, tools_with_separator, triggered_with_excludes};
+use super::{
+    StructuralTagBuilder, StructuralTagContext, json_schema, schema, structural, tag,
+    tools_with_separator, triggered_with_excludes,
+};
+
+/// Kimi K2 tool-calling structural-tag builder.
+#[derive(Debug, Clone, Copy, Default)]
+pub struct KimiBuilder;
+
+impl StructuralTagBuilder for KimiBuilder {
+    fn build(&self, ctx: StructuralTagContext<'_>) -> StructuralTag {
+        build_kimi(ctx.function_tools, ctx.tool_choice, ctx.reasoning)
+    }
+}
 
 fn kimi_tool_tag(tool: &FunctionToolParam) -> TagFormat {
     const TOOL_CALL_BEGIN_PREFIX: &str = "<|tool_call_begin|>functions.";
@@ -30,7 +43,7 @@ fn kimi_tool_tag(tool: &FunctionToolParam) -> TagFormat {
 /// prefix is dropped and only the tool/text part is constrained.
 pub(super) fn build_kimi(
     tools: &[FunctionToolParam],
-    choice: SimplifiedToolChoice,
+    choice: BuilderToolChoice,
     reasoning: bool,
 ) -> StructuralTag {
     const TOOL_CALL_BEGIN: &str = "<|tool_call_begin|>";
@@ -40,7 +53,7 @@ pub(super) fn build_kimi(
     const THINK_EXCLUDES: &[&str] = &["<think>", "</think>"];
 
     let suffix = match choice {
-        SimplifiedToolChoice::Auto => {
+        BuilderToolChoice::Auto => {
             let tags = tools.iter().map(kimi_tool_tag).collect::<Vec<_>>();
             if tags.is_empty() {
                 Format::any_text_excluding(THINK_EXCLUDES)
@@ -54,12 +67,12 @@ pub(super) fn build_kimi(
                 )
             }
         }
-        SimplifiedToolChoice::Forced => Format::sequence(vec![
+        BuilderToolChoice::Forced => Format::sequence(vec![
             Format::const_string(TOOL_CALLS_SECTION_BEGIN),
             Format::Tag(kimi_tool_tag(&tools[0])),
             Format::const_string(TOOL_CALLS_SECTION_END),
         ]),
-        SimplifiedToolChoice::Required => {
+        BuilderToolChoice::Required => {
             let tags = tools.iter().map(kimi_tool_tag).collect::<Vec<_>>();
             Format::sequence(vec![
                 Format::const_string(TOOL_CALLS_SECTION_BEGIN),
