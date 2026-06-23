@@ -111,6 +111,9 @@ pub fn build_structural_tag(
 ///
 /// This mirrors serving request lowering: empty tools and `tool_choice=none`
 /// produce `Ok(None)` so the request can continue without structured outputs.
+///
+/// Use [`build_structural_tag`] when the caller already knows a structural tag
+/// should be built.
 #[doc(alias = "maybe_get_model_structural_tag")]
 pub fn build_optional_structural_tag(
     builder: impl StructuralTagBuilder,

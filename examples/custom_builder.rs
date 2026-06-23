@@ -5,9 +5,11 @@
 
 use serde_json::json;
 use xgrammar_structural_tag::{
-    FunctionDefinition, FunctionToolParam, StructuralTag, StructuralTagBuilder,
-    StructuralTagContext, ToolChoice, ToolParam, build_structural_tag, format::Format,
-    format::TagFormat, function_parameters,
+    FunctionDefinition, FunctionToolParam, StructuralTag, ToolChoice, ToolParam,
+    build_structural_tag,
+    builders::{StructuralTagBuilder, StructuralTagContext},
+    format::{Format, TagFormat},
+    tool::function_parameters,
 };
 
 #[derive(Debug, Clone, Copy)]

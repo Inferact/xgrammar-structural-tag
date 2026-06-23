@@ -54,8 +54,8 @@ let structural_tag_json = tag.to_json_string()?;
 ```
 
 `Model` is the built-in catalog. Callers can also pass a concrete
-builder such as `Qwen35Builder`, `Model::Qwen35.builder()`, or their own
-`StructuralTagBuilder` implementation.
+builder such as `builders::Qwen35Builder`, `Model::Qwen35.builder()`, or their
+own `builders::StructuralTagBuilder` implementation.
 
 For serving request lowering, use `build_optional_structural_tag`. It
 returns `Ok(None)` for empty tools or `tool_choice=none`.
