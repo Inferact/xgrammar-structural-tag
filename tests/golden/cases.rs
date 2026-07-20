@@ -4,7 +4,9 @@ use std::{collections::BTreeMap, sync::OnceLock};
 
 use serde::Deserialize;
 use serde_json::{Map, Value};
-use xgrammar_structural_tag::{Model, ToolChoice, ToolParam, build_structural_tag};
+use xgrammar_structural_tag::{
+    Model, ToolChoice, ToolParam, build_structural_tag, builders::StructuralTagOptions,
+};
 
 #[derive(Deserialize)]
 struct RawCaseSpec {
@@ -84,7 +86,7 @@ pub fn build_cases(model: Model) -> xgrammar_structural_tag::Result<Value> {
                 model,
                 &case.tools,
                 case.tool_choice.clone(),
-                case.reasoning,
+                StructuralTagOptions::default().with_reasoning(case.reasoning),
             )?)?,
         );
     }

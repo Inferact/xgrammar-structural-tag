@@ -3,8 +3,8 @@ use crate::format::{Format, JsonSchemaStyle, StructuralTag};
 use crate::tool::{BuilderToolChoice, FunctionToolParam};
 
 use super::{
-    StructuralTagBuilder, StructuralTagContext, schema, styled_schema, tag, tools_with_separator,
-    triggered_with_excludes, with_optional_reasoning,
+    StructuralTagBuilder, StructuralTagContext, required_triggered_with_excludes, schema,
+    structural, styled_schema, tag, text_excludes, triggered_with_excludes,
 };
 
 /// GLM XML tool-calling structural-tag builder.
@@ -16,7 +16,7 @@ impl StructuralTagBuilder for Glm47Builder {
         Ok(build_glm_47(
             ctx.function_tools,
             ctx.tool_choice,
-            ctx.reasoning,
+            ctx.options,
         ))
     }
 }
@@ -30,18 +30,35 @@ impl StructuralTagBuilder for Glm47Builder {
 pub(super) fn build_glm_47(
     tools: &[FunctionToolParam],
     choice: BuilderToolChoice,
-    reasoning: bool,
+    options: super::StructuralTagOptions,
 ) -> StructuralTag {
     const TOOL_CALL_BEGIN_PREFIX: &str = "<tool_call>";
     const TOOL_CALL_END: &str = "</tool_call>";
     const TOOL_CALL_TRIGGER: &str = "<tool_call>";
     const THINK_TAG_END: &str = "</think>";
-    const THINK_EXCLUDES: &[&str] = &["<think>", "</think>"];
-
+    const REASONING_EXCLUDES: &[&str] = &[
+        "<think>",
+        "</think>",
+        TOOL_CALL_BEGIN_PREFIX,
+        TOOL_CALL_END,
+        "<arg_key>",
+        "</arg_key>",
+        "<arg_value>",
+        "</arg_value>",
+    ];
+    const TEXT_EXCLUDES: &[&str] = &[
+        "<think>",
+        "</think>",
+        TOOL_CALL_END,
+        "<arg_key>",
+        "</arg_key>",
+        "<arg_value>",
+        "</arg_value>",
+    ];
     let tool_tag = |tool: &FunctionToolParam| {
         tag(
             format!("{TOOL_CALL_BEGIN_PREFIX}{}", tool.function.name),
-            styled_schema(schema(&tool.function), JsonSchemaStyle::GlmXml),
+            styled_schema(schema(&tool.function), JsonSchemaStyle::GlmXml, options),
             TOOL_CALL_END,
         )
     };
@@ -49,16 +66,34 @@ pub(super) fn build_glm_47(
         BuilderToolChoice::Auto => {
             let tags = tools.iter().map(tool_tag).collect::<Vec<_>>();
             if tags.is_empty() {
-                Format::any_text_excluding(THINK_EXCLUDES)
+                Format::any_text_excluding(text_excludes(options, REASONING_EXCLUDES))
             } else {
-                triggered_with_excludes(&[TOOL_CALL_TRIGGER], tags, THINK_EXCLUDES)
+                triggered_with_excludes(
+                    &[TOOL_CALL_TRIGGER],
+                    tags,
+                    text_excludes(options, TEXT_EXCLUDES),
+                )
             }
         }
         BuilderToolChoice::Forced => Format::Tag(tool_tag(&tools[0])),
         BuilderToolChoice::Required => {
             let tags = tools.iter().map(tool_tag).collect::<Vec<_>>();
-            tools_with_separator(tags, "", true)
+            required_triggered_with_excludes(
+                &[TOOL_CALL_TRIGGER],
+                tags,
+                text_excludes(options, TEXT_EXCLUDES),
+            )
         }
     };
-    with_optional_reasoning(suffix, reasoning, THINK_TAG_END)
+    if !options.reasoning {
+        return structural(suffix);
+    }
+    structural(Format::sequence(vec![
+        Format::tag(
+            "",
+            Format::any_text_excluding(text_excludes(options, REASONING_EXCLUDES)),
+            THINK_TAG_END,
+        ),
+        suffix,
+    ]))
 }

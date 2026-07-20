@@ -1,6 +1,10 @@
 # Rust build output
 /target/
 
+# Python bytecode
+__pycache__/
+*.py[cod]
+
 # Local editor and OS files
 *.swp
 *.swo

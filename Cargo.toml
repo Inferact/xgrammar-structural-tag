@@ -1,6 +1,6 @@
 [package]
 name = "xgrammar-structural-tag"
-version = "0.1.0+xgrammar.0.2.2.4d145cc"
+version = "0.2.0+xgrammar.0.2.4.dd729e7"
 edition = "2024"
 rust-version = "1.85"
 authors = ["Bugen Zhao <i@bugenzhao.com>"]

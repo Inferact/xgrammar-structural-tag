@@ -3,8 +3,8 @@ use crate::format::{Format, StructuralTag};
 use crate::tool::{BuilderToolChoice, FunctionToolParam};
 
 use super::{
-    StructuralTagBuilder, StructuralTagContext, json_schema, schema, structural, tag,
-    tools_with_separator, triggered_with_excludes,
+    StructuralTagBuilder, StructuralTagContext, json_schema, required_triggered_with_excludes,
+    schema, structural, tag, text_excludes, triggered_with_excludes,
 };
 
 /// Llama JSON function-calling structural-tag builder.
@@ -16,7 +16,7 @@ impl StructuralTagBuilder for LlamaBuilder {
         Ok(build_llama(
             ctx.function_tools,
             ctx.tool_choice,
-            ctx.reasoning,
+            ctx.options,
         ))
     }
 }
@@ -30,7 +30,7 @@ impl StructuralTagBuilder for LlamaBuilder {
 pub(super) fn build_llama(
     tools: &[FunctionToolParam],
     choice: BuilderToolChoice,
-    _reasoning: bool,
+    options: super::StructuralTagOptions,
 ) -> StructuralTag {
     const TOOL_NAME_PREFIX: &str = "{\"name\": \"";
     const PARAMETERS_FIELD_PREFIX: &str = "\", \"parameters\": ";
@@ -49,15 +49,19 @@ pub(super) fn build_llama(
                             "{TOOL_OBJECT_BEGIN_PREFIX}{}{TOOL_OBJECT_PARAMETERS_PREFIX}",
                             tool.function.name
                         ),
-                        json_schema(schema(&tool.function)),
+                        json_schema(schema(&tool.function), options),
                         "}",
                     )
                 })
                 .collect::<Vec<_>>();
             if tags.is_empty() {
-                Format::any_text_excluding(THINK_EXCLUDES)
+                Format::any_text_excluding(text_excludes(options, THINK_EXCLUDES))
             } else {
-                triggered_with_excludes(&[TOOLS_TRIGGER], tags, THINK_EXCLUDES)
+                triggered_with_excludes(
+                    &[TOOLS_TRIGGER],
+                    tags,
+                    text_excludes(options, THINK_EXCLUDES),
+                )
             }
         }
         BuilderToolChoice::Forced => {
@@ -67,7 +71,7 @@ pub(super) fn build_llama(
                     "{TOOL_NAME_PREFIX}{}{PARAMETERS_FIELD_PREFIX}",
                     function.name
                 ),
-                json_schema(schema(function)),
+                json_schema(schema(function), options),
                 "}",
             )
         }
@@ -80,12 +84,16 @@ pub(super) fn build_llama(
                             "{TOOL_OBJECT_BEGIN_PREFIX}{}{TOOL_OBJECT_PARAMETERS_PREFIX}",
                             tool.function.name
                         ),
-                        json_schema(schema(&tool.function)),
+                        json_schema(schema(&tool.function), options),
                         "}",
                     )
                 })
                 .collect();
-            tools_with_separator(tags, "", true)
+            required_triggered_with_excludes(
+                &[TOOLS_TRIGGER],
+                tags,
+                text_excludes(options, THINK_EXCLUDES),
+            )
         }
     };
     structural(suffix)

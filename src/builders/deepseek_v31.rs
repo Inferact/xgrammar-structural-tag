@@ -3,8 +3,8 @@ use crate::format::{Format, StructuralTag};
 use crate::tool::{BuilderToolChoice, FunctionToolParam};
 
 use super::{
-    StructuralTagBuilder, StructuralTagContext, json_schema, schema, tag, tools_with_separator,
-    triggered_with_excludes, with_optional_reasoning,
+    StructuralTagBuilder, StructuralTagContext, json_schema, schema, tag, text_excludes,
+    tools_with_separator, triggered_with_excludes, with_optional_reasoning,
 };
 
 /// DeepSeek V3.1 tool-calling structural-tag builder.
@@ -16,7 +16,7 @@ impl StructuralTagBuilder for DeepSeekV31Builder {
         Ok(build_deepseek_v31(
             ctx.function_tools,
             ctx.tool_choice,
-            ctx.reasoning,
+            ctx.options,
         ))
     }
 }
@@ -30,7 +30,7 @@ impl StructuralTagBuilder for DeepSeekV31Builder {
 pub(super) fn build_deepseek_v31(
     tools: &[FunctionToolParam],
     choice: BuilderToolChoice,
-    reasoning: bool,
+    options: super::StructuralTagOptions,
 ) -> StructuralTag {
     const TOOL_CALLS_BEGIN: &str = "<｜tool▁calls▁begin｜>";
     const TOOL_CALLS_END: &str = "<｜tool▁calls▁end｜>";
@@ -43,7 +43,7 @@ pub(super) fn build_deepseek_v31(
     let tool_tag = |tool: &FunctionToolParam| {
         tag(
             format!("{TOOL_CALL_BEGIN}{}{TOOL_SEP}", tool.function.name),
-            json_schema(schema(&tool.function)),
+            json_schema(schema(&tool.function), options),
             TOOL_CALL_END,
         )
     };
@@ -51,11 +51,15 @@ pub(super) fn build_deepseek_v31(
         BuilderToolChoice::Auto => {
             let tags = tools.iter().map(tool_tag).collect::<Vec<_>>();
             if tags.is_empty() {
-                Format::any_text_excluding(THINK_EXCLUDES)
+                Format::any_text_excluding(text_excludes(options, THINK_EXCLUDES))
             } else {
                 let inner = tools_with_separator(tags, "", true);
                 let tool_calls = tag(TOOL_CALLS_BEGIN, inner, TOOL_CALLS_END);
-                triggered_with_excludes(&[TOOL_CALLS_BEGIN], vec![tool_calls], THINK_EXCLUDES)
+                triggered_with_excludes(
+                    &[TOOL_CALLS_BEGIN],
+                    vec![tool_calls],
+                    text_excludes(options, THINK_EXCLUDES),
+                )
             }
         }
         BuilderToolChoice::Forced => {
@@ -65,7 +69,7 @@ pub(super) fn build_deepseek_v31(
                     "{TOOL_CALLS_BEGIN}{TOOL_CALL_BEGIN}{}{TOOL_SEP}",
                     function.name
                 ),
-                json_schema(schema(function)),
+                json_schema(schema(function), options),
                 format!("{TOOL_CALL_END}{TOOL_CALLS_END}"),
             )
         }
@@ -78,5 +82,5 @@ pub(super) fn build_deepseek_v31(
             )
         }
     };
-    with_optional_reasoning(suffix, reasoning, THINK_TAG_END)
+    with_optional_reasoning(suffix, options.reasoning, THINK_TAG_END)
 }

@@ -68,20 +68,19 @@ the Python `Union` shapes.
    Keep one model family/style per builder file where practical.
 5. Align rustdoc with the upstream docstrings touched by the sync, following
    the Documentation Style above.
-6. Update `scripts/generate_python_golden.py` when the upstream model list or
-   golden case matrix changes. This script depends on an installed Python
-   xgrammar package and covers upstream xgrammar models only.
+6. Update `scripts/generate_python_golden.py` when the upstream model list,
+   golden case matrix, or pinned Python xgrammar version changes. The script's
+   uv metadata supplies xgrammar and covers upstream xgrammar models only.
 7. Regenerate Rust fixtures with:
 
    ```bash
    cargo run --example write_golden -- --write
    ```
 
-8. When Python xgrammar for the target upstream version is available, compare
-   upstream fixtures with:
+8. Compare upstream fixtures through the script's pinned uv environment:
 
    ```bash
-   python3 scripts/generate_python_golden.py
+   uv run scripts/generate_python_golden.py
    ```
 
    Reconcile intentional local extensions separately.

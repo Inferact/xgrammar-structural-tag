@@ -5,7 +5,13 @@
       "type": "any_text",
       "excludes": [
         "<think>",
-        "</think>"
+        "</think>",
+        "<tool_call>",
+        "</tool_call>",
+        "<arg_key>",
+        "</arg_key>",
+        "<arg_value>",
+        "</arg_value>"
       ]
     }
   },
@@ -32,7 +38,9 @@
                 "q"
               ]
             },
-            "style": "glm_xml"
+            "style": "glm_xml",
+            "any_order": false,
+            "max_whitespace_cnt": null
           },
           "end": "</tool_call>"
         }
@@ -41,14 +49,22 @@
       "stop_after_first": false,
       "excludes": [
         "<think>",
-        "</think>"
+        "</think>",
+        "</tool_call>",
+        "<arg_key>",
+        "</arg_key>",
+        "<arg_value>",
+        "</arg_value>"
       ]
     }
   },
   "required_two_tools": {
     "type": "structural_tag",
     "format": {
-      "type": "tags_with_separator",
+      "type": "triggered_tags",
+      "triggers": [
+        "<tool_call>"
+      ],
       "tags": [
         {
           "begin": "<tool_call>search",
@@ -65,7 +81,9 @@
                 "q"
               ]
             },
-            "style": "glm_xml"
+            "style": "glm_xml",
+            "any_order": false,
+            "max_whitespace_cnt": null
           },
           "end": "</tool_call>"
         },
@@ -84,14 +102,24 @@
                 "q"
               ]
             },
-            "style": "glm_xml"
+            "style": "glm_xml",
+            "any_order": false,
+            "max_whitespace_cnt": null
           },
           "end": "</tool_call>"
         }
       ],
-      "separator": "",
       "at_least_one": true,
-      "stop_after_first": false
+      "stop_after_first": false,
+      "excludes": [
+        "<think>",
+        "</think>",
+        "</tool_call>",
+        "<arg_key>",
+        "</arg_key>",
+        "<arg_value>",
+        "</arg_value>"
+      ]
     }
   },
   "reasoning_required_one_tool": {
@@ -104,12 +132,24 @@
           "begin": "",
           "content": {
             "type": "any_text",
-            "excludes": []
+            "excludes": [
+              "<think>",
+              "</think>",
+              "<tool_call>",
+              "</tool_call>",
+              "<arg_key>",
+              "</arg_key>",
+              "<arg_value>",
+              "</arg_value>"
+            ]
           },
           "end": "</think>"
         },
         {
-          "type": "tags_with_separator",
+          "type": "triggered_tags",
+          "triggers": [
+            "<tool_call>"
+          ],
           "tags": [
             {
               "begin": "<tool_call>search",
@@ -126,14 +166,24 @@
                     "q"
                   ]
                 },
-                "style": "glm_xml"
+                "style": "glm_xml",
+                "any_order": false,
+                "max_whitespace_cnt": null
               },
               "end": "</tool_call>"
             }
           ],
-          "separator": "",
           "at_least_one": true,
-          "stop_after_first": false
+          "stop_after_first": false,
+          "excludes": [
+            "<think>",
+            "</think>",
+            "</tool_call>",
+            "<arg_key>",
+            "</arg_key>",
+            "<arg_value>",
+            "</arg_value>"
+          ]
         }
       ]
     }
@@ -156,7 +206,9 @@
             "q"
           ]
         },
-        "style": "glm_xml"
+        "style": "glm_xml",
+        "any_order": false,
+        "max_whitespace_cnt": null
       },
       "end": "</tool_call>"
     }
@@ -164,7 +216,10 @@
   "allowed_required_alt": {
     "type": "structural_tag",
     "format": {
-      "type": "tags_with_separator",
+      "type": "triggered_tags",
+      "triggers": [
+        "<tool_call>"
+      ],
       "tags": [
         {
           "begin": "<tool_call>alt",
@@ -181,14 +236,24 @@
                 "q"
               ]
             },
-            "style": "glm_xml"
+            "style": "glm_xml",
+            "any_order": false,
+            "max_whitespace_cnt": null
           },
           "end": "</tool_call>"
         }
       ],
-      "separator": "",
       "at_least_one": true,
-      "stop_after_first": false
+      "stop_after_first": false,
+      "excludes": [
+        "<think>",
+        "</think>",
+        "</tool_call>",
+        "<arg_key>",
+        "</arg_key>",
+        "<arg_value>",
+        "</arg_value>"
+      ]
     }
   },
   "strict_false": {
@@ -204,7 +269,9 @@
           "content": {
             "type": "json_schema",
             "json_schema": true,
-            "style": "glm_xml"
+            "style": "glm_xml",
+            "any_order": false,
+            "max_whitespace_cnt": null
           },
           "end": "</tool_call>"
         }
@@ -213,7 +280,12 @@
       "stop_after_first": false,
       "excludes": [
         "<think>",
-        "</think>"
+        "</think>",
+        "</tool_call>",
+        "<arg_key>",
+        "</arg_key>",
+        "<arg_value>",
+        "</arg_value>"
       ]
     }
   },
@@ -230,7 +302,9 @@
           "content": {
             "type": "json_schema",
             "json_schema": true,
-            "style": "glm_xml"
+            "style": "glm_xml",
+            "any_order": false,
+            "max_whitespace_cnt": null
           },
           "end": "</tool_call>"
         }
@@ -239,7 +313,12 @@
       "stop_after_first": false,
       "excludes": [
         "<think>",
-        "</think>"
+        "</think>",
+        "</tool_call>",
+        "<arg_key>",
+        "</arg_key>",
+        "<arg_value>",
+        "</arg_value>"
       ]
     }
   }

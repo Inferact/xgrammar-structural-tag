@@ -1,9 +1,15 @@
 #!/usr/bin/env python3
+# /// script
+# requires-python = ">=3.10"
+# dependencies = [
+#     "xgrammar==0.2.4",
+# ]
+# ///
 """Generate xgrammar-origin golden fixtures for this crate.
 
-This script intentionally depends on Python xgrammar. It is a development tool
-for refreshing `tests/golden/*.json` against an installed xgrammar build, while
-the Rust crate itself has no runtime xgrammar dependency.
+Run this script through uv so its inline dependency metadata supplies the
+matching Python xgrammar release. The Rust crate itself has no runtime xgrammar
+dependency.
 """
 
 from __future__ import annotations

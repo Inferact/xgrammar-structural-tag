@@ -7,7 +7,7 @@ use serde_json::json;
 use xgrammar_structural_tag::{
     FunctionDefinition, FunctionToolParam, StructuralTag, ToolChoice, ToolParam,
     build_structural_tag,
-    builders::{StructuralTagBuilder, StructuralTagContext},
+    builders::{StructuralTagBuilder, StructuralTagContext, StructuralTagOptions},
     format::{Format, TagFormat},
     tool::function_parameters,
 };
@@ -59,7 +59,7 @@ fn main() -> xgrammar_structural_tag::Result<()> {
         CustomXmlBuilder,
         &tools,
         ToolChoice::function("search"),
-        false,
+        StructuralTagOptions::default().with_reasoning(false),
     )?;
 
     let rendered = tag.to_json_string()?;

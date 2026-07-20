@@ -30,6 +30,7 @@ use serde_json::json;
 use xgrammar_structural_tag::{
     FunctionDefinition, FunctionToolParam, Model, ToolChoice, ToolParam,
     build_structural_tag,
+    builders::StructuralTagOptions,
 };
 
 fn main() -> xgrammar_structural_tag::Result<()> {
@@ -47,7 +48,7 @@ fn main() -> xgrammar_structural_tag::Result<()> {
         Model::Qwen35,
         &tools,
         ToolChoice::required(),
-        true,
+        StructuralTagOptions::default(),
     )?;
 
     let structural_tag_json = tag.to_json_string()?;
@@ -81,11 +82,11 @@ Refresh Rust-generated golden fixtures:
 cargo run --example write_golden -- --write
 ```
 
-Refresh fixtures from Python xgrammar when an installed xgrammar build is
-available:
+Refresh upstream fixtures with the Python xgrammar version pinned in the
+script's uv metadata:
 
 ```bash
-python3 scripts/generate_python_golden.py
+uv run scripts/generate_python_golden.py
 ```
 
 The crate version build metadata records the xgrammar source version used for

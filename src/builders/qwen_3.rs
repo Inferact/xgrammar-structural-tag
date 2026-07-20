@@ -3,8 +3,8 @@ use crate::format::{Format, StructuralTag};
 use crate::tool::{BuilderToolChoice, FunctionToolParam};
 
 use super::{
-    StructuralTagBuilder, StructuralTagContext, json_schema, schema, structural, tag,
-    tools_with_separator, triggered_with_excludes,
+    StructuralTagBuilder, StructuralTagContext, json_schema, required_triggered_with_excludes,
+    schema, structural, tag, text_excludes, triggered_with_excludes,
 };
 
 /// Qwen 3 JSON-in-tag tool-calling structural-tag builder.
@@ -16,7 +16,7 @@ impl StructuralTagBuilder for Qwen3Builder {
         Ok(build_qwen_3(
             ctx.function_tools,
             ctx.tool_choice,
-            ctx.reasoning,
+            ctx.options,
         ))
     }
 }
@@ -29,7 +29,7 @@ impl StructuralTagBuilder for Qwen3Builder {
 pub(super) fn build_qwen_3(
     tools: &[FunctionToolParam],
     choice: BuilderToolChoice,
-    reasoning: bool,
+    options: super::StructuralTagOptions,
 ) -> StructuralTag {
     const TOOL_CALL_BEGIN_PREFIX: &str = "<tool_call>\n{\"name\": \"";
     const ARGUMENTS_FIELD_PREFIX: &str = "\", \"arguments\": ";
@@ -45,7 +45,7 @@ pub(super) fn build_qwen_3(
                 "{TOOL_CALL_BEGIN_PREFIX}{}{ARGUMENTS_FIELD_PREFIX}",
                 tool.function.name
             ),
-            json_schema(schema(&tool.function)),
+            json_schema(schema(&tool.function), options),
             TOOL_CALL_END,
         )
     };
@@ -53,18 +53,26 @@ pub(super) fn build_qwen_3(
         BuilderToolChoice::Auto => {
             let tags = tools.iter().map(tool_tag).collect::<Vec<_>>();
             if tags.is_empty() {
-                Format::any_text_excluding(THINK_EXCLUDES)
+                Format::any_text_excluding(text_excludes(options, THINK_EXCLUDES))
             } else {
-                triggered_with_excludes(&[TOOL_CALL_TRIGGER], tags, THINK_EXCLUDES)
+                triggered_with_excludes(
+                    &[TOOL_CALL_TRIGGER],
+                    tags,
+                    text_excludes(options, THINK_EXCLUDES),
+                )
             }
         }
         BuilderToolChoice::Forced => Format::Tag(tool_tag(&tools[0])),
         BuilderToolChoice::Required => {
             let tags = tools.iter().map(tool_tag).collect::<Vec<_>>();
-            tools_with_separator(tags, "\n", true)
+            required_triggered_with_excludes(
+                &[TOOL_CALL_TRIGGER],
+                tags,
+                text_excludes(options, THINK_EXCLUDES),
+            )
         }
     };
-    if !reasoning {
+    if !options.reasoning {
         return structural(suffix);
     }
     structural(Format::sequence(vec![

@@ -1,4 +1,10 @@
 #!/usr/bin/env python3
+# /// script
+# requires-python = ">=3.10"
+# dependencies = [
+#     "xgrammar==0.2.4",
+# ]
+# ///
 """Benchmark upstream xgrammar structural-tag golden case construction.
 
 This script intentionally keeps Python measurements separate from Rust
@@ -19,8 +25,8 @@ try:
 except ModuleNotFoundError as err:
     if err.name == "xgrammar":
         raise SystemExit(
-            "missing Python package 'xgrammar'; install it or run with "
-            "`uv run --with xgrammar==0.2.2 python scripts/bench_python_structural_tag.py`"
+            "missing Python package 'xgrammar'; run with "
+            "`uv run scripts/bench_python_structural_tag.py`"
         ) from err
     raise
 

@@ -66,6 +66,45 @@ pub struct JsonSchemaFormat {
     /// Conversion style for non-JSON tool argument syntaxes.
     #[serde(default)]
     pub style: JsonSchemaStyle,
+    /// Whether object properties may appear in any order.
+    ///
+    /// When enabled, key validity and value schemas are enforced while required
+    /// key presence and key uniqueness are relaxed. This applies recursively to
+    /// nested objects.
+    #[serde(default)]
+    pub any_order: bool,
+    /// Maximum consecutive whitespace characters, or no limit when unset.
+    pub max_whitespace_cnt: Option<i32>,
+}
+
+impl JsonSchemaFormat {
+    /// Build a standard JSON schema format.
+    pub fn new(json_schema: Value) -> Self {
+        Self {
+            json_schema,
+            style: JsonSchemaStyle::Json,
+            any_order: false,
+            max_whitespace_cnt: None,
+        }
+    }
+
+    /// Set the model-specific schema rendering style.
+    pub fn with_style(mut self, style: JsonSchemaStyle) -> Self {
+        self.style = style;
+        self
+    }
+
+    /// Configure whether object properties may appear in any order.
+    pub fn with_any_order(mut self, any_order: bool) -> Self {
+        self.any_order = any_order;
+        self
+    }
+
+    /// Limit consecutive whitespace characters in the generated schema grammar.
+    pub fn with_max_whitespace_cnt(mut self, max_whitespace_cnt: Option<i32>) -> Self {
+        self.max_whitespace_cnt = max_whitespace_cnt;
+        self
+    }
 }
 
 /// A format that matches arbitrary text.
@@ -301,6 +340,31 @@ pub struct TriggeredTagsFormat {
     pub excludes: Vec<String>,
 }
 
+impl TriggeredTagsFormat {
+    /// Build a triggered-tags format with optional tool calls and unrestricted text.
+    pub fn new(triggers: &[&str], tags: Vec<TagFormat>) -> Self {
+        Self {
+            triggers: triggers.iter().map(|s| (*s).to_string()).collect(),
+            tags,
+            at_least_one: false,
+            stop_after_first: false,
+            excludes: vec![],
+        }
+    }
+
+    /// Set strings excluded from free-text regions.
+    pub fn with_excludes(mut self, excludes: &[&str]) -> Self {
+        self.excludes = excludes.iter().map(|s| (*s).to_string()).collect();
+        self
+    }
+
+    /// Require at least one triggered tag.
+    pub fn require_at_least_one(mut self) -> Self {
+        self.at_least_one = true;
+        self
+    }
+}
+
 /// A token-level triggered tag dispatcher.
 ///
 /// Like [`TriggeredTagsFormat`] but dispatches on trigger token IDs or strings
@@ -479,15 +543,12 @@ impl Format {
 
     /// Build a standard JSON schema format.
     pub fn json_schema(json_schema: Value) -> Self {
-        Self::JsonSchema(JsonSchemaFormat {
-            json_schema,
-            style: JsonSchemaStyle::Json,
-        })
+        Self::JsonSchema(JsonSchemaFormat::new(json_schema))
     }
 
     /// Build a JSON schema format with an explicit style.
     pub fn json_schema_style(json_schema: Value, style: JsonSchemaStyle) -> Self {
-        Self::JsonSchema(JsonSchemaFormat { json_schema, style })
+        Self::JsonSchema(JsonSchemaFormat::new(json_schema).with_style(style))
     }
 
     /// Build an arbitrary text format.
@@ -530,13 +591,7 @@ impl Format {
 
     /// Build a triggered-tags format.
     pub fn triggered_tags(triggers: &[&str], tags: Vec<TagFormat>) -> Self {
-        Self::TriggeredTags(TriggeredTagsFormat {
-            triggers: triggers.iter().map(|s| (*s).to_string()).collect(),
-            tags,
-            at_least_one: false,
-            stop_after_first: false,
-            excludes: vec![],
-        })
+        Self::TriggeredTags(TriggeredTagsFormat::new(triggers, tags))
     }
 
     /// Build tags with a separator.
@@ -551,6 +606,36 @@ impl Format {
             separator: separator.into(),
             at_least_one,
             stop_after_first,
+        })
+    }
+
+    /// Build an optional child format.
+    pub fn optional(content: Format) -> Self {
+        Self::Optional(OptionalFormat {
+            content: Box::new(content),
+        })
+    }
+
+    /// Build a one-or-more child format.
+    pub fn plus(content: Format) -> Self {
+        Self::Plus(PlusFormat {
+            content: Box::new(content),
+        })
+    }
+
+    /// Build a zero-or-more child format.
+    pub fn star(content: Format) -> Self {
+        Self::Star(StarFormat {
+            content: Box::new(content),
+        })
+    }
+
+    /// Build a bounded or unbounded repeated child format.
+    pub fn repeat(content: Format, min: i64, max: i64) -> Self {
+        Self::Repeat(RepeatFormat {
+            min,
+            max,
+            content: Box::new(content),
         })
     }
 }
@@ -642,20 +727,10 @@ mod tests {
             true,
             false,
         ));
-        round_trip(Format::Optional(OptionalFormat {
-            content: Box::new(Format::const_string("x")),
-        }));
-        round_trip(Format::Plus(PlusFormat {
-            content: Box::new(Format::const_string("x")),
-        }));
-        round_trip(Format::Star(StarFormat {
-            content: Box::new(Format::const_string("x")),
-        }));
-        round_trip(Format::Repeat(RepeatFormat {
-            min: 1,
-            max: 3,
-            content: Box::new(Format::const_string("x")),
-        }));
+        round_trip(Format::optional(Format::const_string("x")));
+        round_trip(Format::plus(Format::const_string("x")));
+        round_trip(Format::star(Format::const_string("x")));
+        round_trip(Format::repeat(Format::const_string("x"), 1, 3));
         round_trip(Format::Dispatch(DispatchFormat {
             rules: vec![("<x>".to_string(), Format::Tag(tag.clone()))],
             r#loop: true,
@@ -681,5 +756,17 @@ mod tests {
         .unwrap();
         assert_eq!(value["loop"], json!(false));
         assert!(value.get("loop_").is_none());
+    }
+
+    #[test]
+    fn json_schema_options_use_upstream_wire_fields() {
+        let format = Format::JsonSchema(
+            JsonSchemaFormat::new(json!({"type": "object"}))
+                .with_any_order(true)
+                .with_max_whitespace_cnt(Some(2)),
+        );
+        let value = serde_json::to_value(format).unwrap();
+        assert_eq!(value["any_order"], true);
+        assert_eq!(value["max_whitespace_cnt"], 2);
     }
 }

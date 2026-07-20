@@ -34,7 +34,9 @@
                       "q"
                     ]
                   },
-                  "style": "glm_xml"
+                  "style": "glm_xml",
+                  "any_order": false,
+                  "max_whitespace_cnt": null
                 },
                 "end": "</tool_call>"
               }
@@ -78,7 +80,9 @@
                     "q"
                   ]
                 },
-                "style": "glm_xml"
+                "style": "glm_xml",
+                "any_order": false,
+                "max_whitespace_cnt": null
               },
               "end": "</tool_call>"
             },
@@ -97,7 +101,9 @@
                     "q"
                   ]
                 },
-                "style": "glm_xml"
+                "style": "glm_xml",
+                "any_order": false,
+                "max_whitespace_cnt": null
               },
               "end": "</tool_call>"
             }
@@ -140,7 +146,9 @@
                     "q"
                   ]
                 },
-                "style": "glm_xml"
+                "style": "glm_xml",
+                "any_order": false,
+                "max_whitespace_cnt": null
               },
               "end": "</tool_call>"
             }
@@ -181,7 +189,9 @@
                 "q"
               ]
             },
-            "style": "glm_xml"
+            "style": "glm_xml",
+            "any_order": false,
+            "max_whitespace_cnt": null
           },
           "end": "</tool_call>"
         },
@@ -219,7 +229,9 @@
                     "q"
                   ]
                 },
-                "style": "glm_xml"
+                "style": "glm_xml",
+                "any_order": false,
+                "max_whitespace_cnt": null
               },
               "end": "</tool_call>"
             }
@@ -253,7 +265,9 @@
                 "content": {
                   "type": "json_schema",
                   "json_schema": true,
-                  "style": "glm_xml"
+                  "style": "glm_xml",
+                  "any_order": false,
+                  "max_whitespace_cnt": null
                 },
                 "end": "</tool_call>"
               }
@@ -288,7 +302,9 @@
                 "content": {
                   "type": "json_schema",
                   "json_schema": true,
-                  "style": "glm_xml"
+                  "style": "glm_xml",
+                  "any_order": false,
+                  "max_whitespace_cnt": null
                 },
                 "end": "</tool_call>"
               }

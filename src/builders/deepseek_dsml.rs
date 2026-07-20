@@ -3,8 +3,8 @@ use crate::format::{Format, JsonSchemaStyle, StructuralTag, TagFormat};
 use crate::tool::{BuilderToolChoice, FunctionToolParam};
 
 use super::{
-    StructuralTagBuilder, StructuralTagContext, schema, styled_schema, tag, tools_with_separator,
-    triggered_with_excludes, with_optional_reasoning,
+    StructuralTagBuilder, StructuralTagContext, schema, styled_schema, tag, text_excludes,
+    tools_with_separator, triggered_with_excludes, with_optional_reasoning,
 };
 
 /// DeepSeek V3.2 DSML structural-tag builder.
@@ -16,7 +16,7 @@ impl StructuralTagBuilder for DeepSeekV32Builder {
         Ok(build_deepseek_v32(
             ctx.function_tools,
             ctx.tool_choice,
-            ctx.reasoning,
+            ctx.options,
         ))
     }
 }
@@ -30,7 +30,7 @@ impl StructuralTagBuilder for DeepSeekV4Builder {
         Ok(build_deepseek_v4(
             ctx.function_tools,
             ctx.tool_choice,
-            ctx.reasoning,
+            ctx.options,
         ))
     }
 }
@@ -40,13 +40,18 @@ fn dsml_tool_tag(
     invoke_begin_prefix: &str,
     invoke_begin_suffix: &str,
     invoke_end: &str,
+    options: super::StructuralTagOptions,
 ) -> TagFormat {
     tag(
         format!(
             "{invoke_begin_prefix}{}{invoke_begin_suffix}",
             tool.function.name
         ),
-        styled_schema(schema(&tool.function), JsonSchemaStyle::DeepseekXml),
+        styled_schema(
+            schema(&tool.function),
+            JsonSchemaStyle::DeepseekXml,
+            options,
+        ),
         invoke_end,
     )
 }
@@ -58,7 +63,7 @@ fn dsml_tool_tag(
 fn build_deepseek_dsml(
     tools: &[FunctionToolParam],
     choice: BuilderToolChoice,
-    reasoning: bool,
+    options: super::StructuralTagOptions,
     function_calls_begin: &str,
     function_calls_end: &str,
     function_calls_trigger: &str,
@@ -76,15 +81,25 @@ fn build_deepseek_dsml(
             let tags = tools
                 .iter()
                 .map(|tool| {
-                    dsml_tool_tag(tool, INVOKE_BEGIN_PREFIX, INVOKE_BEGIN_SUFFIX, INVOKE_END)
+                    dsml_tool_tag(
+                        tool,
+                        INVOKE_BEGIN_PREFIX,
+                        INVOKE_BEGIN_SUFFIX,
+                        INVOKE_END,
+                        options,
+                    )
                 })
                 .collect::<Vec<_>>();
             if tags.is_empty() {
-                Format::any_text_excluding(THINK_EXCLUDES)
+                Format::any_text_excluding(text_excludes(options, THINK_EXCLUDES))
             } else {
                 let content = tools_with_separator(tags, INVOKE_SEPARATOR, true);
                 let outer = tag(function_calls_begin, content, function_calls_end);
-                triggered_with_excludes(&[function_calls_trigger], vec![outer], THINK_EXCLUDES)
+                triggered_with_excludes(
+                    &[function_calls_trigger],
+                    vec![outer],
+                    text_excludes(options, THINK_EXCLUDES),
+                )
             }
         }
         BuilderToolChoice::Forced => Format::sequence(vec![
@@ -94,6 +109,7 @@ fn build_deepseek_dsml(
                 INVOKE_BEGIN_PREFIX,
                 INVOKE_BEGIN_SUFFIX,
                 INVOKE_END,
+                options,
             )),
             Format::const_string(function_calls_end),
         ]),
@@ -101,7 +117,13 @@ fn build_deepseek_dsml(
             let tags = tools
                 .iter()
                 .map(|tool| {
-                    dsml_tool_tag(tool, INVOKE_BEGIN_PREFIX, INVOKE_BEGIN_SUFFIX, INVOKE_END)
+                    dsml_tool_tag(
+                        tool,
+                        INVOKE_BEGIN_PREFIX,
+                        INVOKE_BEGIN_SUFFIX,
+                        INVOKE_END,
+                        options,
+                    )
                 })
                 .collect::<Vec<_>>();
             Format::sequence(vec![
@@ -111,7 +133,7 @@ fn build_deepseek_dsml(
             ])
         }
     };
-    with_optional_reasoning(suffix, reasoning, THINK_TAG_END)
+    with_optional_reasoning(suffix, options.reasoning, THINK_TAG_END)
 }
 
 /// Build a DeepSeek-V3.2-style structural tag (DSML format).
@@ -120,12 +142,12 @@ fn build_deepseek_dsml(
 pub(super) fn build_deepseek_v32(
     tools: &[FunctionToolParam],
     choice: BuilderToolChoice,
-    reasoning: bool,
+    options: super::StructuralTagOptions,
 ) -> StructuralTag {
     build_deepseek_dsml(
         tools,
         choice,
-        reasoning,
+        options,
         "<｜DSML｜function_calls>\n",
         "</｜DSML｜function_calls>",
         "<｜DSML｜function_calls>",
@@ -138,12 +160,12 @@ pub(super) fn build_deepseek_v32(
 pub(super) fn build_deepseek_v4(
     tools: &[FunctionToolParam],
     choice: BuilderToolChoice,
-    reasoning: bool,
+    options: super::StructuralTagOptions,
 ) -> StructuralTag {
     build_deepseek_dsml(
         tools,
         choice,
-        reasoning,
+        options,
         "<｜DSML｜tool_calls>\n",
         "</｜DSML｜tool_calls>",
         "<｜DSML｜tool_calls>",

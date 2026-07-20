@@ -32,7 +32,9 @@
                 "q"
               ]
             },
-            "style": "json"
+            "style": "json",
+            "any_order": false,
+            "max_whitespace_cnt": null
           },
           "end": "}\n</tool_call>"
         }
@@ -48,7 +50,10 @@
   "required_two_tools": {
     "type": "structural_tag",
     "format": {
-      "type": "tags_with_separator",
+      "type": "triggered_tags",
+      "triggers": [
+        "<tool_call>"
+      ],
       "tags": [
         {
           "begin": "<tool_call>\n{\"name\": \"search\", \"arguments\": ",
@@ -65,7 +70,9 @@
                 "q"
               ]
             },
-            "style": "json"
+            "style": "json",
+            "any_order": false,
+            "max_whitespace_cnt": null
           },
           "end": "}\n</tool_call>"
         },
@@ -84,14 +91,19 @@
                 "q"
               ]
             },
-            "style": "json"
+            "style": "json",
+            "any_order": false,
+            "max_whitespace_cnt": null
           },
           "end": "}\n</tool_call>"
         }
       ],
-      "separator": "\n",
       "at_least_one": true,
-      "stop_after_first": false
+      "stop_after_first": false,
+      "excludes": [
+        "<think>",
+        "</think>"
+      ]
     }
   },
   "reasoning_required_one_tool": {
@@ -118,7 +130,10 @@
           ]
         },
         {
-          "type": "tags_with_separator",
+          "type": "triggered_tags",
+          "triggers": [
+            "<tool_call>"
+          ],
           "tags": [
             {
               "begin": "<tool_call>\n{\"name\": \"search\", \"arguments\": ",
@@ -135,14 +150,19 @@
                     "q"
                   ]
                 },
-                "style": "json"
+                "style": "json",
+                "any_order": false,
+                "max_whitespace_cnt": null
               },
               "end": "}\n</tool_call>"
             }
           ],
-          "separator": "\n",
           "at_least_one": true,
-          "stop_after_first": false
+          "stop_after_first": false,
+          "excludes": [
+            "<think>",
+            "</think>"
+          ]
         }
       ]
     }
@@ -165,7 +185,9 @@
             "q"
           ]
         },
-        "style": "json"
+        "style": "json",
+        "any_order": false,
+        "max_whitespace_cnt": null
       },
       "end": "}\n</tool_call>"
     }
@@ -173,7 +195,10 @@
   "allowed_required_alt": {
     "type": "structural_tag",
     "format": {
-      "type": "tags_with_separator",
+      "type": "triggered_tags",
+      "triggers": [
+        "<tool_call>"
+      ],
       "tags": [
         {
           "begin": "<tool_call>\n{\"name\": \"alt\", \"arguments\": ",
@@ -190,14 +215,19 @@
                 "q"
               ]
             },
-            "style": "json"
+            "style": "json",
+            "any_order": false,
+            "max_whitespace_cnt": null
           },
           "end": "}\n</tool_call>"
         }
       ],
-      "separator": "\n",
       "at_least_one": true,
-      "stop_after_first": false
+      "stop_after_first": false,
+      "excludes": [
+        "<think>",
+        "</think>"
+      ]
     }
   },
   "strict_false": {
@@ -213,7 +243,9 @@
           "content": {
             "type": "json_schema",
             "json_schema": true,
-            "style": "json"
+            "style": "json",
+            "any_order": false,
+            "max_whitespace_cnt": null
           },
           "end": "}\n</tool_call>"
         }
@@ -239,7 +271,9 @@
           "content": {
             "type": "json_schema",
             "json_schema": true,
-            "style": "json"
+            "style": "json",
+            "any_order": false,
+            "max_whitespace_cnt": null
           },
           "end": "}\n</tool_call>"
         }

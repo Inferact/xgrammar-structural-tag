@@ -3,8 +3,8 @@ use crate::format::{Format, StructuralTag, TagFormat};
 use crate::tool::{BuilderToolChoice, FunctionToolParam};
 
 use super::{
-    StructuralTagBuilder, StructuralTagContext, json_schema, schema, structural, tag,
-    tools_with_separator,
+    StructuralTagBuilder, StructuralTagContext, StructuralTagOptions, json_schema, schema,
+    structural, tag, tools_with_separator,
 };
 
 /// Hermes tool-calling structural-tag builder.
@@ -13,7 +13,11 @@ pub struct HermesBuilder;
 
 impl StructuralTagBuilder for HermesBuilder {
     fn build(&self, ctx: StructuralTagContext<'_>) -> Result<StructuralTag> {
-        Ok(build_hermes(ctx.function_tools, ctx.tool_choice))
+        Ok(build_hermes(
+            ctx.function_tools,
+            ctx.tool_choice,
+            ctx.options,
+        ))
     }
 }
 
@@ -25,8 +29,12 @@ impl StructuralTagBuilder for HermesBuilder {
 pub(super) fn build_hermes(
     tools: &[FunctionToolParam],
     choice: BuilderToolChoice,
+    options: StructuralTagOptions,
 ) -> StructuralTag {
-    fn hermes_tool_tags(tools: &[FunctionToolParam]) -> Vec<TagFormat> {
+    fn hermes_tool_tags(
+        tools: &[FunctionToolParam],
+        options: StructuralTagOptions,
+    ) -> Vec<TagFormat> {
         const ARGUMENTS_FIELD_PREFIX: &str = "\", \"arguments\": ";
         let formats = [
             ("<tool_call>\n{\"name\": \"", "}\n</tool_call>"),
@@ -38,7 +46,7 @@ pub(super) fn build_hermes(
                 formats.iter().map(move |(begin, end)| {
                     tag(
                         format!("{begin}{}{ARGUMENTS_FIELD_PREFIX}", tool.function.name),
-                        json_schema(schema(&tool.function)),
+                        json_schema(schema(&tool.function), options),
                         *end,
                     )
                 })
@@ -48,7 +56,7 @@ pub(super) fn build_hermes(
 
     let suffix = match choice {
         BuilderToolChoice::Auto => {
-            let tags = hermes_tool_tags(tools);
+            let tags = hermes_tool_tags(tools, options);
             if tags.is_empty() {
                 Format::any_text()
             } else {
@@ -56,9 +64,11 @@ pub(super) fn build_hermes(
             }
         }
         BuilderToolChoice::Forced => {
-            Format::tags_with_separator(hermes_tool_tags(tools), "", true, true)
+            Format::tags_with_separator(hermes_tool_tags(tools, options), "", true, true)
         }
-        BuilderToolChoice::Required => tools_with_separator(hermes_tool_tags(tools), "", true),
+        BuilderToolChoice::Required => {
+            tools_with_separator(hermes_tool_tags(tools, options), "", true)
+        }
     };
     structural(suffix)
 }

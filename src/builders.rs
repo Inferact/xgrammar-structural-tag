@@ -14,7 +14,9 @@ mod qwen_3;
 mod qwen_35;
 
 use crate::error::Result;
-use crate::format::{Format, JsonSchemaStyle, StructuralTag, TagFormat, TriggeredTagsFormat};
+use crate::format::{
+    Format, JsonSchemaFormat, JsonSchemaStyle, StructuralTag, TagFormat, TriggeredTagsFormat,
+};
 use crate::tool::{
     BuilderToolChoice, BuiltinToolParam, FunctionToolParam, ToolChoice, ToolParam,
     function_parameters, normalize_tool_choice,
@@ -33,6 +35,57 @@ pub use minimax::MinimaxBuilder;
 pub use qwen_3::Qwen3Builder;
 pub use qwen_35::Qwen35Builder;
 
+/// Options shared by model-specific structural-tag builders.
+#[non_exhaustive]
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct StructuralTagOptions {
+    /// Whether the request enables model reasoning sections.
+    pub reasoning: bool,
+    /// Whether JSON object properties may appear in any order.
+    pub any_order: bool,
+    /// Whether free-text regions exclude model special tokens.
+    pub exclude_special_tokens: bool,
+    /// Maximum consecutive whitespace characters in JSON schema regions.
+    pub max_whitespace_cnt: Option<i32>,
+}
+
+impl StructuralTagOptions {
+    /// Configure whether the request enables model reasoning sections.
+    pub const fn with_reasoning(mut self, reasoning: bool) -> Self {
+        self.reasoning = reasoning;
+        self
+    }
+
+    /// Configure whether JSON object properties may appear in any order.
+    pub const fn with_any_order(mut self, any_order: bool) -> Self {
+        self.any_order = any_order;
+        self
+    }
+
+    /// Configure whether free-text regions exclude model special tokens.
+    pub const fn with_exclude_special_tokens(mut self, exclude_special_tokens: bool) -> Self {
+        self.exclude_special_tokens = exclude_special_tokens;
+        self
+    }
+
+    /// Limit consecutive whitespace characters in JSON schema regions.
+    pub const fn with_max_whitespace_cnt(mut self, max_whitespace_cnt: Option<i32>) -> Self {
+        self.max_whitespace_cnt = max_whitespace_cnt;
+        self
+    }
+}
+
+impl Default for StructuralTagOptions {
+    fn default() -> Self {
+        Self {
+            reasoning: true,
+            any_order: false,
+            exclude_special_tokens: true,
+            max_whitespace_cnt: None,
+        }
+    }
+}
+
 /// Normalized inputs passed to a structural-tag builder.
 ///
 /// Public tool-choice forms are resolved before this context is created: named
@@ -47,8 +100,8 @@ pub struct StructuralTagContext<'a> {
     pub builtin_tools: &'a [BuiltinToolParam],
     /// Builder-facing tool-choice mode.
     pub tool_choice: BuilderToolChoice,
-    /// Whether the request enables model reasoning sections.
-    pub reasoning: bool,
+    /// Shared request options.
+    pub options: StructuralTagOptions,
 }
 
 /// A model-specific structural-tag template builder.
@@ -77,7 +130,7 @@ pub trait StructuralTagBuilder {
 /// - [`ToolChoice::builtin`] forces one builtin tool, matched by type.
 /// - [`ToolChoice::allowed_tools`] restricts the tools before applying its mode.
 ///
-/// `reasoning` toggles the reasoning part for models that support both modes
+/// [`StructuralTagOptions::reasoning`] toggles the reasoning part for models that support both modes
 /// (e.g. Qwen 3.6, DeepSeek V4). It has no effect on models without a reasoning
 /// part, and for reasoning-only models `false` keeps the reasoning section with
 /// empty content.
@@ -96,14 +149,14 @@ pub fn build_structural_tag(
     builder: impl StructuralTagBuilder,
     tools: &[ToolParam],
     tool_choice: ToolChoice,
-    reasoning: bool,
+    options: StructuralTagOptions,
 ) -> Result<StructuralTag> {
     let normalized = normalize_tool_choice(tools, tool_choice)?;
     builder.build(StructuralTagContext {
         function_tools: &normalized.function_tools,
         builtin_tools: &normalized.builtin_tools,
         tool_choice: normalized.choice,
-        reasoning,
+        options,
     })
 }
 
@@ -119,7 +172,7 @@ pub fn build_optional_structural_tag(
     builder: impl StructuralTagBuilder,
     tools: &[ToolParam],
     tool_choice: ToolChoice,
-    reasoning: bool,
+    options: StructuralTagOptions,
 ) -> Result<Option<StructuralTag>> {
     if tools.is_empty()
         || matches!(
@@ -129,19 +182,32 @@ pub fn build_optional_structural_tag(
     {
         return Ok(None);
     }
-    build_structural_tag(builder, tools, tool_choice, reasoning).map(Some)
+    build_structural_tag(builder, tools, tool_choice, options).map(Some)
 }
 
 pub(super) fn schema(function: &crate::tool::FunctionDefinition) -> serde_json::Value {
     function_parameters(function)
 }
 
-pub(super) fn json_schema(value: serde_json::Value) -> Format {
-    Format::json_schema(value)
+pub(super) fn json_schema(value: serde_json::Value, options: StructuralTagOptions) -> Format {
+    Format::JsonSchema(
+        JsonSchemaFormat::new(value)
+            .with_any_order(options.any_order)
+            .with_max_whitespace_cnt(options.max_whitespace_cnt),
+    )
 }
 
-pub(super) fn styled_schema(value: serde_json::Value, style: JsonSchemaStyle) -> Format {
-    Format::json_schema_style(value, style)
+pub(super) fn styled_schema(
+    value: serde_json::Value,
+    style: JsonSchemaStyle,
+    options: StructuralTagOptions,
+) -> Format {
+    Format::JsonSchema(
+        JsonSchemaFormat::new(value)
+            .with_style(style)
+            .with_any_order(options.any_order)
+            .with_max_whitespace_cnt(options.max_whitespace_cnt),
+    )
 }
 
 pub(super) fn tag(
@@ -161,13 +227,30 @@ pub(super) fn triggered_with_excludes(
     tags: Vec<TagFormat>,
     excludes: &[&str],
 ) -> Format {
-    Format::TriggeredTags(TriggeredTagsFormat {
-        triggers: triggers.iter().map(|s| (*s).to_string()).collect(),
-        tags,
-        at_least_one: false,
-        stop_after_first: false,
-        excludes: excludes.iter().map(|s| (*s).to_string()).collect(),
-    })
+    Format::TriggeredTags(TriggeredTagsFormat::new(triggers, tags).with_excludes(excludes))
+}
+
+pub(super) fn required_triggered_with_excludes(
+    triggers: &[&str],
+    tags: Vec<TagFormat>,
+    excludes: &[&str],
+) -> Format {
+    Format::TriggeredTags(
+        TriggeredTagsFormat::new(triggers, tags)
+            .with_excludes(excludes)
+            .require_at_least_one(),
+    )
+}
+
+pub(super) fn text_excludes<'a>(
+    options: StructuralTagOptions,
+    excludes: &'a [&'a str],
+) -> &'a [&'a str] {
+    if options.exclude_special_tokens {
+        excludes
+    } else {
+        &[]
+    }
 }
 
 pub(super) fn tools_with_separator(
@@ -217,11 +300,12 @@ mod tests {
     #[test]
     fn every_model_builds_required_and_forced() {
         let tools = vec![tool("search"), tool("alt")];
+        let options = StructuralTagOptions::default().with_reasoning(false);
         for model in Model::VARIANTS {
             let required =
-                build_structural_tag(*model, &tools, ToolChoice::required(), false).unwrap();
+                build_structural_tag(*model, &tools, ToolChoice::required(), options).unwrap();
             let forced =
-                build_structural_tag(*model, &tools, ToolChoice::function("search"), false)
+                build_structural_tag(*model, &tools, ToolChoice::function("search"), options)
                     .unwrap();
             assert_eq!(
                 serde_json::to_value(required).unwrap()["type"],
@@ -237,16 +321,21 @@ mod tests {
     #[test]
     fn optional_skips_empty_tools_and_none_choice() {
         assert!(
-            build_optional_structural_tag(Model::Llama, &[], ToolChoice::auto(), false)
-                .unwrap()
-                .is_none()
+            build_optional_structural_tag(
+                Model::Llama,
+                &[],
+                ToolChoice::auto(),
+                StructuralTagOptions::default(),
+            )
+            .unwrap()
+            .is_none()
         );
         assert!(
             build_optional_structural_tag(
                 Model::Llama,
                 &[tool("search")],
                 ToolChoice::none(),
-                false
+                StructuralTagOptions::default(),
             )
             .unwrap()
             .is_none()
@@ -287,24 +376,66 @@ mod tests {
             Model::Qwen35,
             &[tool("run_sql")],
             ToolChoice::required(),
-            false,
+            StructuralTagOptions::default().with_reasoning(false),
         )
         .unwrap();
         let value: Value = serde_json::to_value(tag).unwrap();
-        assert_eq!(value["format"]["type"], "tags_with_separator");
+        assert_eq!(value["format"]["type"], "triggered_tags");
+        assert_eq!(value["format"]["at_least_one"], true);
         assert_eq!(value["format"]["tags"][0]["content"]["style"], "qwen_xml");
+    }
+
+    #[test]
+    fn request_options_flow_to_schema_and_text_regions() {
+        let options = StructuralTagOptions::default()
+            .with_reasoning(false)
+            .with_any_order(true)
+            .with_exclude_special_tokens(false)
+            .with_max_whitespace_cnt(Some(2));
+        let tag =
+            build_structural_tag(Model::Llama, &[tool("search")], ToolChoice::auto(), options)
+                .unwrap();
+        let value: Value = serde_json::to_value(tag).unwrap();
+        assert_eq!(value["format"]["excludes"], json!([]));
+        assert_eq!(value["format"]["tags"][0]["content"]["any_order"], true);
+        assert_eq!(
+            value["format"]["tags"][0]["content"]["max_whitespace_cnt"],
+            2
+        );
+    }
+
+    #[test]
+    fn glm_text_regions_exclude_control_tokens() {
+        let tag = build_structural_tag(
+            Model::Glm47,
+            &[tool("search")],
+            ToolChoice::auto(),
+            StructuralTagOptions::default(),
+        )
+        .unwrap();
+        let value: Value = serde_json::to_value(tag).unwrap();
+        let reasoning_excludes = value["format"]["elements"][0]["content"]["excludes"]
+            .as_array()
+            .unwrap();
+        let text_excludes = value["format"]["elements"][1]["excludes"]
+            .as_array()
+            .unwrap();
+        assert!(reasoning_excludes.len() > text_excludes.len());
+        assert!(text_excludes.contains(&json!("<arg_key>")));
+        assert!(!text_excludes.contains(&json!("<tool_call>")));
     }
 
     #[test]
     fn builtin_model_builder_matches_model_adapter() {
         let tools = vec![tool("run_sql")];
+        let options = StructuralTagOptions::default().with_reasoning(false);
         let from_model =
-            build_structural_tag(Model::Qwen35, &tools, ToolChoice::required(), false).unwrap();
+            build_structural_tag(Model::Qwen35, &tools, ToolChoice::required(), options).unwrap();
         let from_builder = build_structural_tag(
             Model::Qwen35.builder(),
             &tools,
             ToolChoice::required(),
-            false,
+            options,
         )
         .unwrap();
         assert_eq!(from_builder, from_model);
@@ -320,7 +451,7 @@ mod tests {
                 .map(|tool| {
                     tag(
                         format!("<call name=\"{}\">", tool.function.name),
-                        json_schema(schema(&tool.function)),
+                        json_schema(schema(&tool.function), ctx.options),
                         "</call>",
                     )
                 })
@@ -339,7 +470,7 @@ mod tests {
             CustomXmlBuilder,
             &[tool("search"), tool("other")],
             ToolChoice::function("search"),
-            false,
+            StructuralTagOptions::default().with_reasoning(false),
         )
         .unwrap();
         let value: Value = serde_json::to_value(tag).unwrap();
@@ -365,7 +496,7 @@ mod tests {
             FailingBuilder,
             &[tool("search")],
             ToolChoice::required(),
-            false,
+            StructuralTagOptions::default().with_reasoning(false),
         )
         .unwrap_err();
         assert_eq!(error.to_string(), "unsupported template");
@@ -377,7 +508,7 @@ mod tests {
             Model::HyV3,
             &[tool("search")],
             ToolChoice::required(),
-            false,
+            StructuralTagOptions::default().with_reasoning(false),
         )
         .unwrap();
         let value: Value = serde_json::to_value(tag).unwrap();

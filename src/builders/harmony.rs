@@ -5,8 +5,8 @@ use crate::tool::{
 };
 
 use super::{
-    StructuralTagBuilder, StructuralTagContext, json_schema, schema, structural, tag,
-    tools_with_separator,
+    StructuralTagBuilder, StructuralTagContext, StructuralTagOptions, json_schema, schema,
+    structural, tag, tools_with_separator,
 };
 
 const CALL_END: &str = "<|call|>";
@@ -21,13 +21,17 @@ impl StructuralTagBuilder for HarmonyBuilder {
             ctx.function_tools,
             ctx.builtin_tools,
             ctx.tool_choice,
-            ctx.reasoning,
+            ctx.options,
         ))
     }
 }
 
-fn function_tool_tags(name: &str, parameters: serde_json::Value) -> Vec<TagFormat> {
-    let content = json_schema(parameters);
+fn function_tool_tags(
+    name: &str,
+    parameters: serde_json::Value,
+    options: StructuralTagOptions,
+) -> Vec<TagFormat> {
+    let content = json_schema(parameters, options);
     vec![
         tag(
             format!("<|channel|>commentary to=functions.{name}<|constrain|>json<|message|>"),
@@ -47,8 +51,12 @@ fn function_tool_tags(name: &str, parameters: serde_json::Value) -> Vec<TagForma
     ]
 }
 
-fn builtin_tool_tags(name: &str, parameters: serde_json::Value) -> Vec<TagFormat> {
-    let content = json_schema(parameters);
+fn builtin_tool_tags(
+    name: &str,
+    parameters: serde_json::Value,
+    options: StructuralTagOptions,
+) -> Vec<TagFormat> {
+    let content = json_schema(parameters, options);
     vec![
         tag(
             format!("<|channel|>commentary to={name} code<|message|>"),
@@ -73,7 +81,7 @@ pub(super) fn build_harmony(
     tools: &[FunctionToolParam],
     builtin_tools: &[BuiltinToolParam],
     choice: BuilderToolChoice,
-    reasoning: bool,
+    options: StructuralTagOptions,
 ) -> StructuralTag {
     const FINAL_BEGIN: &str = "<|channel|>final<|message|>";
     const ANALYSIS_BEGIN: &str = "<|channel|>analysis<|message|>";
@@ -86,12 +94,14 @@ pub(super) fn build_harmony(
                 tags.extend(function_tool_tags(
                     &tool.function.name,
                     schema(&tool.function),
+                    options,
                 ));
             }
             for tool in builtin_tools {
                 tags.extend(builtin_tool_tags(
                     builtin_tool_name(tool),
                     builtin_parameters(tool),
+                    options,
                 ));
             }
             tags.push(tag(
@@ -105,10 +115,15 @@ pub(super) fn build_harmony(
                 tags.extend(builtin_tool_tags(
                     builtin_tool_name(tool),
                     builtin_parameters(tool),
+                    options,
                 ));
             } else {
                 let function = &tools[0].function;
-                tags.extend(function_tool_tags(&function.name, schema(function)));
+                tags.extend(function_tool_tags(
+                    &function.name,
+                    schema(function),
+                    options,
+                ));
             }
         }
         BuilderToolChoice::Required => {
@@ -116,17 +131,19 @@ pub(super) fn build_harmony(
                 tags.extend(builtin_tool_tags(
                     builtin_tool_name(tool),
                     builtin_parameters(tool),
+                    options,
                 ));
             }
             for tool in tools {
                 tags.extend(function_tool_tags(
                     &tool.function.name,
                     schema(&tool.function),
+                    options,
                 ));
             }
         }
     }
-    if reasoning {
+    if options.reasoning {
         tags.push(tag(
             ANALYSIS_BEGIN,
             Format::any_text(),

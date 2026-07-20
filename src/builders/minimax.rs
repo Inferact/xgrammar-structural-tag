@@ -4,7 +4,7 @@ use crate::tool::{BuilderToolChoice, FunctionToolParam};
 
 use super::{
     StructuralTagBuilder, StructuralTagContext, schema, structural, styled_schema, tag,
-    tools_with_separator, triggered_with_excludes,
+    text_excludes, tools_with_separator, triggered_with_excludes,
 };
 
 /// MiniMax XML tool-calling structural-tag builder.
@@ -16,7 +16,7 @@ impl StructuralTagBuilder for MinimaxBuilder {
         Ok(build_minimax(
             ctx.function_tools,
             ctx.tool_choice,
-            ctx.reasoning,
+            ctx.options,
         ))
     }
 }
@@ -27,7 +27,7 @@ impl StructuralTagBuilder for MinimaxBuilder {
 pub(super) fn build_minimax(
     tools: &[FunctionToolParam],
     choice: BuilderToolChoice,
-    reasoning: bool,
+    options: super::StructuralTagOptions,
 ) -> StructuralTag {
     const INVOKE_BEGIN_PREFIX: &str = "<invoke name=\"";
     const INVOKE_BEGIN_SUFFIX: &str = "\">\n";
@@ -49,7 +49,7 @@ pub(super) fn build_minimax(
                         "{INVOKE_BEGIN_PREFIX}{}{INVOKE_BEGIN_SUFFIX}",
                         tool.function.name
                     ),
-                    styled_schema(schema(&tool.function), JsonSchemaStyle::MinimaxXml),
+                    styled_schema(schema(&tool.function), JsonSchemaStyle::MinimaxXml, options),
                     INVOKE_END,
                 )
             })
@@ -60,13 +60,13 @@ pub(super) fn build_minimax(
         BuilderToolChoice::Auto => {
             let tags = tool_tags();
             if tags.is_empty() {
-                Format::any_text_excluding(THINK_EXCLUDES)
+                Format::any_text_excluding(text_excludes(options, THINK_EXCLUDES))
             } else {
                 let function_calling = tools_with_separator(tags, "", true);
                 triggered_with_excludes(
                     &[TOOL_CALL_TRIGGER],
                     vec![tag(TOOL_CALL_BEGIN, function_calling, TOOL_CALL_END)],
-                    THINK_EXCLUDES,
+                    text_excludes(options, THINK_EXCLUDES),
                 )
             }
         }
@@ -82,7 +82,7 @@ pub(super) fn build_minimax(
         ]),
     };
 
-    let think = if reasoning {
+    let think = if options.reasoning {
         Format::tag("", Format::any_text(), THINK_TAG_END)
     } else {
         Format::const_string(EMPTY_THINK_CONTENT)

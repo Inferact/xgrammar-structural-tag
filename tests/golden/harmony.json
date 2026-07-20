@@ -41,7 +41,9 @@
                 "q"
               ]
             },
-            "style": "json"
+            "style": "json",
+            "any_order": false,
+            "max_whitespace_cnt": null
           },
           "end": "<|call|>"
         },
@@ -60,7 +62,9 @@
                 "q"
               ]
             },
-            "style": "json"
+            "style": "json",
+            "any_order": false,
+            "max_whitespace_cnt": null
           },
           "end": "<|call|>"
         },
@@ -79,7 +83,9 @@
                 "q"
               ]
             },
-            "style": "json"
+            "style": "json",
+            "any_order": false,
+            "max_whitespace_cnt": null
           },
           "end": "<|call|>"
         },
@@ -120,7 +126,9 @@
                 "q"
               ]
             },
-            "style": "json"
+            "style": "json",
+            "any_order": false,
+            "max_whitespace_cnt": null
           },
           "end": "<|call|>"
         },
@@ -139,7 +147,9 @@
                 "q"
               ]
             },
-            "style": "json"
+            "style": "json",
+            "any_order": false,
+            "max_whitespace_cnt": null
           },
           "end": "<|call|>"
         },
@@ -158,7 +168,9 @@
                 "q"
               ]
             },
-            "style": "json"
+            "style": "json",
+            "any_order": false,
+            "max_whitespace_cnt": null
           },
           "end": "<|call|>"
         },
@@ -177,7 +189,9 @@
                 "q"
               ]
             },
-            "style": "json"
+            "style": "json",
+            "any_order": false,
+            "max_whitespace_cnt": null
           },
           "end": "<|call|>"
         },
@@ -196,7 +210,9 @@
                 "q"
               ]
             },
-            "style": "json"
+            "style": "json",
+            "any_order": false,
+            "max_whitespace_cnt": null
           },
           "end": "<|call|>"
         },
@@ -215,7 +231,9 @@
                 "q"
               ]
             },
-            "style": "json"
+            "style": "json",
+            "any_order": false,
+            "max_whitespace_cnt": null
           },
           "end": "<|call|>"
         }
@@ -245,7 +263,9 @@
                 "q"
               ]
             },
-            "style": "json"
+            "style": "json",
+            "any_order": false,
+            "max_whitespace_cnt": null
           },
           "end": "<|call|>"
         },
@@ -264,7 +284,9 @@
                 "q"
               ]
             },
-            "style": "json"
+            "style": "json",
+            "any_order": false,
+            "max_whitespace_cnt": null
           },
           "end": "<|call|>"
         },
@@ -283,7 +305,9 @@
                 "q"
               ]
             },
-            "style": "json"
+            "style": "json",
+            "any_order": false,
+            "max_whitespace_cnt": null
           },
           "end": "<|call|>"
         },
@@ -324,7 +348,9 @@
                 "q"
               ]
             },
-            "style": "json"
+            "style": "json",
+            "any_order": false,
+            "max_whitespace_cnt": null
           },
           "end": "<|call|>"
         },
@@ -343,7 +369,9 @@
                 "q"
               ]
             },
-            "style": "json"
+            "style": "json",
+            "any_order": false,
+            "max_whitespace_cnt": null
           },
           "end": "<|call|>"
         },
@@ -362,7 +390,9 @@
                 "q"
               ]
             },
-            "style": "json"
+            "style": "json",
+            "any_order": false,
+            "max_whitespace_cnt": null
           },
           "end": "<|call|>"
         }
@@ -392,7 +422,9 @@
                 "q"
               ]
             },
-            "style": "json"
+            "style": "json",
+            "any_order": false,
+            "max_whitespace_cnt": null
           },
           "end": "<|call|>"
         },
@@ -411,7 +443,9 @@
                 "q"
               ]
             },
-            "style": "json"
+            "style": "json",
+            "any_order": false,
+            "max_whitespace_cnt": null
           },
           "end": "<|call|>"
         },
@@ -430,7 +464,9 @@
                 "q"
               ]
             },
-            "style": "json"
+            "style": "json",
+            "any_order": false,
+            "max_whitespace_cnt": null
           },
           "end": "<|call|>"
         }
@@ -450,7 +486,9 @@
           "content": {
             "type": "json_schema",
             "json_schema": true,
-            "style": "json"
+            "style": "json",
+            "any_order": false,
+            "max_whitespace_cnt": null
           },
           "end": "<|call|>"
         },
@@ -459,7 +497,9 @@
           "content": {
             "type": "json_schema",
             "json_schema": true,
-            "style": "json"
+            "style": "json",
+            "any_order": false,
+            "max_whitespace_cnt": null
           },
           "end": "<|call|>"
         },
@@ -468,7 +508,9 @@
           "content": {
             "type": "json_schema",
             "json_schema": true,
-            "style": "json"
+            "style": "json",
+            "any_order": false,
+            "max_whitespace_cnt": null
           },
           "end": "<|call|>"
         },
@@ -499,7 +541,9 @@
           "content": {
             "type": "json_schema",
             "json_schema": true,
-            "style": "json"
+            "style": "json",
+            "any_order": false,
+            "max_whitespace_cnt": null
           },
           "end": "<|call|>"
         },
@@ -508,7 +552,9 @@
           "content": {
             "type": "json_schema",
             "json_schema": true,
-            "style": "json"
+            "style": "json",
+            "any_order": false,
+            "max_whitespace_cnt": null
           },
           "end": "<|call|>"
         },
@@ -517,7 +563,9 @@
           "content": {
             "type": "json_schema",
             "json_schema": true,
-            "style": "json"
+            "style": "json",
+            "any_order": false,
+            "max_whitespace_cnt": null
           },
           "end": "<|call|>"
         },
@@ -558,7 +606,9 @@
                 "query"
               ]
             },
-            "style": "json"
+            "style": "json",
+            "any_order": false,
+            "max_whitespace_cnt": null
           },
           "end": "<|call|>"
         },
@@ -577,7 +627,9 @@
                 "query"
               ]
             },
-            "style": "json"
+            "style": "json",
+            "any_order": false,
+            "max_whitespace_cnt": null
           },
           "end": "<|call|>"
         },

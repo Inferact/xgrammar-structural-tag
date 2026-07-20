@@ -32,7 +32,9 @@
                 "q"
               ]
             },
-            "style": "json"
+            "style": "json",
+            "any_order": false,
+            "max_whitespace_cnt": null
           },
           "end": "}"
         }
@@ -48,7 +50,10 @@
   "required_two_tools": {
     "type": "structural_tag",
     "format": {
-      "type": "tags_with_separator",
+      "type": "triggered_tags",
+      "triggers": [
+        "{\"name\": "
+      ],
       "tags": [
         {
           "begin": "{\"name\": \"search\", \"parameters\": ",
@@ -65,7 +70,9 @@
                 "q"
               ]
             },
-            "style": "json"
+            "style": "json",
+            "any_order": false,
+            "max_whitespace_cnt": null
           },
           "end": "}"
         },
@@ -84,20 +91,28 @@
                 "q"
               ]
             },
-            "style": "json"
+            "style": "json",
+            "any_order": false,
+            "max_whitespace_cnt": null
           },
           "end": "}"
         }
       ],
-      "separator": "",
       "at_least_one": true,
-      "stop_after_first": false
+      "stop_after_first": false,
+      "excludes": [
+        "<think>",
+        "</think>"
+      ]
     }
   },
   "reasoning_required_one_tool": {
     "type": "structural_tag",
     "format": {
-      "type": "tags_with_separator",
+      "type": "triggered_tags",
+      "triggers": [
+        "{\"name\": "
+      ],
       "tags": [
         {
           "begin": "{\"name\": \"search\", \"parameters\": ",
@@ -114,14 +129,19 @@
                 "q"
               ]
             },
-            "style": "json"
+            "style": "json",
+            "any_order": false,
+            "max_whitespace_cnt": null
           },
           "end": "}"
         }
       ],
-      "separator": "",
       "at_least_one": true,
-      "stop_after_first": false
+      "stop_after_first": false,
+      "excludes": [
+        "<think>",
+        "</think>"
+      ]
     }
   },
   "forced_search": {
@@ -142,7 +162,9 @@
             "q"
           ]
         },
-        "style": "json"
+        "style": "json",
+        "any_order": false,
+        "max_whitespace_cnt": null
       },
       "end": "}"
     }
@@ -150,7 +172,10 @@
   "allowed_required_alt": {
     "type": "structural_tag",
     "format": {
-      "type": "tags_with_separator",
+      "type": "triggered_tags",
+      "triggers": [
+        "{\"name\": "
+      ],
       "tags": [
         {
           "begin": "{\"name\": \"alt\", \"parameters\": ",
@@ -167,14 +192,19 @@
                 "q"
               ]
             },
-            "style": "json"
+            "style": "json",
+            "any_order": false,
+            "max_whitespace_cnt": null
           },
           "end": "}"
         }
       ],
-      "separator": "",
       "at_least_one": true,
-      "stop_after_first": false
+      "stop_after_first": false,
+      "excludes": [
+        "<think>",
+        "</think>"
+      ]
     }
   },
   "strict_false": {
@@ -190,7 +220,9 @@
           "content": {
             "type": "json_schema",
             "json_schema": true,
-            "style": "json"
+            "style": "json",
+            "any_order": false,
+            "max_whitespace_cnt": null
           },
           "end": "}"
         }
@@ -216,7 +248,9 @@
           "content": {
             "type": "json_schema",
             "json_schema": true,
-            "style": "json"
+            "style": "json",
+            "any_order": false,
+            "max_whitespace_cnt": null
           },
           "end": "}"
         }

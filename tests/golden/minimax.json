@@ -61,7 +61,9 @@
                           "q"
                         ]
                       },
-                      "style": "minimax_xml"
+                      "style": "minimax_xml",
+                      "any_order": false,
+                      "max_whitespace_cnt": null
                     },
                     "end": "</invoke>\n"
                   }
@@ -121,7 +123,9 @@
                         "q"
                       ]
                     },
-                    "style": "minimax_xml"
+                    "style": "minimax_xml",
+                    "any_order": false,
+                    "max_whitespace_cnt": null
                   },
                   "end": "</invoke>\n"
                 },
@@ -140,7 +144,9 @@
                         "q"
                       ]
                     },
-                    "style": "minimax_xml"
+                    "style": "minimax_xml",
+                    "any_order": false,
+                    "max_whitespace_cnt": null
                   },
                   "end": "</invoke>\n"
                 }
@@ -201,7 +207,9 @@
                         "q"
                       ]
                     },
-                    "style": "minimax_xml"
+                    "style": "minimax_xml",
+                    "any_order": false,
+                    "max_whitespace_cnt": null
                   },
                   "end": "</invoke>\n"
                 }
@@ -255,7 +263,9 @@
                     "q"
                   ]
                 },
-                "style": "minimax_xml"
+                "style": "minimax_xml",
+                "any_order": false,
+                "max_whitespace_cnt": null
               },
               "end": "</invoke>\n"
             },
@@ -306,7 +316,9 @@
                         "q"
                       ]
                     },
-                    "style": "minimax_xml"
+                    "style": "minimax_xml",
+                    "any_order": false,
+                    "max_whitespace_cnt": null
                   },
                   "end": "</invoke>\n"
                 }
@@ -353,7 +365,9 @@
                     "content": {
                       "type": "json_schema",
                       "json_schema": true,
-                      "style": "minimax_xml"
+                      "style": "minimax_xml",
+                      "any_order": false,
+                      "max_whitespace_cnt": null
                     },
                     "end": "</invoke>\n"
                   }
@@ -404,7 +418,9 @@
                     "content": {
                       "type": "json_schema",
                       "json_schema": true,
-                      "style": "minimax_xml"
+                      "style": "minimax_xml",
+                      "any_order": false,
+                      "max_whitespace_cnt": null
                     },
                     "end": "</invoke>\n"
                   }

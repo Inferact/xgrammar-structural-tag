@@ -13,7 +13,11 @@ pub struct HyV3Builder;
 
 impl StructuralTagBuilder for HyV3Builder {
     fn build(&self, ctx: StructuralTagContext<'_>) -> Result<StructuralTag> {
-        Ok(build_hy_v3(ctx.function_tools, ctx.tool_choice))
+        Ok(build_hy_v3(
+            ctx.function_tools,
+            ctx.tool_choice,
+            ctx.options,
+        ))
     }
 }
 
@@ -22,7 +26,11 @@ impl StructuralTagBuilder for HyV3Builder {
 /// Local extension not present in upstream xgrammar. Uses GLM-style XML
 /// arguments wrapped in `<tool_calls>` / `<tool_call>` / `<tool_sep>` markers,
 /// with no reasoning part.
-pub(super) fn build_hy_v3(tools: &[FunctionToolParam], choice: BuilderToolChoice) -> StructuralTag {
+pub(super) fn build_hy_v3(
+    tools: &[FunctionToolParam],
+    choice: BuilderToolChoice,
+    options: super::StructuralTagOptions,
+) -> StructuralTag {
     const TOOL_CALLS_BEGIN: &str = "<tool_calls>\n";
     const TOOL_CALLS_TRIGGER: &str = "<tool_calls>";
     const TOOL_CALLS_END: &str = "</tool_calls>";
@@ -33,7 +41,7 @@ pub(super) fn build_hy_v3(tools: &[FunctionToolParam], choice: BuilderToolChoice
     let tool_tag = |tool: &FunctionToolParam| {
         tag(
             format!("{TOOL_CALL_BEGIN_PREFIX}{}{TOOL_SEP}", tool.function.name),
-            styled_schema(schema(&tool.function), JsonSchemaStyle::GlmXml),
+            styled_schema(schema(&tool.function), JsonSchemaStyle::GlmXml, options),
             TOOL_CALL_END,
         )
     };
