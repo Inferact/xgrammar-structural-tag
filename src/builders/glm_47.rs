@@ -3,8 +3,9 @@ use crate::format::{Format, JsonSchemaStyle, StructuralTag};
 use crate::tool::{BuilderToolChoice, FunctionToolParam};
 
 use super::{
-    StructuralTagBuilder, StructuralTagContext, required_triggered_with_excludes, schema,
-    structural, styled_schema, tag, text_excludes, triggered_with_excludes,
+    StructuralTagBuilder, StructuralTagContext, assemble, reasoning_prefix,
+    required_triggered_with_excludes, schema, styled_schema, tag, text_excludes,
+    triggered_with_excludes,
 };
 
 /// GLM XML tool-calling structural-tag builder.
@@ -72,6 +73,7 @@ pub(super) fn build_glm_47(
                     &[TOOL_CALL_TRIGGER],
                     tags,
                     text_excludes(options, TEXT_EXCLUDES),
+                    options,
                 )
             }
         }
@@ -82,18 +84,12 @@ pub(super) fn build_glm_47(
                 &[TOOL_CALL_TRIGGER],
                 tags,
                 text_excludes(options, TEXT_EXCLUDES),
+                options,
             )
         }
     };
-    if !options.reasoning {
-        return structural(suffix);
-    }
-    structural(Format::sequence(vec![
-        Format::tag(
-            "",
-            Format::any_text_excluding(text_excludes(options, REASONING_EXCLUDES)),
-            THINK_TAG_END,
-        ),
+    assemble(
+        reasoning_prefix(options, "<think>", THINK_TAG_END, REASONING_EXCLUDES, ""),
         suffix,
-    ]))
+    )
 }

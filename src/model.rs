@@ -30,6 +30,8 @@ pub enum Model {
     Llama,
     /// Kimi K2 tool calling.
     Kimi,
+    /// Kimi K3 channel-format tool calling.
+    KimiK3,
     /// DeepSeek R1 tool calling.
     DeepSeekR1,
     /// DeepSeek V3.1 / V3.2-Exp tool calling.
@@ -46,10 +48,18 @@ pub enum Model {
     DeepSeekV32,
     /// MiniMax XML tool calling.
     Minimax,
+    /// MiniMax M3 namespace-XML tool calling.
+    MinimaxM3,
     /// GLM 4.7 / GLM 5 XML tool calling.
     Glm47,
     /// DeepSeek V4 DSML tool calling.
     DeepSeekV4,
+    /// DeepSeek V4.1 spaced-DSML tool calling.
+    DeepSeekV41,
+    /// Cohere Command XML tool calling.
+    Cohere,
+    /// EXAONE 4.0 tool calling.
+    Exaone,
     /// Hermes tool calling.
     Hermes,
     /// HY3 XML tool calling.
@@ -62,6 +72,7 @@ impl Model {
         match self {
             Self::Llama => "llama",
             Self::Kimi => "kimi",
+            Self::KimiK3 => "kimi_k3",
             Self::DeepSeekR1 => "deepseek_r1",
             Self::DeepSeekV31 => "deepseek_v3_1",
             Self::Qwen35 => "qwen_3_5",
@@ -70,8 +81,12 @@ impl Model {
             Self::Harmony => "harmony",
             Self::DeepSeekV32 => "deepseek_v3_2",
             Self::Minimax => "minimax",
+            Self::MinimaxM3 => "minimax_m3",
             Self::Glm47 => "glm_4_7",
             Self::DeepSeekV4 => "deepseek_v4",
+            Self::DeepSeekV41 => "deepseek_v4_1",
+            Self::Cohere => "cohere",
+            Self::Exaone => "exaone",
             Self::Hermes => "hermes",
             Self::HyV3 => "hy_v3",
         }
@@ -82,6 +97,7 @@ impl Model {
         match self {
             Self::Llama => &LlamaBuilder,
             Self::Kimi => &KimiBuilder,
+            Self::KimiK3 => &KimiK3Builder,
             Self::DeepSeekR1 => &DeepSeekR1Builder,
             Self::DeepSeekV31 => &DeepSeekV31Builder,
             Self::Qwen35 | Self::Qwen3Coder => &Qwen35Builder,
@@ -89,8 +105,12 @@ impl Model {
             Self::Harmony => &HarmonyBuilder,
             Self::DeepSeekV32 => &DeepSeekV32Builder,
             Self::Minimax => &MinimaxBuilder,
+            Self::MinimaxM3 => &MinimaxM3Builder,
             Self::Glm47 => &Glm47Builder,
             Self::DeepSeekV4 => &DeepSeekV4Builder,
+            Self::DeepSeekV41 => &DeepSeekV41Builder,
+            Self::Cohere => &CohereBuilder,
+            Self::Exaone => &ExaoneBuilder,
             Self::Hermes => &HermesBuilder,
             Self::HyV3 => &HyV3Builder,
         }
@@ -118,6 +138,7 @@ impl FromStr for Model {
         let model = match value {
             "llama" => Self::Llama,
             "kimi" => Self::Kimi,
+            "kimi_k3" => Self::KimiK3,
             "deepseek_r1" => Self::DeepSeekR1,
             "deepseek_v3_1" => Self::DeepSeekV31,
             "qwen_3_5" => Self::Qwen35,
@@ -126,8 +147,12 @@ impl FromStr for Model {
             "harmony" => Self::Harmony,
             "deepseek_v3_2" => Self::DeepSeekV32,
             "minimax" => Self::Minimax,
+            "minimax_m3" => Self::MinimaxM3,
             "glm_4_7" => Self::Glm47,
             "deepseek_v4" => Self::DeepSeekV4,
+            "deepseek_v4_1" => Self::DeepSeekV41,
+            "cohere" => Self::Cohere,
+            "exaone" => Self::Exaone,
             "hermes" => Self::Hermes,
             "hy_v3" => Self::HyV3,
             _ => {

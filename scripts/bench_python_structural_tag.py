@@ -2,7 +2,7 @@
 # /// script
 # requires-python = ">=3.10"
 # dependencies = [
-#     "xgrammar==0.2.4",
+#     "xgrammar==0.2.7",
 # ]
 # ///
 """Benchmark upstream xgrammar structural-tag golden case construction.

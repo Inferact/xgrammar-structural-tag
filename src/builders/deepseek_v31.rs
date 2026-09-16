@@ -3,8 +3,8 @@ use crate::format::{Format, StructuralTag};
 use crate::tool::{BuilderToolChoice, FunctionToolParam};
 
 use super::{
-    StructuralTagBuilder, StructuralTagContext, json_schema, schema, tag, text_excludes,
-    tools_with_separator, triggered_with_excludes, with_optional_reasoning,
+    StructuralTagBuilder, StructuralTagContext, assemble, json_schema, reasoning_prefix, schema,
+    tag, text_excludes, tools_with_separator, triggered_with_excludes,
 };
 
 /// DeepSeek V3.1 tool-calling structural-tag builder.
@@ -53,12 +53,13 @@ pub(super) fn build_deepseek_v31(
             if tags.is_empty() {
                 Format::any_text_excluding(text_excludes(options, THINK_EXCLUDES))
             } else {
-                let inner = tools_with_separator(tags, "", true);
+                let inner = tools_with_separator(tags, "", true, options);
                 let tool_calls = tag(TOOL_CALLS_BEGIN, inner, TOOL_CALLS_END);
                 triggered_with_excludes(
                     &[TOOL_CALLS_BEGIN],
                     vec![tool_calls],
                     text_excludes(options, THINK_EXCLUDES),
+                    options,
                 )
             }
         }
@@ -77,10 +78,13 @@ pub(super) fn build_deepseek_v31(
             let tags = tools.iter().map(tool_tag).collect::<Vec<_>>();
             Format::tag(
                 TOOL_CALLS_BEGIN,
-                tools_with_separator(tags, "", true),
+                tools_with_separator(tags, "", true, options),
                 TOOL_CALLS_END,
             )
         }
     };
-    with_optional_reasoning(suffix, options.reasoning, THINK_TAG_END)
+    assemble(
+        reasoning_prefix(options, "<think>", THINK_TAG_END, THINK_EXCLUDES, ""),
+        suffix,
+    )
 }

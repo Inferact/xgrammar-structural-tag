@@ -4,8 +4,8 @@
     "format": {
       "type": "any_text",
       "excludes": [
-        "<think>",
-        "</think>"
+        "<|START_THINKING|>",
+        "<|END_THINKING|>"
       ],
       "max_tokens": null,
       "max_chars": null
@@ -16,18 +16,18 @@
     "format": {
       "type": "triggered_tags",
       "triggers": [
-        "<|tool_calls_section_begin|>"
+        "<cofl:tool_calls>"
       ],
       "tags": [
         {
           "type": "tag",
-          "begin": "<|tool_calls_section_begin|>",
+          "begin": "<cofl:tool_calls>",
           "content": {
             "type": "tags_with_separator",
             "tags": [
               {
                 "type": "tag",
-                "begin": "<|tool_call_begin|>functions.search:",
+                "begin": "<cofl:tool_call id=\"",
                 "content": {
                   "type": "sequence",
                   "elements": [
@@ -37,7 +37,7 @@
                     },
                     {
                       "type": "const_string",
-                      "value": "<|tool_call_argument_begin|>"
+                      "value": "\" name=\"search\">"
                     },
                     {
                       "type": "json_schema",
@@ -52,28 +52,27 @@
                           "q"
                         ]
                       },
-                      "style": "json",
+                      "style": "cohere_xml",
                       "any_order": false,
                       "max_whitespace_cnt": null
                     }
                   ]
                 },
-                "end": "<|tool_call_end|>"
+                "end": "</cofl:tool_call>"
               }
             ],
             "separator": "",
             "at_least_one": true,
             "stop_after_first": false
           },
-          "end": "<|tool_calls_section_end|>"
+          "end": "</cofl:tool_calls>"
         }
       ],
       "at_least_one": false,
       "stop_after_first": false,
       "excludes": [
-        "<think>",
-        "</think>",
-        "<|tool_call_begin|>"
+        "<|START_THINKING|>",
+        "<|END_THINKING|>"
       ]
     }
   },
@@ -84,14 +83,14 @@
       "elements": [
         {
           "type": "const_string",
-          "value": "<|tool_calls_section_begin|>"
+          "value": "<cofl:tool_calls>"
         },
         {
           "type": "tags_with_separator",
           "tags": [
             {
               "type": "tag",
-              "begin": "<|tool_call_begin|>functions.search:",
+              "begin": "<cofl:tool_call id=\"",
               "content": {
                 "type": "sequence",
                 "elements": [
@@ -101,7 +100,7 @@
                   },
                   {
                     "type": "const_string",
-                    "value": "<|tool_call_argument_begin|>"
+                    "value": "\" name=\"search\">"
                   },
                   {
                     "type": "json_schema",
@@ -116,17 +115,17 @@
                         "q"
                       ]
                     },
-                    "style": "json",
+                    "style": "cohere_xml",
                     "any_order": false,
                     "max_whitespace_cnt": null
                   }
                 ]
               },
-              "end": "<|tool_call_end|>"
+              "end": "</cofl:tool_call>"
             },
             {
               "type": "tag",
-              "begin": "<|tool_call_begin|>functions.alt:",
+              "begin": "<cofl:tool_call id=\"",
               "content": {
                 "type": "sequence",
                 "elements": [
@@ -136,7 +135,7 @@
                   },
                   {
                     "type": "const_string",
-                    "value": "<|tool_call_argument_begin|>"
+                    "value": "\" name=\"alt\">"
                   },
                   {
                     "type": "json_schema",
@@ -151,13 +150,13 @@
                         "q"
                       ]
                     },
-                    "style": "json",
+                    "style": "cohere_xml",
                     "any_order": false,
                     "max_whitespace_cnt": null
                   }
                 ]
               },
-              "end": "<|tool_call_end|>"
+              "end": "</cofl:tool_call>"
             }
           ],
           "separator": "",
@@ -166,7 +165,7 @@
         },
         {
           "type": "const_string",
-          "value": "<|tool_calls_section_end|>"
+          "value": "</cofl:tool_calls>"
         }
       ]
     }
@@ -185,21 +184,21 @@
             "max_tokens": null,
             "max_chars": null
           },
-          "end": "</think>"
+          "end": "<|END_THINKING|>"
         },
         {
           "type": "sequence",
           "elements": [
             {
               "type": "const_string",
-              "value": "<|tool_calls_section_begin|>"
+              "value": "<cofl:tool_calls>"
             },
             {
               "type": "tags_with_separator",
               "tags": [
                 {
                   "type": "tag",
-                  "begin": "<|tool_call_begin|>functions.search:",
+                  "begin": "<cofl:tool_call id=\"",
                   "content": {
                     "type": "sequence",
                     "elements": [
@@ -209,7 +208,7 @@
                       },
                       {
                         "type": "const_string",
-                        "value": "<|tool_call_argument_begin|>"
+                        "value": "\" name=\"search\">"
                       },
                       {
                         "type": "json_schema",
@@ -224,13 +223,13 @@
                             "q"
                           ]
                         },
-                        "style": "json",
+                        "style": "cohere_xml",
                         "any_order": false,
                         "max_whitespace_cnt": null
                       }
                     ]
                   },
-                  "end": "<|tool_call_end|>"
+                  "end": "</cofl:tool_call>"
                 }
               ],
               "separator": "",
@@ -239,7 +238,7 @@
             },
             {
               "type": "const_string",
-              "value": "<|tool_calls_section_end|>"
+              "value": "</cofl:tool_calls>"
             }
           ]
         }
@@ -253,11 +252,11 @@
       "elements": [
         {
           "type": "const_string",
-          "value": "<|tool_calls_section_begin|>"
+          "value": "<cofl:tool_calls>"
         },
         {
           "type": "tag",
-          "begin": "<|tool_call_begin|>functions.search:",
+          "begin": "<cofl:tool_call id=\"",
           "content": {
             "type": "sequence",
             "elements": [
@@ -267,7 +266,7 @@
               },
               {
                 "type": "const_string",
-                "value": "<|tool_call_argument_begin|>"
+                "value": "\" name=\"search\">"
               },
               {
                 "type": "json_schema",
@@ -282,17 +281,17 @@
                     "q"
                   ]
                 },
-                "style": "json",
+                "style": "cohere_xml",
                 "any_order": false,
                 "max_whitespace_cnt": null
               }
             ]
           },
-          "end": "<|tool_call_end|>"
+          "end": "</cofl:tool_call>"
         },
         {
           "type": "const_string",
-          "value": "<|tool_calls_section_end|>"
+          "value": "</cofl:tool_calls>"
         }
       ]
     }
@@ -304,14 +303,14 @@
       "elements": [
         {
           "type": "const_string",
-          "value": "<|tool_calls_section_begin|>"
+          "value": "<cofl:tool_calls>"
         },
         {
           "type": "tags_with_separator",
           "tags": [
             {
               "type": "tag",
-              "begin": "<|tool_call_begin|>functions.alt:",
+              "begin": "<cofl:tool_call id=\"",
               "content": {
                 "type": "sequence",
                 "elements": [
@@ -321,7 +320,7 @@
                   },
                   {
                     "type": "const_string",
-                    "value": "<|tool_call_argument_begin|>"
+                    "value": "\" name=\"alt\">"
                   },
                   {
                     "type": "json_schema",
@@ -336,13 +335,13 @@
                         "q"
                       ]
                     },
-                    "style": "json",
+                    "style": "cohere_xml",
                     "any_order": false,
                     "max_whitespace_cnt": null
                   }
                 ]
               },
-              "end": "<|tool_call_end|>"
+              "end": "</cofl:tool_call>"
             }
           ],
           "separator": "",
@@ -351,7 +350,7 @@
         },
         {
           "type": "const_string",
-          "value": "<|tool_calls_section_end|>"
+          "value": "</cofl:tool_calls>"
         }
       ]
     }
@@ -361,18 +360,18 @@
     "format": {
       "type": "triggered_tags",
       "triggers": [
-        "<|tool_calls_section_begin|>"
+        "<cofl:tool_calls>"
       ],
       "tags": [
         {
           "type": "tag",
-          "begin": "<|tool_calls_section_begin|>",
+          "begin": "<cofl:tool_calls>",
           "content": {
             "type": "tags_with_separator",
             "tags": [
               {
                 "type": "tag",
-                "begin": "<|tool_call_begin|>functions.loose:",
+                "begin": "<cofl:tool_call id=\"",
                 "content": {
                   "type": "sequence",
                   "elements": [
@@ -382,33 +381,32 @@
                     },
                     {
                       "type": "const_string",
-                      "value": "<|tool_call_argument_begin|>"
+                      "value": "\" name=\"loose\">"
                     },
                     {
                       "type": "json_schema",
                       "json_schema": true,
-                      "style": "json",
+                      "style": "cohere_xml",
                       "any_order": false,
                       "max_whitespace_cnt": null
                     }
                   ]
                 },
-                "end": "<|tool_call_end|>"
+                "end": "</cofl:tool_call>"
               }
             ],
             "separator": "",
             "at_least_one": true,
             "stop_after_first": false
           },
-          "end": "<|tool_calls_section_end|>"
+          "end": "</cofl:tool_calls>"
         }
       ],
       "at_least_one": false,
       "stop_after_first": false,
       "excludes": [
-        "<think>",
-        "</think>",
-        "<|tool_call_begin|>"
+        "<|START_THINKING|>",
+        "<|END_THINKING|>"
       ]
     }
   },
@@ -417,18 +415,18 @@
     "format": {
       "type": "triggered_tags",
       "triggers": [
-        "<|tool_calls_section_begin|>"
+        "<cofl:tool_calls>"
       ],
       "tags": [
         {
           "type": "tag",
-          "begin": "<|tool_calls_section_begin|>",
+          "begin": "<cofl:tool_calls>",
           "content": {
             "type": "tags_with_separator",
             "tags": [
               {
                 "type": "tag",
-                "begin": "<|tool_call_begin|>functions.missing:",
+                "begin": "<cofl:tool_call id=\"",
                 "content": {
                   "type": "sequence",
                   "elements": [
@@ -438,33 +436,32 @@
                     },
                     {
                       "type": "const_string",
-                      "value": "<|tool_call_argument_begin|>"
+                      "value": "\" name=\"missing\">"
                     },
                     {
                       "type": "json_schema",
                       "json_schema": true,
-                      "style": "json",
+                      "style": "cohere_xml",
                       "any_order": false,
                       "max_whitespace_cnt": null
                     }
                   ]
                 },
-                "end": "<|tool_call_end|>"
+                "end": "</cofl:tool_call>"
               }
             ],
             "separator": "",
             "at_least_one": true,
             "stop_after_first": false
           },
-          "end": "<|tool_calls_section_end|>"
+          "end": "</cofl:tool_calls>"
         }
       ],
       "at_least_one": false,
       "stop_after_first": false,
       "excludes": [
-        "<think>",
-        "</think>",
-        "<|tool_call_begin|>"
+        "<|START_THINKING|>",
+        "<|END_THINKING|>"
       ]
     }
   },
@@ -477,24 +474,24 @@
           "type": "optional",
           "content": {
             "type": "tag",
-            "begin": "<think>",
+            "begin": "<|START_THINKING|>",
             "content": {
               "type": "any_text",
               "excludes": [
-                "<think>",
-                "</think>"
+                "<|START_THINKING|>",
+                "<|END_THINKING|>"
               ],
               "max_tokens": null,
               "max_chars": null
             },
-            "end": "</think>"
+            "end": "<|END_THINKING|>"
           }
         },
         {
           "type": "any_text",
           "excludes": [
-            "<think>",
-            "</think>"
+            "<|START_THINKING|>",
+            "<|END_THINKING|>"
           ],
           "max_tokens": null,
           "max_chars": null
@@ -516,13 +513,13 @@
             "max_tokens": null,
             "max_chars": null
           },
-          "end": "</think>"
+          "end": "<|END_THINKING|>"
         },
         {
           "type": "any_text",
           "excludes": [
-            "<think>",
-            "</think>"
+            "<|START_THINKING|>",
+            "<|END_THINKING|>"
           ],
           "max_tokens": null,
           "max_chars": null
@@ -539,34 +536,34 @@
           "type": "optional",
           "content": {
             "type": "tag",
-            "begin": "<think>",
+            "begin": "<|START_THINKING|>",
             "content": {
               "type": "any_text",
               "excludes": [
-                "<think>",
-                "</think>"
+                "<|START_THINKING|>",
+                "<|END_THINKING|>"
               ],
               "max_tokens": null,
               "max_chars": null
             },
-            "end": "</think>"
+            "end": "<|END_THINKING|>"
           }
         },
         {
           "type": "triggered_tags",
           "triggers": [
-            "<|tool_calls_section_begin|>"
+            "<cofl:tool_calls>"
           ],
           "tags": [
             {
               "type": "tag",
-              "begin": "<|tool_calls_section_begin|>",
+              "begin": "<cofl:tool_calls>",
               "content": {
                 "type": "tags_with_separator",
                 "tags": [
                   {
                     "type": "tag",
-                    "begin": "<|tool_call_begin|>functions.search:",
+                    "begin": "<cofl:tool_call id=\"",
                     "content": {
                       "type": "sequence",
                       "elements": [
@@ -576,7 +573,7 @@
                         },
                         {
                           "type": "const_string",
-                          "value": "<|tool_call_argument_begin|>"
+                          "value": "\" name=\"search\">"
                         },
                         {
                           "type": "json_schema",
@@ -591,17 +588,17 @@
                               "q"
                             ]
                           },
-                          "style": "json",
+                          "style": "cohere_xml",
                           "any_order": false,
                           "max_whitespace_cnt": null
                         }
                       ]
                     },
-                    "end": "<|tool_call_end|>"
+                    "end": "</cofl:tool_call>"
                   },
                   {
                     "type": "tag",
-                    "begin": "<|tool_call_begin|>functions.alt:",
+                    "begin": "<cofl:tool_call id=\"",
                     "content": {
                       "type": "sequence",
                       "elements": [
@@ -611,7 +608,7 @@
                         },
                         {
                           "type": "const_string",
-                          "value": "<|tool_call_argument_begin|>"
+                          "value": "\" name=\"alt\">"
                         },
                         {
                           "type": "json_schema",
@@ -626,28 +623,27 @@
                               "q"
                             ]
                           },
-                          "style": "json",
+                          "style": "cohere_xml",
                           "any_order": false,
                           "max_whitespace_cnt": null
                         }
                       ]
                     },
-                    "end": "<|tool_call_end|>"
+                    "end": "</cofl:tool_call>"
                   }
                 ],
                 "separator": "",
                 "at_least_one": true,
                 "stop_after_first": false
               },
-              "end": "<|tool_calls_section_end|>"
+              "end": "</cofl:tool_calls>"
             }
           ],
           "at_least_one": false,
           "stop_after_first": false,
           "excludes": [
-            "<think>",
-            "</think>",
-            "<|tool_call_begin|>"
+            "<|START_THINKING|>",
+            "<|END_THINKING|>"
           ]
         }
       ]
@@ -667,23 +663,23 @@
             "max_tokens": null,
             "max_chars": null
           },
-          "end": "</think>"
+          "end": "<|END_THINKING|>"
         },
         {
           "type": "triggered_tags",
           "triggers": [
-            "<|tool_calls_section_begin|>"
+            "<cofl:tool_calls>"
           ],
           "tags": [
             {
               "type": "tag",
-              "begin": "<|tool_calls_section_begin|>",
+              "begin": "<cofl:tool_calls>",
               "content": {
                 "type": "tags_with_separator",
                 "tags": [
                   {
                     "type": "tag",
-                    "begin": "<|tool_call_begin|>functions.search:",
+                    "begin": "<cofl:tool_call id=\"",
                     "content": {
                       "type": "sequence",
                       "elements": [
@@ -693,7 +689,7 @@
                         },
                         {
                           "type": "const_string",
-                          "value": "<|tool_call_argument_begin|>"
+                          "value": "\" name=\"search\">"
                         },
                         {
                           "type": "json_schema",
@@ -708,17 +704,17 @@
                               "q"
                             ]
                           },
-                          "style": "json",
+                          "style": "cohere_xml",
                           "any_order": false,
                           "max_whitespace_cnt": null
                         }
                       ]
                     },
-                    "end": "<|tool_call_end|>"
+                    "end": "</cofl:tool_call>"
                   },
                   {
                     "type": "tag",
-                    "begin": "<|tool_call_begin|>functions.alt:",
+                    "begin": "<cofl:tool_call id=\"",
                     "content": {
                       "type": "sequence",
                       "elements": [
@@ -728,7 +724,7 @@
                         },
                         {
                           "type": "const_string",
-                          "value": "<|tool_call_argument_begin|>"
+                          "value": "\" name=\"alt\">"
                         },
                         {
                           "type": "json_schema",
@@ -743,28 +739,27 @@
                               "q"
                             ]
                           },
-                          "style": "json",
+                          "style": "cohere_xml",
                           "any_order": false,
                           "max_whitespace_cnt": null
                         }
                       ]
                     },
-                    "end": "<|tool_call_end|>"
+                    "end": "</cofl:tool_call>"
                   }
                 ],
                 "separator": "",
                 "at_least_one": true,
                 "stop_after_first": true
               },
-              "end": "<|tool_calls_section_end|>"
+              "end": "</cofl:tool_calls>"
             }
           ],
           "at_least_one": false,
           "stop_after_first": true,
           "excludes": [
-            "<think>",
-            "</think>",
-            "<|tool_call_begin|>"
+            "<|START_THINKING|>",
+            "<|END_THINKING|>"
           ]
         }
       ]
@@ -779,17 +774,17 @@
           "type": "optional",
           "content": {
             "type": "tag",
-            "begin": "<think>",
+            "begin": "<|START_THINKING|>",
             "content": {
               "type": "any_text",
               "excludes": [
-                "<think>",
-                "</think>"
+                "<|START_THINKING|>",
+                "<|END_THINKING|>"
               ],
               "max_tokens": null,
               "max_chars": null
             },
-            "end": "</think>"
+            "end": "<|END_THINKING|>"
           }
         },
         {
@@ -797,14 +792,14 @@
           "elements": [
             {
               "type": "const_string",
-              "value": "<|tool_calls_section_begin|>"
+              "value": "<cofl:tool_calls>"
             },
             {
               "type": "tags_with_separator",
               "tags": [
                 {
                   "type": "tag",
-                  "begin": "<|tool_call_begin|>functions.search:",
+                  "begin": "<cofl:tool_call id=\"",
                   "content": {
                     "type": "sequence",
                     "elements": [
@@ -814,7 +809,7 @@
                       },
                       {
                         "type": "const_string",
-                        "value": "<|tool_call_argument_begin|>"
+                        "value": "\" name=\"search\">"
                       },
                       {
                         "type": "json_schema",
@@ -829,17 +824,17 @@
                             "q"
                           ]
                         },
-                        "style": "json",
+                        "style": "cohere_xml",
                         "any_order": false,
                         "max_whitespace_cnt": null
                       }
                     ]
                   },
-                  "end": "<|tool_call_end|>"
+                  "end": "</cofl:tool_call>"
                 },
                 {
                   "type": "tag",
-                  "begin": "<|tool_call_begin|>functions.alt:",
+                  "begin": "<cofl:tool_call id=\"",
                   "content": {
                     "type": "sequence",
                     "elements": [
@@ -849,7 +844,7 @@
                       },
                       {
                         "type": "const_string",
-                        "value": "<|tool_call_argument_begin|>"
+                        "value": "\" name=\"alt\">"
                       },
                       {
                         "type": "json_schema",
@@ -864,13 +859,13 @@
                             "q"
                           ]
                         },
-                        "style": "json",
+                        "style": "cohere_xml",
                         "any_order": false,
                         "max_whitespace_cnt": null
                       }
                     ]
                   },
-                  "end": "<|tool_call_end|>"
+                  "end": "</cofl:tool_call>"
                 }
               ],
               "separator": "",
@@ -879,7 +874,7 @@
             },
             {
               "type": "const_string",
-              "value": "<|tool_calls_section_end|>"
+              "value": "</cofl:tool_calls>"
             }
           ]
         }
@@ -900,21 +895,21 @@
             "max_tokens": null,
             "max_chars": null
           },
-          "end": "</think>"
+          "end": "<|END_THINKING|>"
         },
         {
           "type": "sequence",
           "elements": [
             {
               "type": "const_string",
-              "value": "<|tool_calls_section_begin|>"
+              "value": "<cofl:tool_calls>"
             },
             {
               "type": "tags_with_separator",
               "tags": [
                 {
                   "type": "tag",
-                  "begin": "<|tool_call_begin|>functions.search:",
+                  "begin": "<cofl:tool_call id=\"",
                   "content": {
                     "type": "sequence",
                     "elements": [
@@ -924,7 +919,7 @@
                       },
                       {
                         "type": "const_string",
-                        "value": "<|tool_call_argument_begin|>"
+                        "value": "\" name=\"search\">"
                       },
                       {
                         "type": "json_schema",
@@ -939,17 +934,17 @@
                             "q"
                           ]
                         },
-                        "style": "json",
+                        "style": "cohere_xml",
                         "any_order": false,
                         "max_whitespace_cnt": null
                       }
                     ]
                   },
-                  "end": "<|tool_call_end|>"
+                  "end": "</cofl:tool_call>"
                 },
                 {
                   "type": "tag",
-                  "begin": "<|tool_call_begin|>functions.alt:",
+                  "begin": "<cofl:tool_call id=\"",
                   "content": {
                     "type": "sequence",
                     "elements": [
@@ -959,7 +954,7 @@
                       },
                       {
                         "type": "const_string",
-                        "value": "<|tool_call_argument_begin|>"
+                        "value": "\" name=\"alt\">"
                       },
                       {
                         "type": "json_schema",
@@ -974,13 +969,13 @@
                             "q"
                           ]
                         },
-                        "style": "json",
+                        "style": "cohere_xml",
                         "any_order": false,
                         "max_whitespace_cnt": null
                       }
                     ]
                   },
-                  "end": "<|tool_call_end|>"
+                  "end": "</cofl:tool_call>"
                 }
               ],
               "separator": "",
@@ -989,7 +984,7 @@
             },
             {
               "type": "const_string",
-              "value": "<|tool_calls_section_end|>"
+              "value": "</cofl:tool_calls>"
             }
           ]
         }
@@ -1005,17 +1000,17 @@
           "type": "optional",
           "content": {
             "type": "tag",
-            "begin": "<think>",
+            "begin": "<|START_THINKING|>",
             "content": {
               "type": "any_text",
               "excludes": [
-                "<think>",
-                "</think>"
+                "<|START_THINKING|>",
+                "<|END_THINKING|>"
               ],
               "max_tokens": null,
               "max_chars": null
             },
-            "end": "</think>"
+            "end": "<|END_THINKING|>"
           }
         },
         {
@@ -1023,11 +1018,11 @@
           "elements": [
             {
               "type": "const_string",
-              "value": "<|tool_calls_section_begin|>"
+              "value": "<cofl:tool_calls>"
             },
             {
               "type": "tag",
-              "begin": "<|tool_call_begin|>functions.search:",
+              "begin": "<cofl:tool_call id=\"",
               "content": {
                 "type": "sequence",
                 "elements": [
@@ -1037,7 +1032,7 @@
                   },
                   {
                     "type": "const_string",
-                    "value": "<|tool_call_argument_begin|>"
+                    "value": "\" name=\"search\">"
                   },
                   {
                     "type": "json_schema",
@@ -1052,17 +1047,17 @@
                         "q"
                       ]
                     },
-                    "style": "json",
+                    "style": "cohere_xml",
                     "any_order": false,
                     "max_whitespace_cnt": null
                   }
                 ]
               },
-              "end": "<|tool_call_end|>"
+              "end": "</cofl:tool_call>"
             },
             {
               "type": "const_string",
-              "value": "<|tool_calls_section_end|>"
+              "value": "</cofl:tool_calls>"
             }
           ]
         }
@@ -1083,18 +1078,18 @@
             "max_tokens": null,
             "max_chars": null
           },
-          "end": "</think>"
+          "end": "<|END_THINKING|>"
         },
         {
           "type": "sequence",
           "elements": [
             {
               "type": "const_string",
-              "value": "<|tool_calls_section_begin|>"
+              "value": "<cofl:tool_calls>"
             },
             {
               "type": "tag",
-              "begin": "<|tool_call_begin|>functions.search:",
+              "begin": "<cofl:tool_call id=\"",
               "content": {
                 "type": "sequence",
                 "elements": [
@@ -1104,7 +1099,7 @@
                   },
                   {
                     "type": "const_string",
-                    "value": "<|tool_call_argument_begin|>"
+                    "value": "\" name=\"search\">"
                   },
                   {
                     "type": "json_schema",
@@ -1119,17 +1114,17 @@
                         "q"
                       ]
                     },
-                    "style": "json",
+                    "style": "cohere_xml",
                     "any_order": false,
                     "max_whitespace_cnt": null
                   }
                 ]
               },
-              "end": "<|tool_call_end|>"
+              "end": "</cofl:tool_call>"
             },
             {
               "type": "const_string",
-              "value": "<|tool_calls_section_end|>"
+              "value": "</cofl:tool_calls>"
             }
           ]
         }
@@ -1145,14 +1140,14 @@
           "type": "optional",
           "content": {
             "type": "tag",
-            "begin": "<think>",
+            "begin": "<|START_THINKING|>",
             "content": {
               "type": "any_text",
               "excludes": [],
               "max_tokens": null,
               "max_chars": null
             },
-            "end": "</think>"
+            "end": "<|END_THINKING|>"
           }
         },
         {
@@ -1160,14 +1155,14 @@
           "elements": [
             {
               "type": "const_string",
-              "value": "<|tool_calls_section_begin|>"
+              "value": "<cofl:tool_calls>"
             },
             {
               "type": "tags_with_separator",
               "tags": [
                 {
                   "type": "tag",
-                  "begin": "<|tool_call_begin|>functions.search:",
+                  "begin": "<cofl:tool_call id=\"",
                   "content": {
                     "type": "sequence",
                     "elements": [
@@ -1177,7 +1172,7 @@
                       },
                       {
                         "type": "const_string",
-                        "value": "<|tool_call_argument_begin|>"
+                        "value": "\" name=\"search\">"
                       },
                       {
                         "type": "json_schema",
@@ -1192,17 +1187,17 @@
                             "q"
                           ]
                         },
-                        "style": "json",
+                        "style": "cohere_xml",
                         "any_order": true,
                         "max_whitespace_cnt": 2
                       }
                     ]
                   },
-                  "end": "<|tool_call_end|>"
+                  "end": "</cofl:tool_call>"
                 },
                 {
                   "type": "tag",
-                  "begin": "<|tool_call_begin|>functions.alt:",
+                  "begin": "<cofl:tool_call id=\"",
                   "content": {
                     "type": "sequence",
                     "elements": [
@@ -1212,7 +1207,7 @@
                       },
                       {
                         "type": "const_string",
-                        "value": "<|tool_call_argument_begin|>"
+                        "value": "\" name=\"alt\">"
                       },
                       {
                         "type": "json_schema",
@@ -1227,13 +1222,13 @@
                             "q"
                           ]
                         },
-                        "style": "json",
+                        "style": "cohere_xml",
                         "any_order": true,
                         "max_whitespace_cnt": 2
                       }
                     ]
                   },
-                  "end": "<|tool_call_end|>"
+                  "end": "</cofl:tool_call>"
                 }
               ],
               "separator": "",
@@ -1242,7 +1237,7 @@
             },
             {
               "type": "const_string",
-              "value": "<|tool_calls_section_end|>"
+              "value": "</cofl:tool_calls>"
             }
           ]
         }

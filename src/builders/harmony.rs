@@ -6,7 +6,7 @@ use crate::tool::{
 
 use super::{
     StructuralTagBuilder, StructuralTagContext, StructuralTagOptions, json_schema, schema,
-    structural, tag, tools_with_separator,
+    structural, tag,
 };
 
 const CALL_END: &str = "<|call|>";
@@ -143,12 +143,39 @@ pub(super) fn build_harmony(
             }
         }
     }
-    if options.reasoning {
+    if options.reasoning != super::ReasoningMode::Disabled {
         tags.push(tag(
             ANALYSIS_BEGIN,
             Format::any_text(),
             vec!["<|end|>", "<|return|>"],
         ));
     }
-    structural(tools_with_separator(tags, TAG_SEPARATOR, false))
+    let (call_tags, message_tags): (Vec<_>, Vec<_>) = tags
+        .iter()
+        .cloned()
+        .partition(|tag| tag.end == CALL_END.into());
+    if options.parallel_tool_calls || call_tags.is_empty() {
+        return structural(Format::tags_with_separator(
+            tags,
+            TAG_SEPARATOR,
+            false,
+            false,
+        ));
+    }
+
+    // Limit tool-call messages while preserving the analysis and final channels.
+    let one_call = Format::tags_with_separator(call_tags, TAG_SEPARATOR, true, true);
+    if message_tags.is_empty() {
+        return structural(Format::optional(one_call));
+    }
+    let messages_then_call = Format::sequence(vec![
+        Format::tags_with_separator(message_tags.clone(), TAG_SEPARATOR, true, false),
+        Format::const_string(TAG_SEPARATOR),
+        one_call.clone(),
+    ]);
+    structural(Format::or(vec![
+        Format::tags_with_separator(message_tags, TAG_SEPARATOR, false, false),
+        one_call,
+        messages_then_call,
+    ]))
 }

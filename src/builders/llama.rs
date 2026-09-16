@@ -61,6 +61,7 @@ pub(super) fn build_llama(
                     &[TOOLS_TRIGGER],
                     tags,
                     text_excludes(options, THINK_EXCLUDES),
+                    options,
                 )
             }
         }
@@ -93,6 +94,7 @@ pub(super) fn build_llama(
                 &[TOOLS_TRIGGER],
                 tags,
                 text_excludes(options, THINK_EXCLUDES),
+                options,
             )
         }
     };

@@ -10,6 +10,12 @@ pub type Result<T> = std::result::Result<T, Error>;
 /// Errors produced while normalizing tools or building a model structural tag.
 #[derive(Debug, ThisError)]
 pub enum Error {
+    /// A model format supports function tools only.
+    #[error("{model} does not support builtin tools")]
+    UnsupportedBuiltinTools {
+        /// Model format that rejected the builtin tools.
+        model: &'static str,
+    },
     /// A named tool choice referenced a function absent from `tools`.
     #[error("the tool with name '{name}' is not found in the tools list")]
     ToolNotFound {

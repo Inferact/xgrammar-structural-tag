@@ -45,10 +45,18 @@ pub enum JsonSchemaStyle {
     QwenXml,
     /// MiniMax XML: `<parameter name="key">value</parameter>`.
     MinimaxXml,
+    /// MiniMax M3 recursive XML: `]<]minimax[>[<key>value]<]minimax[>[</key>`.
+    MinimaxM3Xml,
     /// DeepSeek DSML: `<…parameter name="key" string="true|false">value</…parameter>`.
     DeepseekXml,
+    /// DeepSeek V4.1 DSML with a space before `parameter` in each marker.
+    DeepseekV4_1Xml,
     /// GLM key-value XML: `<arg_key>key</arg_key><arg_value>value</arg_value>`.
     GlmXml,
+    /// Cohere XML: `<cofl:value name="key" type="raw|json|dict|list">value</cofl:value>`.
+    CohereXml,
+    /// Kimi K3: `<|open|>argument key="key" type="type"<|sep|>value<|close|>argument<|sep|>`.
+    KimiK3Xml,
 }
 
 /// A format that matches a constant string.
@@ -108,11 +116,22 @@ impl JsonSchemaFormat {
 }
 
 /// A format that matches arbitrary text.
-#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[derive(Debug, Clone, Default, PartialEq, Eq, Serialize, Deserialize)]
 pub struct AnyTextFormat {
     /// Strings that must not appear in the arbitrary text region.
     #[serde(default)]
     pub excludes: Vec<String>,
+    /// Maximum LLM tokens consumed by this region, or unbounded when unset.
+    ///
+    /// Enforced during token-mask-driven generation. Accepting strings directly
+    /// does not consume the token budget. Values range from zero to `i32::MAX`.
+    #[serde(default, with = "region_limit")]
+    pub max_tokens: Option<u32>,
+    /// Maximum Unicode codepoints consumed by this region, or unbounded when unset.
+    ///
+    /// Also applies when accepting strings directly. Values range from zero to `i32::MAX`.
+    #[serde(default, with = "region_limit")]
+    pub max_chars: Option<u32>,
 }
 
 /// A format that matches a single token, by ID or string representation.
@@ -155,11 +174,36 @@ pub struct ExcludeTokenFormat {
 }
 
 /// A format that matches zero or more tokens excluding a set of tokens.
-#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[derive(Debug, Clone, Default, PartialEq, Eq, Serialize, Deserialize)]
 pub struct AnyTokensFormat {
     /// Tokens excluded from the match.
     #[serde(default)]
     pub exclude_tokens: Vec<TokenValue>,
+    /// Maximum tokens consumed during token-mask-driven generation, or unbounded
+    /// when unset. Values range from zero to `i32::MAX`.
+    #[serde(default, with = "region_limit")]
+    pub max_tokens: Option<u32>,
+}
+
+mod region_limit {
+    use serde::{Deserialize, Deserializer, Serialize, Serializer};
+
+    pub fn serialize<S: Serializer>(value: &Option<u32>, serializer: S) -> Result<S::Ok, S::Error> {
+        if value.is_some_and(|value| value > i32::MAX as u32) {
+            return Err(serde::ser::Error::custom("region limit exceeds i32::MAX"));
+        }
+        value.serialize(serializer)
+    }
+
+    pub fn deserialize<'de, D: Deserializer<'de>>(
+        deserializer: D,
+    ) -> Result<Option<u32>, D::Error> {
+        let value = Option::<u32>::deserialize(deserializer)?;
+        if value.is_some_and(|value| value > i32::MAX as u32) {
+            return Err(serde::de::Error::custom("region limit exceeds i32::MAX"));
+        }
+        Ok(value)
+    }
 }
 
 /// A format that embeds an EBNF grammar.
@@ -328,6 +372,7 @@ pub struct TriggeredTagsFormat {
     /// Trigger strings.
     pub triggers: Vec<String>,
     /// Tag formats reached by triggers.
+    #[serde(serialize_with = "serialize_tags")]
     pub tags: Vec<TagFormat>,
     /// Whether at least one tag must be produced.
     #[serde(default)]
@@ -358,6 +403,12 @@ impl TriggeredTagsFormat {
         self
     }
 
+    /// Set whether to stop after the first tag is produced.
+    pub fn with_stop_after_first(mut self, stop_after_first: bool) -> Self {
+        self.stop_after_first = stop_after_first;
+        self
+    }
+
     /// Require at least one triggered tag.
     pub fn require_at_least_one(mut self) -> Self {
         self.at_least_one = true;
@@ -374,6 +425,7 @@ pub struct TokenTriggeredTagsFormat {
     /// Trigger token IDs or strings.
     pub trigger_tokens: Vec<TokenValue>,
     /// Tag formats reached by triggers.
+    #[serde(serialize_with = "serialize_tags")]
     pub tags: Vec<TagFormat>,
     /// Tokens excluded from free token regions.
     #[serde(default)]
@@ -401,6 +453,7 @@ pub struct TokenTriggeredTagsFormat {
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct TagsWithSeparatorFormat {
     /// Candidate tag formats.
+    #[serde(serialize_with = "serialize_tags")]
     pub tags: Vec<TagFormat>,
     /// Separator between adjacent tags.
     pub separator: String,
@@ -410,6 +463,20 @@ pub struct TagsWithSeparatorFormat {
     /// Whether to stop after the first tag is produced.
     #[serde(default)]
     pub stop_after_first: bool,
+}
+
+// Embedded tags carry the same discriminator as Format::Tag while the public
+// field keeps its narrower Vec<TagFormat> type.
+fn serialize_tags<S: serde::Serializer>(
+    tags: &[TagFormat],
+    serializer: S,
+) -> Result<S::Ok, S::Error> {
+    #[derive(Serialize)]
+    #[serde(tag = "type", rename_all = "snake_case")]
+    enum Tagged<'a> {
+        Tag(&'a TagFormat),
+    }
+    serializer.collect_seq(tags.iter().map(Tagged::Tag))
 }
 
 /// A format that matches its child 0 or 1 time (EBNF optional).
@@ -553,13 +620,14 @@ impl Format {
 
     /// Build an arbitrary text format.
     pub fn any_text() -> Self {
-        Self::AnyText(AnyTextFormat { excludes: vec![] })
+        Self::AnyText(AnyTextFormat::default())
     }
 
     /// Build an arbitrary text format with excluded strings.
     pub fn any_text_excluding(excludes: &[&str]) -> Self {
         Self::AnyText(AnyTextFormat {
             excludes: excludes.iter().map(|s| (*s).to_string()).collect(),
+            ..Default::default()
         })
     }
 
@@ -698,6 +766,7 @@ mod tests {
         }));
         round_trip(Format::AnyTokens(AnyTokensFormat {
             exclude_tokens: vec![TokenValue::Id(2)],
+            ..Default::default()
         }));
         round_trip(Format::Grammar(GrammarFormat {
             grammar: "root ::= \"x\"".to_string(),
@@ -768,5 +837,39 @@ mod tests {
         let value = serde_json::to_value(format).unwrap();
         assert_eq!(value["any_order"], true);
         assert_eq!(value["max_whitespace_cnt"], 2);
+    }
+
+    #[test]
+    fn region_limits_preserve_zero_and_reject_out_of_range_values() {
+        for field in ["max_tokens", "max_chars"] {
+            for value in [0, i32::MAX] {
+                let wire = json!({"type": "any_text", field: value});
+                let format: Format = serde_json::from_value(wire).unwrap();
+                assert_eq!(serde_json::to_value(format).unwrap()[field], value);
+            }
+            for value in [-1_i64, i32::MAX as i64 + 1] {
+                assert!(
+                    serde_json::from_value::<Format>(json!({"type": "any_text", field: value}))
+                        .is_err()
+                );
+            }
+        }
+        let old: Format =
+            serde_json::from_value(json!({"type": "any_text", "excludes": []})).unwrap();
+        assert_eq!(old, Format::any_text());
+        assert!(
+            serde_json::to_string(&AnyTextFormat {
+                max_chars: Some(u32::MAX),
+                ..Default::default()
+            })
+            .is_err()
+        );
+        assert!(
+            serde_json::to_string(&AnyTokensFormat {
+                max_tokens: Some(u32::MAX),
+                ..Default::default()
+            })
+            .is_err()
+        );
     }
 }

@@ -6,7 +6,9 @@
       "excludes": [
         "<think>",
         "</think>"
-      ]
+      ],
+      "max_tokens": null,
+      "max_chars": null
     }
   },
   "auto_one_tool": {
@@ -18,6 +20,7 @@
       ],
       "tags": [
         {
+          "type": "tag",
           "begin": "<tool_call>\n{\"name\": \"search\", \"arguments\": ",
           "content": {
             "type": "json_schema",
@@ -56,6 +59,7 @@
       ],
       "tags": [
         {
+          "type": "tag",
           "begin": "<tool_call>\n{\"name\": \"search\", \"arguments\": ",
           "content": {
             "type": "json_schema",
@@ -77,6 +81,7 @@
           "end": "}\n</tool_call>"
         },
         {
+          "type": "tag",
           "begin": "<tool_call>\n{\"name\": \"alt\", \"arguments\": ",
           "content": {
             "type": "json_schema",
@@ -119,7 +124,12 @@
               "begin": "",
               "content": {
                 "type": "any_text",
-                "excludes": []
+                "excludes": [
+                  "<think>",
+                  "</think>"
+                ],
+                "max_tokens": null,
+                "max_chars": null
               },
               "end": "</think>"
             },
@@ -136,6 +146,7 @@
           ],
           "tags": [
             {
+              "type": "tag",
               "begin": "<tool_call>\n{\"name\": \"search\", \"arguments\": ",
               "content": {
                 "type": "json_schema",
@@ -201,6 +212,7 @@
       ],
       "tags": [
         {
+          "type": "tag",
           "begin": "<tool_call>\n{\"name\": \"alt\", \"arguments\": ",
           "content": {
             "type": "json_schema",
@@ -239,6 +251,7 @@
       ],
       "tags": [
         {
+          "type": "tag",
           "begin": "<tool_call>\n{\"name\": \"loose\", \"arguments\": ",
           "content": {
             "type": "json_schema",
@@ -267,6 +280,7 @@
       ],
       "tags": [
         {
+          "type": "tag",
           "begin": "<tool_call>\n{\"name\": \"missing\", \"arguments\": ",
           "content": {
             "type": "json_schema",
@@ -283,6 +297,646 @@
       "excludes": [
         "<think>",
         "</think>"
+      ]
+    }
+  },
+  "adaptive_auto_no_tools": {
+    "type": "structural_tag",
+    "format": {
+      "type": "sequence",
+      "elements": [
+        {
+          "type": "optional",
+          "content": {
+            "type": "sequence",
+            "elements": [
+              {
+                "type": "tag",
+                "begin": "<think>",
+                "content": {
+                  "type": "any_text",
+                  "excludes": [
+                    "<think>",
+                    "</think>"
+                  ],
+                  "max_tokens": null,
+                  "max_chars": null
+                },
+                "end": "</think>"
+              },
+              {
+                "type": "const_string",
+                "value": "\n\n"
+              }
+            ]
+          }
+        },
+        {
+          "type": "any_text",
+          "excludes": [
+            "<think>",
+            "</think>"
+          ],
+          "max_tokens": null,
+          "max_chars": null
+        }
+      ]
+    }
+  },
+  "single_call_auto_no_tools": {
+    "type": "structural_tag",
+    "format": {
+      "type": "sequence",
+      "elements": [
+        {
+          "type": "sequence",
+          "elements": [
+            {
+              "type": "tag",
+              "begin": "",
+              "content": {
+                "type": "any_text",
+                "excludes": [
+                  "<think>",
+                  "</think>"
+                ],
+                "max_tokens": null,
+                "max_chars": null
+              },
+              "end": "</think>"
+            },
+            {
+              "type": "const_string",
+              "value": "\n\n"
+            }
+          ]
+        },
+        {
+          "type": "any_text",
+          "excludes": [
+            "<think>",
+            "</think>"
+          ],
+          "max_tokens": null,
+          "max_chars": null
+        }
+      ]
+    }
+  },
+  "adaptive_auto_two_tools": {
+    "type": "structural_tag",
+    "format": {
+      "type": "sequence",
+      "elements": [
+        {
+          "type": "optional",
+          "content": {
+            "type": "sequence",
+            "elements": [
+              {
+                "type": "tag",
+                "begin": "<think>",
+                "content": {
+                  "type": "any_text",
+                  "excludes": [
+                    "<think>",
+                    "</think>"
+                  ],
+                  "max_tokens": null,
+                  "max_chars": null
+                },
+                "end": "</think>"
+              },
+              {
+                "type": "const_string",
+                "value": "\n\n"
+              }
+            ]
+          }
+        },
+        {
+          "type": "triggered_tags",
+          "triggers": [
+            "<tool_call>"
+          ],
+          "tags": [
+            {
+              "type": "tag",
+              "begin": "<tool_call>\n{\"name\": \"search\", \"arguments\": ",
+              "content": {
+                "type": "json_schema",
+                "json_schema": {
+                  "type": "object",
+                  "properties": {
+                    "q": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "q"
+                  ]
+                },
+                "style": "json",
+                "any_order": false,
+                "max_whitespace_cnt": null
+              },
+              "end": "}\n</tool_call>"
+            },
+            {
+              "type": "tag",
+              "begin": "<tool_call>\n{\"name\": \"alt\", \"arguments\": ",
+              "content": {
+                "type": "json_schema",
+                "json_schema": {
+                  "type": "object",
+                  "properties": {
+                    "q": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "q"
+                  ]
+                },
+                "style": "json",
+                "any_order": false,
+                "max_whitespace_cnt": null
+              },
+              "end": "}\n</tool_call>"
+            }
+          ],
+          "at_least_one": false,
+          "stop_after_first": false,
+          "excludes": [
+            "<think>",
+            "</think>"
+          ]
+        }
+      ]
+    }
+  },
+  "single_call_auto_two_tools": {
+    "type": "structural_tag",
+    "format": {
+      "type": "sequence",
+      "elements": [
+        {
+          "type": "sequence",
+          "elements": [
+            {
+              "type": "tag",
+              "begin": "",
+              "content": {
+                "type": "any_text",
+                "excludes": [
+                  "<think>",
+                  "</think>"
+                ],
+                "max_tokens": null,
+                "max_chars": null
+              },
+              "end": "</think>"
+            },
+            {
+              "type": "const_string",
+              "value": "\n\n"
+            }
+          ]
+        },
+        {
+          "type": "triggered_tags",
+          "triggers": [
+            "<tool_call>"
+          ],
+          "tags": [
+            {
+              "type": "tag",
+              "begin": "<tool_call>\n{\"name\": \"search\", \"arguments\": ",
+              "content": {
+                "type": "json_schema",
+                "json_schema": {
+                  "type": "object",
+                  "properties": {
+                    "q": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "q"
+                  ]
+                },
+                "style": "json",
+                "any_order": false,
+                "max_whitespace_cnt": null
+              },
+              "end": "}\n</tool_call>"
+            },
+            {
+              "type": "tag",
+              "begin": "<tool_call>\n{\"name\": \"alt\", \"arguments\": ",
+              "content": {
+                "type": "json_schema",
+                "json_schema": {
+                  "type": "object",
+                  "properties": {
+                    "q": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "q"
+                  ]
+                },
+                "style": "json",
+                "any_order": false,
+                "max_whitespace_cnt": null
+              },
+              "end": "}\n</tool_call>"
+            }
+          ],
+          "at_least_one": false,
+          "stop_after_first": true,
+          "excludes": [
+            "<think>",
+            "</think>"
+          ]
+        }
+      ]
+    }
+  },
+  "adaptive_required_two_tools": {
+    "type": "structural_tag",
+    "format": {
+      "type": "sequence",
+      "elements": [
+        {
+          "type": "optional",
+          "content": {
+            "type": "sequence",
+            "elements": [
+              {
+                "type": "tag",
+                "begin": "<think>",
+                "content": {
+                  "type": "any_text",
+                  "excludes": [
+                    "<think>",
+                    "</think>"
+                  ],
+                  "max_tokens": null,
+                  "max_chars": null
+                },
+                "end": "</think>"
+              },
+              {
+                "type": "const_string",
+                "value": "\n\n"
+              }
+            ]
+          }
+        },
+        {
+          "type": "triggered_tags",
+          "triggers": [
+            "<tool_call>"
+          ],
+          "tags": [
+            {
+              "type": "tag",
+              "begin": "<tool_call>\n{\"name\": \"search\", \"arguments\": ",
+              "content": {
+                "type": "json_schema",
+                "json_schema": {
+                  "type": "object",
+                  "properties": {
+                    "q": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "q"
+                  ]
+                },
+                "style": "json",
+                "any_order": false,
+                "max_whitespace_cnt": null
+              },
+              "end": "}\n</tool_call>"
+            },
+            {
+              "type": "tag",
+              "begin": "<tool_call>\n{\"name\": \"alt\", \"arguments\": ",
+              "content": {
+                "type": "json_schema",
+                "json_schema": {
+                  "type": "object",
+                  "properties": {
+                    "q": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "q"
+                  ]
+                },
+                "style": "json",
+                "any_order": false,
+                "max_whitespace_cnt": null
+              },
+              "end": "}\n</tool_call>"
+            }
+          ],
+          "at_least_one": true,
+          "stop_after_first": false,
+          "excludes": [
+            "<think>",
+            "</think>"
+          ]
+        }
+      ]
+    }
+  },
+  "single_call_required_two_tools": {
+    "type": "structural_tag",
+    "format": {
+      "type": "sequence",
+      "elements": [
+        {
+          "type": "sequence",
+          "elements": [
+            {
+              "type": "tag",
+              "begin": "",
+              "content": {
+                "type": "any_text",
+                "excludes": [
+                  "<think>",
+                  "</think>"
+                ],
+                "max_tokens": null,
+                "max_chars": null
+              },
+              "end": "</think>"
+            },
+            {
+              "type": "const_string",
+              "value": "\n\n"
+            }
+          ]
+        },
+        {
+          "type": "triggered_tags",
+          "triggers": [
+            "<tool_call>"
+          ],
+          "tags": [
+            {
+              "type": "tag",
+              "begin": "<tool_call>\n{\"name\": \"search\", \"arguments\": ",
+              "content": {
+                "type": "json_schema",
+                "json_schema": {
+                  "type": "object",
+                  "properties": {
+                    "q": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "q"
+                  ]
+                },
+                "style": "json",
+                "any_order": false,
+                "max_whitespace_cnt": null
+              },
+              "end": "}\n</tool_call>"
+            },
+            {
+              "type": "tag",
+              "begin": "<tool_call>\n{\"name\": \"alt\", \"arguments\": ",
+              "content": {
+                "type": "json_schema",
+                "json_schema": {
+                  "type": "object",
+                  "properties": {
+                    "q": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "q"
+                  ]
+                },
+                "style": "json",
+                "any_order": false,
+                "max_whitespace_cnt": null
+              },
+              "end": "}\n</tool_call>"
+            }
+          ],
+          "at_least_one": true,
+          "stop_after_first": true,
+          "excludes": [
+            "<think>",
+            "</think>"
+          ]
+        }
+      ]
+    }
+  },
+  "adaptive_forced_search": {
+    "type": "structural_tag",
+    "format": {
+      "type": "sequence",
+      "elements": [
+        {
+          "type": "optional",
+          "content": {
+            "type": "sequence",
+            "elements": [
+              {
+                "type": "tag",
+                "begin": "<think>",
+                "content": {
+                  "type": "any_text",
+                  "excludes": [
+                    "<think>",
+                    "</think>"
+                  ],
+                  "max_tokens": null,
+                  "max_chars": null
+                },
+                "end": "</think>"
+              },
+              {
+                "type": "const_string",
+                "value": "\n\n"
+              }
+            ]
+          }
+        },
+        {
+          "type": "tag",
+          "begin": "<tool_call>\n{\"name\": \"search\", \"arguments\": ",
+          "content": {
+            "type": "json_schema",
+            "json_schema": {
+              "type": "object",
+              "properties": {
+                "q": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "q"
+              ]
+            },
+            "style": "json",
+            "any_order": false,
+            "max_whitespace_cnt": null
+          },
+          "end": "}\n</tool_call>"
+        }
+      ]
+    }
+  },
+  "single_call_forced_search": {
+    "type": "structural_tag",
+    "format": {
+      "type": "sequence",
+      "elements": [
+        {
+          "type": "sequence",
+          "elements": [
+            {
+              "type": "tag",
+              "begin": "",
+              "content": {
+                "type": "any_text",
+                "excludes": [
+                  "<think>",
+                  "</think>"
+                ],
+                "max_tokens": null,
+                "max_chars": null
+              },
+              "end": "</think>"
+            },
+            {
+              "type": "const_string",
+              "value": "\n\n"
+            }
+          ]
+        },
+        {
+          "type": "tag",
+          "begin": "<tool_call>\n{\"name\": \"search\", \"arguments\": ",
+          "content": {
+            "type": "json_schema",
+            "json_schema": {
+              "type": "object",
+              "properties": {
+                "q": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "q"
+              ]
+            },
+            "style": "json",
+            "any_order": false,
+            "max_whitespace_cnt": null
+          },
+          "end": "}\n</tool_call>"
+        }
+      ]
+    }
+  },
+  "adaptive_single_call_relaxed_schema": {
+    "type": "structural_tag",
+    "format": {
+      "type": "sequence",
+      "elements": [
+        {
+          "type": "optional",
+          "content": {
+            "type": "sequence",
+            "elements": [
+              {
+                "type": "tag",
+                "begin": "<think>",
+                "content": {
+                  "type": "any_text",
+                  "excludes": [],
+                  "max_tokens": null,
+                  "max_chars": null
+                },
+                "end": "</think>"
+              },
+              {
+                "type": "const_string",
+                "value": "\n\n"
+              }
+            ]
+          }
+        },
+        {
+          "type": "triggered_tags",
+          "triggers": [
+            "<tool_call>"
+          ],
+          "tags": [
+            {
+              "type": "tag",
+              "begin": "<tool_call>\n{\"name\": \"search\", \"arguments\": ",
+              "content": {
+                "type": "json_schema",
+                "json_schema": {
+                  "type": "object",
+                  "properties": {
+                    "q": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "q"
+                  ]
+                },
+                "style": "json",
+                "any_order": true,
+                "max_whitespace_cnt": 2
+              },
+              "end": "}\n</tool_call>"
+            },
+            {
+              "type": "tag",
+              "begin": "<tool_call>\n{\"name\": \"alt\", \"arguments\": ",
+              "content": {
+                "type": "json_schema",
+                "json_schema": {
+                  "type": "object",
+                  "properties": {
+                    "q": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "q"
+                  ]
+                },
+                "style": "json",
+                "any_order": true,
+                "max_whitespace_cnt": 2
+              },
+              "end": "}\n</tool_call>"
+            }
+          ],
+          "at_least_one": true,
+          "stop_after_first": true,
+          "excludes": []
+        }
       ]
     }
   }

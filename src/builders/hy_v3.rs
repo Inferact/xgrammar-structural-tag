@@ -53,10 +53,10 @@ pub(super) fn build_hy_v3(
             } else {
                 let outer = tag(
                     TOOL_CALLS_BEGIN,
-                    tools_with_separator(tags, "\n", true),
+                    tools_with_separator(tags, "\n", true, options),
                     TOOL_CALLS_END,
                 );
-                triggered_with_excludes(&[TOOL_CALLS_TRIGGER], vec![outer], &[])
+                triggered_with_excludes(&[TOOL_CALLS_TRIGGER], vec![outer], &[], options)
             }
         }
         BuilderToolChoice::Forced => Format::sequence(vec![
@@ -68,7 +68,7 @@ pub(super) fn build_hy_v3(
             let tags = tools.iter().map(tool_tag).collect::<Vec<_>>();
             Format::sequence(vec![
                 Format::const_string(TOOL_CALLS_BEGIN),
-                tools_with_separator(tags, "\n", true),
+                tools_with_separator(tags, "\n", true, options),
                 Format::const_string(format!("\n{TOOL_CALLS_END}")),
             ])
         }

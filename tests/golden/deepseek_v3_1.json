@@ -6,7 +6,9 @@
       "excludes": [
         "<think>",
         "</think>"
-      ]
+      ],
+      "max_tokens": null,
+      "max_chars": null
     }
   },
   "auto_one_tool": {
@@ -18,11 +20,13 @@
       ],
       "tags": [
         {
+          "type": "tag",
           "begin": "<｜tool▁calls▁begin｜>",
           "content": {
             "type": "tags_with_separator",
             "tags": [
               {
+                "type": "tag",
                 "begin": "<｜tool▁call▁begin｜>search<｜tool▁sep｜>",
                 "content": {
                   "type": "json_schema",
@@ -68,6 +72,7 @@
         "type": "tags_with_separator",
         "tags": [
           {
+            "type": "tag",
             "begin": "<｜tool▁call▁begin｜>search<｜tool▁sep｜>",
             "content": {
               "type": "json_schema",
@@ -89,6 +94,7 @@
             "end": "<｜tool▁call▁end｜>"
           },
           {
+            "type": "tag",
             "begin": "<｜tool▁call▁begin｜>alt<｜tool▁sep｜>",
             "content": {
               "type": "json_schema",
@@ -127,7 +133,12 @@
           "begin": "",
           "content": {
             "type": "any_text",
-            "excludes": []
+            "excludes": [
+              "<think>",
+              "</think>"
+            ],
+            "max_tokens": null,
+            "max_chars": null
           },
           "end": "</think>"
         },
@@ -138,6 +149,7 @@
             "type": "tags_with_separator",
             "tags": [
               {
+                "type": "tag",
                 "begin": "<｜tool▁call▁begin｜>search<｜tool▁sep｜>",
                 "content": {
                   "type": "json_schema",
@@ -202,6 +214,7 @@
         "type": "tags_with_separator",
         "tags": [
           {
+            "type": "tag",
             "begin": "<｜tool▁call▁begin｜>alt<｜tool▁sep｜>",
             "content": {
               "type": "json_schema",
@@ -239,11 +252,13 @@
       ],
       "tags": [
         {
+          "type": "tag",
           "begin": "<｜tool▁calls▁begin｜>",
           "content": {
             "type": "tags_with_separator",
             "tags": [
               {
+                "type": "tag",
                 "begin": "<｜tool▁call▁begin｜>loose<｜tool▁sep｜>",
                 "content": {
                   "type": "json_schema",
@@ -279,11 +294,13 @@
       ],
       "tags": [
         {
+          "type": "tag",
           "begin": "<｜tool▁calls▁begin｜>",
           "content": {
             "type": "tags_with_separator",
             "tags": [
               {
+                "type": "tag",
                 "begin": "<｜tool▁call▁begin｜>missing<｜tool▁sep｜>",
                 "content": {
                   "type": "json_schema",
@@ -307,6 +324,591 @@
       "excludes": [
         "<think>",
         "</think>"
+      ]
+    }
+  },
+  "adaptive_auto_no_tools": {
+    "type": "structural_tag",
+    "format": {
+      "type": "sequence",
+      "elements": [
+        {
+          "type": "optional",
+          "content": {
+            "type": "tag",
+            "begin": "<think>",
+            "content": {
+              "type": "any_text",
+              "excludes": [
+                "<think>",
+                "</think>"
+              ],
+              "max_tokens": null,
+              "max_chars": null
+            },
+            "end": "</think>"
+          }
+        },
+        {
+          "type": "any_text",
+          "excludes": [
+            "<think>",
+            "</think>"
+          ],
+          "max_tokens": null,
+          "max_chars": null
+        }
+      ]
+    }
+  },
+  "single_call_auto_no_tools": {
+    "type": "structural_tag",
+    "format": {
+      "type": "sequence",
+      "elements": [
+        {
+          "type": "tag",
+          "begin": "",
+          "content": {
+            "type": "any_text",
+            "excludes": [
+              "<think>",
+              "</think>"
+            ],
+            "max_tokens": null,
+            "max_chars": null
+          },
+          "end": "</think>"
+        },
+        {
+          "type": "any_text",
+          "excludes": [
+            "<think>",
+            "</think>"
+          ],
+          "max_tokens": null,
+          "max_chars": null
+        }
+      ]
+    }
+  },
+  "adaptive_auto_two_tools": {
+    "type": "structural_tag",
+    "format": {
+      "type": "sequence",
+      "elements": [
+        {
+          "type": "optional",
+          "content": {
+            "type": "tag",
+            "begin": "<think>",
+            "content": {
+              "type": "any_text",
+              "excludes": [
+                "<think>",
+                "</think>"
+              ],
+              "max_tokens": null,
+              "max_chars": null
+            },
+            "end": "</think>"
+          }
+        },
+        {
+          "type": "triggered_tags",
+          "triggers": [
+            "<｜tool▁calls▁begin｜>"
+          ],
+          "tags": [
+            {
+              "type": "tag",
+              "begin": "<｜tool▁calls▁begin｜>",
+              "content": {
+                "type": "tags_with_separator",
+                "tags": [
+                  {
+                    "type": "tag",
+                    "begin": "<｜tool▁call▁begin｜>search<｜tool▁sep｜>",
+                    "content": {
+                      "type": "json_schema",
+                      "json_schema": {
+                        "type": "object",
+                        "properties": {
+                          "q": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "q"
+                        ]
+                      },
+                      "style": "json",
+                      "any_order": false,
+                      "max_whitespace_cnt": null
+                    },
+                    "end": "<｜tool▁call▁end｜>"
+                  },
+                  {
+                    "type": "tag",
+                    "begin": "<｜tool▁call▁begin｜>alt<｜tool▁sep｜>",
+                    "content": {
+                      "type": "json_schema",
+                      "json_schema": {
+                        "type": "object",
+                        "properties": {
+                          "q": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "q"
+                        ]
+                      },
+                      "style": "json",
+                      "any_order": false,
+                      "max_whitespace_cnt": null
+                    },
+                    "end": "<｜tool▁call▁end｜>"
+                  }
+                ],
+                "separator": "",
+                "at_least_one": true,
+                "stop_after_first": false
+              },
+              "end": "<｜tool▁calls▁end｜>"
+            }
+          ],
+          "at_least_one": false,
+          "stop_after_first": false,
+          "excludes": [
+            "<think>",
+            "</think>"
+          ]
+        }
+      ]
+    }
+  },
+  "single_call_auto_two_tools": {
+    "type": "structural_tag",
+    "format": {
+      "type": "sequence",
+      "elements": [
+        {
+          "type": "tag",
+          "begin": "",
+          "content": {
+            "type": "any_text",
+            "excludes": [
+              "<think>",
+              "</think>"
+            ],
+            "max_tokens": null,
+            "max_chars": null
+          },
+          "end": "</think>"
+        },
+        {
+          "type": "triggered_tags",
+          "triggers": [
+            "<｜tool▁calls▁begin｜>"
+          ],
+          "tags": [
+            {
+              "type": "tag",
+              "begin": "<｜tool▁calls▁begin｜>",
+              "content": {
+                "type": "tags_with_separator",
+                "tags": [
+                  {
+                    "type": "tag",
+                    "begin": "<｜tool▁call▁begin｜>search<｜tool▁sep｜>",
+                    "content": {
+                      "type": "json_schema",
+                      "json_schema": {
+                        "type": "object",
+                        "properties": {
+                          "q": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "q"
+                        ]
+                      },
+                      "style": "json",
+                      "any_order": false,
+                      "max_whitespace_cnt": null
+                    },
+                    "end": "<｜tool▁call▁end｜>"
+                  },
+                  {
+                    "type": "tag",
+                    "begin": "<｜tool▁call▁begin｜>alt<｜tool▁sep｜>",
+                    "content": {
+                      "type": "json_schema",
+                      "json_schema": {
+                        "type": "object",
+                        "properties": {
+                          "q": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "q"
+                        ]
+                      },
+                      "style": "json",
+                      "any_order": false,
+                      "max_whitespace_cnt": null
+                    },
+                    "end": "<｜tool▁call▁end｜>"
+                  }
+                ],
+                "separator": "",
+                "at_least_one": true,
+                "stop_after_first": true
+              },
+              "end": "<｜tool▁calls▁end｜>"
+            }
+          ],
+          "at_least_one": false,
+          "stop_after_first": true,
+          "excludes": [
+            "<think>",
+            "</think>"
+          ]
+        }
+      ]
+    }
+  },
+  "adaptive_required_two_tools": {
+    "type": "structural_tag",
+    "format": {
+      "type": "sequence",
+      "elements": [
+        {
+          "type": "optional",
+          "content": {
+            "type": "tag",
+            "begin": "<think>",
+            "content": {
+              "type": "any_text",
+              "excludes": [
+                "<think>",
+                "</think>"
+              ],
+              "max_tokens": null,
+              "max_chars": null
+            },
+            "end": "</think>"
+          }
+        },
+        {
+          "type": "tag",
+          "begin": "<｜tool▁calls▁begin｜>",
+          "content": {
+            "type": "tags_with_separator",
+            "tags": [
+              {
+                "type": "tag",
+                "begin": "<｜tool▁call▁begin｜>search<｜tool▁sep｜>",
+                "content": {
+                  "type": "json_schema",
+                  "json_schema": {
+                    "type": "object",
+                    "properties": {
+                      "q": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "q"
+                    ]
+                  },
+                  "style": "json",
+                  "any_order": false,
+                  "max_whitespace_cnt": null
+                },
+                "end": "<｜tool▁call▁end｜>"
+              },
+              {
+                "type": "tag",
+                "begin": "<｜tool▁call▁begin｜>alt<｜tool▁sep｜>",
+                "content": {
+                  "type": "json_schema",
+                  "json_schema": {
+                    "type": "object",
+                    "properties": {
+                      "q": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "q"
+                    ]
+                  },
+                  "style": "json",
+                  "any_order": false,
+                  "max_whitespace_cnt": null
+                },
+                "end": "<｜tool▁call▁end｜>"
+              }
+            ],
+            "separator": "",
+            "at_least_one": true,
+            "stop_after_first": false
+          },
+          "end": "<｜tool▁calls▁end｜>"
+        }
+      ]
+    }
+  },
+  "single_call_required_two_tools": {
+    "type": "structural_tag",
+    "format": {
+      "type": "sequence",
+      "elements": [
+        {
+          "type": "tag",
+          "begin": "",
+          "content": {
+            "type": "any_text",
+            "excludes": [
+              "<think>",
+              "</think>"
+            ],
+            "max_tokens": null,
+            "max_chars": null
+          },
+          "end": "</think>"
+        },
+        {
+          "type": "tag",
+          "begin": "<｜tool▁calls▁begin｜>",
+          "content": {
+            "type": "tags_with_separator",
+            "tags": [
+              {
+                "type": "tag",
+                "begin": "<｜tool▁call▁begin｜>search<｜tool▁sep｜>",
+                "content": {
+                  "type": "json_schema",
+                  "json_schema": {
+                    "type": "object",
+                    "properties": {
+                      "q": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "q"
+                    ]
+                  },
+                  "style": "json",
+                  "any_order": false,
+                  "max_whitespace_cnt": null
+                },
+                "end": "<｜tool▁call▁end｜>"
+              },
+              {
+                "type": "tag",
+                "begin": "<｜tool▁call▁begin｜>alt<｜tool▁sep｜>",
+                "content": {
+                  "type": "json_schema",
+                  "json_schema": {
+                    "type": "object",
+                    "properties": {
+                      "q": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "q"
+                    ]
+                  },
+                  "style": "json",
+                  "any_order": false,
+                  "max_whitespace_cnt": null
+                },
+                "end": "<｜tool▁call▁end｜>"
+              }
+            ],
+            "separator": "",
+            "at_least_one": true,
+            "stop_after_first": true
+          },
+          "end": "<｜tool▁calls▁end｜>"
+        }
+      ]
+    }
+  },
+  "adaptive_forced_search": {
+    "type": "structural_tag",
+    "format": {
+      "type": "sequence",
+      "elements": [
+        {
+          "type": "optional",
+          "content": {
+            "type": "tag",
+            "begin": "<think>",
+            "content": {
+              "type": "any_text",
+              "excludes": [
+                "<think>",
+                "</think>"
+              ],
+              "max_tokens": null,
+              "max_chars": null
+            },
+            "end": "</think>"
+          }
+        },
+        {
+          "type": "tag",
+          "begin": "<｜tool▁calls▁begin｜><｜tool▁call▁begin｜>search<｜tool▁sep｜>",
+          "content": {
+            "type": "json_schema",
+            "json_schema": {
+              "type": "object",
+              "properties": {
+                "q": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "q"
+              ]
+            },
+            "style": "json",
+            "any_order": false,
+            "max_whitespace_cnt": null
+          },
+          "end": "<｜tool▁call▁end｜><｜tool▁calls▁end｜>"
+        }
+      ]
+    }
+  },
+  "single_call_forced_search": {
+    "type": "structural_tag",
+    "format": {
+      "type": "sequence",
+      "elements": [
+        {
+          "type": "tag",
+          "begin": "",
+          "content": {
+            "type": "any_text",
+            "excludes": [
+              "<think>",
+              "</think>"
+            ],
+            "max_tokens": null,
+            "max_chars": null
+          },
+          "end": "</think>"
+        },
+        {
+          "type": "tag",
+          "begin": "<｜tool▁calls▁begin｜><｜tool▁call▁begin｜>search<｜tool▁sep｜>",
+          "content": {
+            "type": "json_schema",
+            "json_schema": {
+              "type": "object",
+              "properties": {
+                "q": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "q"
+              ]
+            },
+            "style": "json",
+            "any_order": false,
+            "max_whitespace_cnt": null
+          },
+          "end": "<｜tool▁call▁end｜><｜tool▁calls▁end｜>"
+        }
+      ]
+    }
+  },
+  "adaptive_single_call_relaxed_schema": {
+    "type": "structural_tag",
+    "format": {
+      "type": "sequence",
+      "elements": [
+        {
+          "type": "optional",
+          "content": {
+            "type": "tag",
+            "begin": "<think>",
+            "content": {
+              "type": "any_text",
+              "excludes": [],
+              "max_tokens": null,
+              "max_chars": null
+            },
+            "end": "</think>"
+          }
+        },
+        {
+          "type": "tag",
+          "begin": "<｜tool▁calls▁begin｜>",
+          "content": {
+            "type": "tags_with_separator",
+            "tags": [
+              {
+                "type": "tag",
+                "begin": "<｜tool▁call▁begin｜>search<｜tool▁sep｜>",
+                "content": {
+                  "type": "json_schema",
+                  "json_schema": {
+                    "type": "object",
+                    "properties": {
+                      "q": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "q"
+                    ]
+                  },
+                  "style": "json",
+                  "any_order": true,
+                  "max_whitespace_cnt": 2
+                },
+                "end": "<｜tool▁call▁end｜>"
+              },
+              {
+                "type": "tag",
+                "begin": "<｜tool▁call▁begin｜>alt<｜tool▁sep｜>",
+                "content": {
+                  "type": "json_schema",
+                  "json_schema": {
+                    "type": "object",
+                    "properties": {
+                      "q": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "q"
+                    ]
+                  },
+                  "style": "json",
+                  "any_order": true,
+                  "max_whitespace_cnt": 2
+                },
+                "end": "<｜tool▁call▁end｜>"
+              }
+            ],
+            "separator": "",
+            "at_least_one": true,
+            "stop_after_first": true
+          },
+          "end": "<｜tool▁calls▁end｜>"
+        }
       ]
     }
   }

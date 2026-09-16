@@ -12,7 +12,12 @@
       "deepseek_v3_2",
       "minimax",
       "glm_4_7",
-      "deepseek_v4"
+      "deepseek_v4",
+      "kimi_k3",
+      "minimax_m3",
+      "deepseek_v4_1",
+      "cohere",
+      "exaone"
     ],
     "rust_only": ["hermes", "hy_v3"]
   },
@@ -70,25 +75,25 @@
       "name": "auto_no_tools",
       "tools": [],
       "tool_choice": "auto",
-      "reasoning": false
+      "reasoning": "disabled"
     },
     {
       "name": "auto_one_tool",
       "tools": ["search"],
       "tool_choice": "auto",
-      "reasoning": false
+      "reasoning": "disabled"
     },
     {
       "name": "required_two_tools",
       "tools": ["search", "alt"],
       "tool_choice": "required",
-      "reasoning": false
+      "reasoning": "disabled"
     },
     {
       "name": "reasoning_required_one_tool",
       "tools": ["search"],
       "tool_choice": "required",
-      "reasoning": true
+      "reasoning": "enabled"
     },
     {
       "name": "forced_search",
@@ -97,7 +102,7 @@
         "type": "function",
         "function": { "name": "search" }
       },
-      "reasoning": false
+      "reasoning": "disabled"
     },
     {
       "name": "allowed_required_alt",
@@ -114,26 +119,102 @@
           ]
         }
       },
-      "reasoning": false
+      "reasoning": "disabled"
     },
     {
       "name": "strict_false",
       "tools": ["loose"],
       "tool_choice": "auto",
-      "reasoning": false
+      "reasoning": "disabled"
     },
     {
       "name": "missing_parameters",
       "tools": ["missing"],
       "tool_choice": "auto",
-      "reasoning": false
+      "reasoning": "disabled"
     },
     {
       "name": "builtin_auto",
       "models": ["harmony"],
       "tools": ["web_search_preview"],
       "tool_choice": "auto",
-      "reasoning": false
+      "reasoning": "disabled"
+    },
+    {
+      "name": "adaptive_auto_no_tools",
+      "tools": [],
+      "tool_choice": "auto",
+      "reasoning": "auto"
+    },
+    {
+      "name": "single_call_auto_no_tools",
+      "tools": [],
+      "tool_choice": "auto",
+      "reasoning": "enabled",
+      "parallel_tool_calls": false
+    },
+    {
+      "name": "adaptive_auto_two_tools",
+      "tools": ["search", "alt"],
+      "tool_choice": "auto",
+      "reasoning": "auto"
+    },
+    {
+      "name": "single_call_auto_two_tools",
+      "tools": ["search", "alt"],
+      "tool_choice": "auto",
+      "reasoning": "enabled",
+      "parallel_tool_calls": false
+    },
+    {
+      "name": "adaptive_required_two_tools",
+      "tools": ["search", "alt"],
+      "tool_choice": "required",
+      "reasoning": "auto"
+    },
+    {
+      "name": "single_call_required_two_tools",
+      "tools": ["search", "alt"],
+      "tool_choice": "required",
+      "reasoning": "enabled",
+      "parallel_tool_calls": false
+    },
+    {
+      "name": "adaptive_forced_search",
+      "tools": ["search", "alt"],
+      "tool_choice": {
+        "type": "function",
+        "function": { "name": "search" }
+      },
+      "reasoning": "auto"
+    },
+    {
+      "name": "single_call_forced_search",
+      "tools": ["search", "alt"],
+      "tool_choice": {
+        "type": "function",
+        "function": { "name": "search" }
+      },
+      "reasoning": "enabled",
+      "parallel_tool_calls": false
+    },
+    {
+      "name": "adaptive_single_call_relaxed_schema",
+      "tools": ["search", "alt"],
+      "tool_choice": "required",
+      "reasoning": "auto",
+      "parallel_tool_calls": false,
+      "any_order": true,
+      "exclude_special_tokens": false,
+      "max_whitespace_cnt": 2
+    },
+    {
+      "name": "harmony_single_builtin",
+      "models": ["harmony"],
+      "tools": ["search", "web_search_preview"],
+      "tool_choice": "required",
+      "reasoning": "auto",
+      "parallel_tool_calls": false
     }
   ]
 }

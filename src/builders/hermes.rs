@@ -4,7 +4,7 @@ use crate::tool::{BuilderToolChoice, FunctionToolParam};
 
 use super::{
     StructuralTagBuilder, StructuralTagContext, StructuralTagOptions, json_schema, schema,
-    structural, tag, tools_with_separator,
+    structural, tag, tools_with_separator, triggered_with_excludes,
 };
 
 /// Hermes tool-calling structural-tag builder.
@@ -60,14 +60,14 @@ pub(super) fn build_hermes(
             if tags.is_empty() {
                 Format::any_text()
             } else {
-                Format::triggered_tags(&["<tool_call>"], tags)
+                triggered_with_excludes(&["<tool_call>"], tags, &[], options)
             }
         }
         BuilderToolChoice::Forced => {
             Format::tags_with_separator(hermes_tool_tags(tools, options), "", true, true)
         }
         BuilderToolChoice::Required => {
-            tools_with_separator(hermes_tool_tags(tools, options), "", true)
+            tools_with_separator(hermes_tool_tags(tools, options), "", true, options)
         }
     };
     structural(suffix)

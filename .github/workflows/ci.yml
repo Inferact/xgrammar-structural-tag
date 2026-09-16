@@ -32,3 +32,28 @@ jobs:
 
       - name: Run tests
         run: cargo test
+
+  python:
+    name: Python compatibility
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    env:
+      # The grammar compilation and token-mask tests run on CPU.
+      UV_INDEX: https://download.pytorch.org/whl/cpu
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v7
+        with:
+          python-version: "3.12"
+          enable-cache: true
+          cache-dependency-glob: "scripts/*.py"
+
+      - name: Check Python golden parity
+        run: uv run scripts/generate_python_golden.py --check
+
+      - name: Check XGrammar runtime compatibility
+        run: uv run scripts/test_python_compat.py

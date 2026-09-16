@@ -3,7 +3,9 @@
     "type": "structural_tag",
     "format": {
       "type": "any_text",
-      "excludes": []
+      "excludes": [],
+      "max_tokens": null,
+      "max_chars": null
     }
   },
   "auto_one_tool": {
@@ -15,11 +17,13 @@
       ],
       "tags": [
         {
+          "type": "tag",
           "begin": "<tool_calls>\n",
           "content": {
             "type": "tags_with_separator",
             "tags": [
               {
+                "type": "tag",
                 "begin": "<tool_call>search<tool_sep>",
                 "content": {
                   "type": "json_schema",
@@ -66,6 +70,7 @@
           "type": "tags_with_separator",
           "tags": [
             {
+              "type": "tag",
               "begin": "<tool_call>search<tool_sep>",
               "content": {
                 "type": "json_schema",
@@ -87,6 +92,7 @@
               "end": "</tool_call>"
             },
             {
+              "type": "tag",
               "begin": "<tool_call>alt<tool_sep>",
               "content": {
                 "type": "json_schema",
@@ -132,6 +138,7 @@
           "type": "tags_with_separator",
           "tags": [
             {
+              "type": "tag",
               "begin": "<tool_call>search<tool_sep>",
               "content": {
                 "type": "json_schema",
@@ -215,6 +222,7 @@
           "type": "tags_with_separator",
           "tags": [
             {
+              "type": "tag",
               "begin": "<tool_call>alt<tool_sep>",
               "content": {
                 "type": "json_schema",
@@ -256,11 +264,13 @@
       ],
       "tags": [
         {
+          "type": "tag",
           "begin": "<tool_calls>\n",
           "content": {
             "type": "tags_with_separator",
             "tags": [
               {
+                "type": "tag",
                 "begin": "<tool_call>loose<tool_sep>",
                 "content": {
                   "type": "json_schema",
@@ -293,11 +303,13 @@
       ],
       "tags": [
         {
+          "type": "tag",
           "begin": "<tool_calls>\n",
           "content": {
             "type": "tags_with_separator",
             "tags": [
               {
+                "type": "tag",
                 "begin": "<tool_call>missing<tool_sep>",
                 "content": {
                   "type": "json_schema",
@@ -319,6 +331,446 @@
       "at_least_one": false,
       "stop_after_first": false,
       "excludes": []
+    }
+  },
+  "adaptive_auto_no_tools": {
+    "type": "structural_tag",
+    "format": {
+      "type": "any_text",
+      "excludes": [],
+      "max_tokens": null,
+      "max_chars": null
+    }
+  },
+  "single_call_auto_no_tools": {
+    "type": "structural_tag",
+    "format": {
+      "type": "any_text",
+      "excludes": [],
+      "max_tokens": null,
+      "max_chars": null
+    }
+  },
+  "adaptive_auto_two_tools": {
+    "type": "structural_tag",
+    "format": {
+      "type": "triggered_tags",
+      "triggers": [
+        "<tool_calls>"
+      ],
+      "tags": [
+        {
+          "type": "tag",
+          "begin": "<tool_calls>\n",
+          "content": {
+            "type": "tags_with_separator",
+            "tags": [
+              {
+                "type": "tag",
+                "begin": "<tool_call>search<tool_sep>",
+                "content": {
+                  "type": "json_schema",
+                  "json_schema": {
+                    "type": "object",
+                    "properties": {
+                      "q": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "q"
+                    ]
+                  },
+                  "style": "glm_xml",
+                  "any_order": false,
+                  "max_whitespace_cnt": null
+                },
+                "end": "</tool_call>"
+              },
+              {
+                "type": "tag",
+                "begin": "<tool_call>alt<tool_sep>",
+                "content": {
+                  "type": "json_schema",
+                  "json_schema": {
+                    "type": "object",
+                    "properties": {
+                      "q": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "q"
+                    ]
+                  },
+                  "style": "glm_xml",
+                  "any_order": false,
+                  "max_whitespace_cnt": null
+                },
+                "end": "</tool_call>"
+              }
+            ],
+            "separator": "\n",
+            "at_least_one": true,
+            "stop_after_first": false
+          },
+          "end": "</tool_calls>"
+        }
+      ],
+      "at_least_one": false,
+      "stop_after_first": false,
+      "excludes": []
+    }
+  },
+  "single_call_auto_two_tools": {
+    "type": "structural_tag",
+    "format": {
+      "type": "triggered_tags",
+      "triggers": [
+        "<tool_calls>"
+      ],
+      "tags": [
+        {
+          "type": "tag",
+          "begin": "<tool_calls>\n",
+          "content": {
+            "type": "tags_with_separator",
+            "tags": [
+              {
+                "type": "tag",
+                "begin": "<tool_call>search<tool_sep>",
+                "content": {
+                  "type": "json_schema",
+                  "json_schema": {
+                    "type": "object",
+                    "properties": {
+                      "q": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "q"
+                    ]
+                  },
+                  "style": "glm_xml",
+                  "any_order": false,
+                  "max_whitespace_cnt": null
+                },
+                "end": "</tool_call>"
+              },
+              {
+                "type": "tag",
+                "begin": "<tool_call>alt<tool_sep>",
+                "content": {
+                  "type": "json_schema",
+                  "json_schema": {
+                    "type": "object",
+                    "properties": {
+                      "q": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "q"
+                    ]
+                  },
+                  "style": "glm_xml",
+                  "any_order": false,
+                  "max_whitespace_cnt": null
+                },
+                "end": "</tool_call>"
+              }
+            ],
+            "separator": "\n",
+            "at_least_one": true,
+            "stop_after_first": true
+          },
+          "end": "</tool_calls>"
+        }
+      ],
+      "at_least_one": false,
+      "stop_after_first": true,
+      "excludes": []
+    }
+  },
+  "adaptive_required_two_tools": {
+    "type": "structural_tag",
+    "format": {
+      "type": "sequence",
+      "elements": [
+        {
+          "type": "const_string",
+          "value": "<tool_calls>\n"
+        },
+        {
+          "type": "tags_with_separator",
+          "tags": [
+            {
+              "type": "tag",
+              "begin": "<tool_call>search<tool_sep>",
+              "content": {
+                "type": "json_schema",
+                "json_schema": {
+                  "type": "object",
+                  "properties": {
+                    "q": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "q"
+                  ]
+                },
+                "style": "glm_xml",
+                "any_order": false,
+                "max_whitespace_cnt": null
+              },
+              "end": "</tool_call>"
+            },
+            {
+              "type": "tag",
+              "begin": "<tool_call>alt<tool_sep>",
+              "content": {
+                "type": "json_schema",
+                "json_schema": {
+                  "type": "object",
+                  "properties": {
+                    "q": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "q"
+                  ]
+                },
+                "style": "glm_xml",
+                "any_order": false,
+                "max_whitespace_cnt": null
+              },
+              "end": "</tool_call>"
+            }
+          ],
+          "separator": "\n",
+          "at_least_one": true,
+          "stop_after_first": false
+        },
+        {
+          "type": "const_string",
+          "value": "\n</tool_calls>"
+        }
+      ]
+    }
+  },
+  "single_call_required_two_tools": {
+    "type": "structural_tag",
+    "format": {
+      "type": "sequence",
+      "elements": [
+        {
+          "type": "const_string",
+          "value": "<tool_calls>\n"
+        },
+        {
+          "type": "tags_with_separator",
+          "tags": [
+            {
+              "type": "tag",
+              "begin": "<tool_call>search<tool_sep>",
+              "content": {
+                "type": "json_schema",
+                "json_schema": {
+                  "type": "object",
+                  "properties": {
+                    "q": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "q"
+                  ]
+                },
+                "style": "glm_xml",
+                "any_order": false,
+                "max_whitespace_cnt": null
+              },
+              "end": "</tool_call>"
+            },
+            {
+              "type": "tag",
+              "begin": "<tool_call>alt<tool_sep>",
+              "content": {
+                "type": "json_schema",
+                "json_schema": {
+                  "type": "object",
+                  "properties": {
+                    "q": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "q"
+                  ]
+                },
+                "style": "glm_xml",
+                "any_order": false,
+                "max_whitespace_cnt": null
+              },
+              "end": "</tool_call>"
+            }
+          ],
+          "separator": "\n",
+          "at_least_one": true,
+          "stop_after_first": true
+        },
+        {
+          "type": "const_string",
+          "value": "\n</tool_calls>"
+        }
+      ]
+    }
+  },
+  "adaptive_forced_search": {
+    "type": "structural_tag",
+    "format": {
+      "type": "sequence",
+      "elements": [
+        {
+          "type": "const_string",
+          "value": "<tool_calls>\n"
+        },
+        {
+          "type": "tag",
+          "begin": "<tool_call>search<tool_sep>",
+          "content": {
+            "type": "json_schema",
+            "json_schema": {
+              "type": "object",
+              "properties": {
+                "q": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "q"
+              ]
+            },
+            "style": "glm_xml",
+            "any_order": false,
+            "max_whitespace_cnt": null
+          },
+          "end": "</tool_call>"
+        },
+        {
+          "type": "const_string",
+          "value": "\n</tool_calls>"
+        }
+      ]
+    }
+  },
+  "single_call_forced_search": {
+    "type": "structural_tag",
+    "format": {
+      "type": "sequence",
+      "elements": [
+        {
+          "type": "const_string",
+          "value": "<tool_calls>\n"
+        },
+        {
+          "type": "tag",
+          "begin": "<tool_call>search<tool_sep>",
+          "content": {
+            "type": "json_schema",
+            "json_schema": {
+              "type": "object",
+              "properties": {
+                "q": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "q"
+              ]
+            },
+            "style": "glm_xml",
+            "any_order": false,
+            "max_whitespace_cnt": null
+          },
+          "end": "</tool_call>"
+        },
+        {
+          "type": "const_string",
+          "value": "\n</tool_calls>"
+        }
+      ]
+    }
+  },
+  "adaptive_single_call_relaxed_schema": {
+    "type": "structural_tag",
+    "format": {
+      "type": "sequence",
+      "elements": [
+        {
+          "type": "const_string",
+          "value": "<tool_calls>\n"
+        },
+        {
+          "type": "tags_with_separator",
+          "tags": [
+            {
+              "type": "tag",
+              "begin": "<tool_call>search<tool_sep>",
+              "content": {
+                "type": "json_schema",
+                "json_schema": {
+                  "type": "object",
+                  "properties": {
+                    "q": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "q"
+                  ]
+                },
+                "style": "glm_xml",
+                "any_order": true,
+                "max_whitespace_cnt": 2
+              },
+              "end": "</tool_call>"
+            },
+            {
+              "type": "tag",
+              "begin": "<tool_call>alt<tool_sep>",
+              "content": {
+                "type": "json_schema",
+                "json_schema": {
+                  "type": "object",
+                  "properties": {
+                    "q": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "q"
+                  ]
+                },
+                "style": "glm_xml",
+                "any_order": true,
+                "max_whitespace_cnt": 2
+              },
+              "end": "</tool_call>"
+            }
+          ],
+          "separator": "\n",
+          "at_least_one": true,
+          "stop_after_first": true
+        },
+        {
+          "type": "const_string",
+          "value": "\n</tool_calls>"
+        }
+      ]
     }
   }
 }

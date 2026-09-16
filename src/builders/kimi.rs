@@ -3,8 +3,8 @@ use crate::format::{Format, StructuralTag, TagFormat};
 use crate::tool::{BuilderToolChoice, FunctionToolParam};
 
 use super::{
-    StructuralTagBuilder, StructuralTagContext, json_schema, schema, structural, tag,
-    text_excludes, tools_with_separator, triggered_with_excludes,
+    StructuralTagBuilder, StructuralTagContext, assemble, json_schema, reasoning_prefix, schema,
+    tag, text_excludes, tools_with_separator, triggered_with_excludes,
 };
 
 /// Kimi K2 tool-calling structural-tag builder.
@@ -40,8 +40,8 @@ fn kimi_tool_tag(tool: &FunctionToolParam, options: super::StructuralTagOptions)
 ///
 /// Reference: <https://huggingface.co/moonshotai/Kimi-K2-Instruct/blob/main/docs/tool_call_guidance.md>
 ///
-/// Supports Kimi-K2 and Kimi-K2.5. When `reasoning` is `false`, the reasoning
-/// prefix is dropped and only the tool/text part is constrained.
+/// Supports Kimi-K2 and Kimi-K2.5. Disabled reasoning constrains the tool/text
+/// suffix; adaptive reasoning accepts a complete optional `<think>` block.
 pub(super) fn build_kimi(
     tools: &[FunctionToolParam],
     choice: BuilderToolChoice,
@@ -62,12 +62,13 @@ pub(super) fn build_kimi(
             if tags.is_empty() {
                 Format::any_text_excluding(text_excludes(options, THINK_EXCLUDES))
             } else {
-                let inner = tools_with_separator(tags, "", true);
+                let inner = tools_with_separator(tags, "", true, options);
                 let tool_calls = tag(TOOL_CALLS_SECTION_BEGIN, inner, TOOL_CALLS_SECTION_END);
                 triggered_with_excludes(
                     &[TOOL_CALLS_SECTION_BEGIN],
                     vec![tool_calls],
                     text_excludes(options, &["<think>", "</think>", TOOL_CALL_BEGIN]),
+                    options,
                 )
             }
         }
@@ -83,17 +84,19 @@ pub(super) fn build_kimi(
                 .collect::<Vec<_>>();
             Format::sequence(vec![
                 Format::const_string(TOOL_CALLS_SECTION_BEGIN),
-                tools_with_separator(tags, "", true),
+                tools_with_separator(tags, "", true, options),
                 Format::const_string(TOOL_CALLS_SECTION_END),
             ])
         }
     };
 
-    if !options.reasoning {
-        return structural(suffix);
-    }
-    structural(Format::sequence(vec![
-        Format::tag("", Format::any_text(), THINK_TAG_END),
+    let excludes = if options.reasoning == super::ReasoningMode::Auto {
+        THINK_EXCLUDES
+    } else {
+        &[]
+    };
+    assemble(
+        reasoning_prefix(options, "<think>", THINK_TAG_END, excludes, ""),
         suffix,
-    ]))
+    )
 }

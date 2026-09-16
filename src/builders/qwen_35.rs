@@ -3,8 +3,9 @@ use crate::format::{Format, JsonSchemaStyle, StructuralTag, TagFormat};
 use crate::tool::{BuilderToolChoice, FunctionToolParam};
 
 use super::{
-    StructuralTagBuilder, StructuralTagContext, required_triggered_with_excludes, schema,
-    structural, styled_schema, tag, text_excludes, triggered_with_excludes,
+    StructuralTagBuilder, StructuralTagContext, assemble, reasoning_prefix,
+    required_triggered_with_excludes, schema, styled_schema, tag, text_excludes,
+    triggered_with_excludes,
 };
 
 /// Qwen 3.5 XML tool-calling structural-tag builder.
@@ -40,8 +41,8 @@ fn qwen_35_tool_tag(tool: &FunctionToolParam, options: super::StructuralTagOptio
 /// Reference: <https://huggingface.co/Qwen/Qwen3-Coder-480B-A35B-Instruct-FP8/blob/main/chat_template.jinja>
 ///
 /// Backs the `qwen_3_5` and `qwen_3_coder` model keys. Supports Qwen3.5,
-/// Qwen3.6, Qwen3-Coder, and Qwen3-Coder-Next. When `reasoning` is `true`, a
-/// `</think>` reasoning prefix precedes the tool/text part.
+/// Qwen3.6, Qwen3-Coder, and Qwen3-Coder-Next. Enabled reasoning continues the
+/// prompt's `<think>` opener; adaptive reasoning accepts a complete optional block.
 pub(super) fn build_qwen_35(
     tools: &[FunctionToolParam],
     choice: BuilderToolChoice,
@@ -65,6 +66,7 @@ pub(super) fn build_qwen_35(
                     &[TOOL_CALL_TRIGGER],
                     tags,
                     text_excludes(options, THINK_EXCLUDES),
+                    options,
                 )
             }
         }
@@ -78,17 +80,18 @@ pub(super) fn build_qwen_35(
                 &[TOOL_CALL_TRIGGER],
                 tags,
                 text_excludes(options, THINK_EXCLUDES),
+                options,
             )
         }
     };
-    if !options.reasoning {
-        return structural(suffix);
-    }
-    structural(Format::sequence(vec![
-        Format::sequence(vec![
-            Format::tag("", Format::any_text(), THINK_TAG_END),
-            Format::const_string(THINK_SUFFIX),
-        ]),
+    assemble(
+        reasoning_prefix(
+            options,
+            "<think>",
+            THINK_TAG_END,
+            THINK_EXCLUDES,
+            THINK_SUFFIX,
+        ),
         suffix,
-    ]))
+    )
 }

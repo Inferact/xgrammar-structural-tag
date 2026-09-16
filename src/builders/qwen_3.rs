@@ -3,8 +3,8 @@ use crate::format::{Format, StructuralTag};
 use crate::tool::{BuilderToolChoice, FunctionToolParam};
 
 use super::{
-    StructuralTagBuilder, StructuralTagContext, json_schema, required_triggered_with_excludes,
-    schema, structural, tag, text_excludes, triggered_with_excludes,
+    StructuralTagBuilder, StructuralTagContext, assemble, json_schema, reasoning_prefix,
+    required_triggered_with_excludes, schema, tag, text_excludes, triggered_with_excludes,
 };
 
 /// Qwen 3 JSON-in-tag tool-calling structural-tag builder.
@@ -59,6 +59,7 @@ pub(super) fn build_qwen_3(
                     &[TOOL_CALL_TRIGGER],
                     tags,
                     text_excludes(options, THINK_EXCLUDES),
+                    options,
                 )
             }
         }
@@ -69,17 +70,18 @@ pub(super) fn build_qwen_3(
                 &[TOOL_CALL_TRIGGER],
                 tags,
                 text_excludes(options, THINK_EXCLUDES),
+                options,
             )
         }
     };
-    if !options.reasoning {
-        return structural(suffix);
-    }
-    structural(Format::sequence(vec![
-        Format::sequence(vec![
-            Format::tag("", Format::any_text(), THINK_TAG_END),
-            Format::const_string(THINK_SUFFIX),
-        ]),
+    assemble(
+        reasoning_prefix(
+            options,
+            "<think>",
+            THINK_TAG_END,
+            THINK_EXCLUDES,
+            THINK_SUFFIX,
+        ),
         suffix,
-    ]))
+    )
 }

@@ -11,6 +11,9 @@ use xgrammar_structural_tag::Model;
 #[path = "../tests/golden/cases.rs"]
 mod golden_cases;
 
+#[path = "../tests/golden/formats.rs"]
+mod format_cases;
+
 fn main() -> xgrammar_structural_tag::Result<()> {
     let write = env::args().any(|arg| arg == "--write");
     let root = PathBuf::from(env!("CARGO_MANIFEST_DIR"));
@@ -31,6 +34,12 @@ fn main() -> xgrammar_structural_tag::Result<()> {
         } else {
             println!("===== {model}.json =====\n{rendered}");
         }
+    }
+    let formats = serde_json::to_string_pretty(&format_cases::build_cases())?;
+    if write {
+        fs::write(golden_dir.join("formats.json"), formats).expect("write format fixture");
+    } else {
+        println!("===== formats.json =====\n{formats}");
     }
     Ok(())
 }

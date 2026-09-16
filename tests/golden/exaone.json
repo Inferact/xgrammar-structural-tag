@@ -5,13 +5,7 @@
       "type": "any_text",
       "excludes": [
         "<think>",
-        "</think>",
-        "<tool_call>",
-        "</tool_call>",
-        "<arg_key>",
-        "</arg_key>",
-        "<arg_value>",
-        "</arg_value>"
+        "</think>"
       ],
       "max_tokens": null,
       "max_chars": null
@@ -27,7 +21,7 @@
       "tags": [
         {
           "type": "tag",
-          "begin": "<tool_call>search",
+          "begin": "<tool_call>{\"name\": \"search\", \"arguments\": ",
           "content": {
             "type": "json_schema",
             "json_schema": {
@@ -41,23 +35,18 @@
                 "q"
               ]
             },
-            "style": "glm_xml",
+            "style": "json",
             "any_order": false,
             "max_whitespace_cnt": null
           },
-          "end": "</tool_call>"
+          "end": "}</tool_call>"
         }
       ],
       "at_least_one": false,
       "stop_after_first": false,
       "excludes": [
         "<think>",
-        "</think>",
-        "</tool_call>",
-        "<arg_key>",
-        "</arg_key>",
-        "<arg_value>",
-        "</arg_value>"
+        "</think>"
       ]
     }
   },
@@ -71,7 +60,7 @@
       "tags": [
         {
           "type": "tag",
-          "begin": "<tool_call>search",
+          "begin": "<tool_call>{\"name\": \"search\", \"arguments\": ",
           "content": {
             "type": "json_schema",
             "json_schema": {
@@ -85,15 +74,15 @@
                 "q"
               ]
             },
-            "style": "glm_xml",
+            "style": "json",
             "any_order": false,
             "max_whitespace_cnt": null
           },
-          "end": "</tool_call>"
+          "end": "}</tool_call>"
         },
         {
           "type": "tag",
-          "begin": "<tool_call>alt",
+          "begin": "<tool_call>{\"name\": \"alt\", \"arguments\": ",
           "content": {
             "type": "json_schema",
             "json_schema": {
@@ -107,23 +96,18 @@
                 "q"
               ]
             },
-            "style": "glm_xml",
+            "style": "json",
             "any_order": false,
             "max_whitespace_cnt": null
           },
-          "end": "</tool_call>"
+          "end": "}</tool_call>"
         }
       ],
       "at_least_one": true,
       "stop_after_first": false,
       "excludes": [
         "<think>",
-        "</think>",
-        "</tool_call>",
-        "<arg_key>",
-        "</arg_key>",
-        "<arg_value>",
-        "</arg_value>"
+        "</think>"
       ]
     }
   },
@@ -133,24 +117,24 @@
       "type": "sequence",
       "elements": [
         {
-          "type": "tag",
-          "begin": "",
-          "content": {
-            "type": "any_text",
-            "excludes": [
-              "<think>",
-              "</think>",
-              "<tool_call>",
-              "</tool_call>",
-              "<arg_key>",
-              "</arg_key>",
-              "<arg_value>",
-              "</arg_value>"
-            ],
-            "max_tokens": null,
-            "max_chars": null
-          },
-          "end": "</think>"
+          "type": "sequence",
+          "elements": [
+            {
+              "type": "tag",
+              "begin": "",
+              "content": {
+                "type": "any_text",
+                "excludes": [],
+                "max_tokens": null,
+                "max_chars": null
+              },
+              "end": "</think>"
+            },
+            {
+              "type": "const_string",
+              "value": "\n\n"
+            }
+          ]
         },
         {
           "type": "triggered_tags",
@@ -160,7 +144,7 @@
           "tags": [
             {
               "type": "tag",
-              "begin": "<tool_call>search",
+              "begin": "<tool_call>{\"name\": \"search\", \"arguments\": ",
               "content": {
                 "type": "json_schema",
                 "json_schema": {
@@ -174,23 +158,18 @@
                     "q"
                   ]
                 },
-                "style": "glm_xml",
+                "style": "json",
                 "any_order": false,
                 "max_whitespace_cnt": null
               },
-              "end": "</tool_call>"
+              "end": "}</tool_call>"
             }
           ],
           "at_least_one": true,
           "stop_after_first": false,
           "excludes": [
             "<think>",
-            "</think>",
-            "</tool_call>",
-            "<arg_key>",
-            "</arg_key>",
-            "<arg_value>",
-            "</arg_value>"
+            "</think>"
           ]
         }
       ]
@@ -200,7 +179,7 @@
     "type": "structural_tag",
     "format": {
       "type": "tag",
-      "begin": "<tool_call>search",
+      "begin": "<tool_call>{\"name\": \"search\", \"arguments\": ",
       "content": {
         "type": "json_schema",
         "json_schema": {
@@ -214,11 +193,11 @@
             "q"
           ]
         },
-        "style": "glm_xml",
+        "style": "json",
         "any_order": false,
         "max_whitespace_cnt": null
       },
-      "end": "</tool_call>"
+      "end": "}</tool_call>"
     }
   },
   "allowed_required_alt": {
@@ -231,7 +210,7 @@
       "tags": [
         {
           "type": "tag",
-          "begin": "<tool_call>alt",
+          "begin": "<tool_call>{\"name\": \"alt\", \"arguments\": ",
           "content": {
             "type": "json_schema",
             "json_schema": {
@@ -245,23 +224,18 @@
                 "q"
               ]
             },
-            "style": "glm_xml",
+            "style": "json",
             "any_order": false,
             "max_whitespace_cnt": null
           },
-          "end": "</tool_call>"
+          "end": "}</tool_call>"
         }
       ],
       "at_least_one": true,
       "stop_after_first": false,
       "excludes": [
         "<think>",
-        "</think>",
-        "</tool_call>",
-        "<arg_key>",
-        "</arg_key>",
-        "<arg_value>",
-        "</arg_value>"
+        "</think>"
       ]
     }
   },
@@ -275,27 +249,22 @@
       "tags": [
         {
           "type": "tag",
-          "begin": "<tool_call>loose",
+          "begin": "<tool_call>{\"name\": \"loose\", \"arguments\": ",
           "content": {
             "type": "json_schema",
             "json_schema": true,
-            "style": "glm_xml",
+            "style": "json",
             "any_order": false,
             "max_whitespace_cnt": null
           },
-          "end": "</tool_call>"
+          "end": "}</tool_call>"
         }
       ],
       "at_least_one": false,
       "stop_after_first": false,
       "excludes": [
         "<think>",
-        "</think>",
-        "</tool_call>",
-        "<arg_key>",
-        "</arg_key>",
-        "<arg_value>",
-        "</arg_value>"
+        "</think>"
       ]
     }
   },
@@ -309,27 +278,22 @@
       "tags": [
         {
           "type": "tag",
-          "begin": "<tool_call>missing",
+          "begin": "<tool_call>{\"name\": \"missing\", \"arguments\": ",
           "content": {
             "type": "json_schema",
             "json_schema": true,
-            "style": "glm_xml",
+            "style": "json",
             "any_order": false,
             "max_whitespace_cnt": null
           },
-          "end": "</tool_call>"
+          "end": "}</tool_call>"
         }
       ],
       "at_least_one": false,
       "stop_after_first": false,
       "excludes": [
         "<think>",
-        "</think>",
-        "</tool_call>",
-        "<arg_key>",
-        "</arg_key>",
-        "<arg_value>",
-        "</arg_value>"
+        "</think>"
       ]
     }
   },
@@ -341,37 +305,34 @@
         {
           "type": "optional",
           "content": {
-            "type": "tag",
-            "begin": "<think>",
-            "content": {
-              "type": "any_text",
-              "excludes": [
-                "<think>",
-                "</think>",
-                "<tool_call>",
-                "</tool_call>",
-                "<arg_key>",
-                "</arg_key>",
-                "<arg_value>",
-                "</arg_value>"
-              ],
-              "max_tokens": null,
-              "max_chars": null
-            },
-            "end": "</think>"
+            "type": "sequence",
+            "elements": [
+              {
+                "type": "tag",
+                "begin": "<think>",
+                "content": {
+                  "type": "any_text",
+                  "excludes": [
+                    "<think>",
+                    "</think>"
+                  ],
+                  "max_tokens": null,
+                  "max_chars": null
+                },
+                "end": "</think>"
+              },
+              {
+                "type": "const_string",
+                "value": "\n\n"
+              }
+            ]
           }
         },
         {
           "type": "any_text",
           "excludes": [
             "<think>",
-            "</think>",
-            "<tool_call>",
-            "</tool_call>",
-            "<arg_key>",
-            "</arg_key>",
-            "<arg_value>",
-            "</arg_value>"
+            "</think>"
           ],
           "max_tokens": null,
           "max_chars": null
@@ -385,36 +346,30 @@
       "type": "sequence",
       "elements": [
         {
-          "type": "tag",
-          "begin": "",
-          "content": {
-            "type": "any_text",
-            "excludes": [
-              "<think>",
-              "</think>",
-              "<tool_call>",
-              "</tool_call>",
-              "<arg_key>",
-              "</arg_key>",
-              "<arg_value>",
-              "</arg_value>"
-            ],
-            "max_tokens": null,
-            "max_chars": null
-          },
-          "end": "</think>"
+          "type": "sequence",
+          "elements": [
+            {
+              "type": "tag",
+              "begin": "",
+              "content": {
+                "type": "any_text",
+                "excludes": [],
+                "max_tokens": null,
+                "max_chars": null
+              },
+              "end": "</think>"
+            },
+            {
+              "type": "const_string",
+              "value": "\n\n"
+            }
+          ]
         },
         {
           "type": "any_text",
           "excludes": [
             "<think>",
-            "</think>",
-            "<tool_call>",
-            "</tool_call>",
-            "<arg_key>",
-            "</arg_key>",
-            "<arg_value>",
-            "</arg_value>"
+            "</think>"
           ],
           "max_tokens": null,
           "max_chars": null
@@ -430,24 +385,27 @@
         {
           "type": "optional",
           "content": {
-            "type": "tag",
-            "begin": "<think>",
-            "content": {
-              "type": "any_text",
-              "excludes": [
-                "<think>",
-                "</think>",
-                "<tool_call>",
-                "</tool_call>",
-                "<arg_key>",
-                "</arg_key>",
-                "<arg_value>",
-                "</arg_value>"
-              ],
-              "max_tokens": null,
-              "max_chars": null
-            },
-            "end": "</think>"
+            "type": "sequence",
+            "elements": [
+              {
+                "type": "tag",
+                "begin": "<think>",
+                "content": {
+                  "type": "any_text",
+                  "excludes": [
+                    "<think>",
+                    "</think>"
+                  ],
+                  "max_tokens": null,
+                  "max_chars": null
+                },
+                "end": "</think>"
+              },
+              {
+                "type": "const_string",
+                "value": "\n\n"
+              }
+            ]
           }
         },
         {
@@ -458,7 +416,7 @@
           "tags": [
             {
               "type": "tag",
-              "begin": "<tool_call>search",
+              "begin": "<tool_call>{\"name\": \"search\", \"arguments\": ",
               "content": {
                 "type": "json_schema",
                 "json_schema": {
@@ -472,15 +430,15 @@
                     "q"
                   ]
                 },
-                "style": "glm_xml",
+                "style": "json",
                 "any_order": false,
                 "max_whitespace_cnt": null
               },
-              "end": "</tool_call>"
+              "end": "}</tool_call>"
             },
             {
               "type": "tag",
-              "begin": "<tool_call>alt",
+              "begin": "<tool_call>{\"name\": \"alt\", \"arguments\": ",
               "content": {
                 "type": "json_schema",
                 "json_schema": {
@@ -494,23 +452,18 @@
                     "q"
                   ]
                 },
-                "style": "glm_xml",
+                "style": "json",
                 "any_order": false,
                 "max_whitespace_cnt": null
               },
-              "end": "</tool_call>"
+              "end": "}</tool_call>"
             }
           ],
           "at_least_one": false,
           "stop_after_first": false,
           "excludes": [
             "<think>",
-            "</think>",
-            "</tool_call>",
-            "<arg_key>",
-            "</arg_key>",
-            "<arg_value>",
-            "</arg_value>"
+            "</think>"
           ]
         }
       ]
@@ -522,24 +475,24 @@
       "type": "sequence",
       "elements": [
         {
-          "type": "tag",
-          "begin": "",
-          "content": {
-            "type": "any_text",
-            "excludes": [
-              "<think>",
-              "</think>",
-              "<tool_call>",
-              "</tool_call>",
-              "<arg_key>",
-              "</arg_key>",
-              "<arg_value>",
-              "</arg_value>"
-            ],
-            "max_tokens": null,
-            "max_chars": null
-          },
-          "end": "</think>"
+          "type": "sequence",
+          "elements": [
+            {
+              "type": "tag",
+              "begin": "",
+              "content": {
+                "type": "any_text",
+                "excludes": [],
+                "max_tokens": null,
+                "max_chars": null
+              },
+              "end": "</think>"
+            },
+            {
+              "type": "const_string",
+              "value": "\n\n"
+            }
+          ]
         },
         {
           "type": "triggered_tags",
@@ -549,7 +502,7 @@
           "tags": [
             {
               "type": "tag",
-              "begin": "<tool_call>search",
+              "begin": "<tool_call>{\"name\": \"search\", \"arguments\": ",
               "content": {
                 "type": "json_schema",
                 "json_schema": {
@@ -563,15 +516,15 @@
                     "q"
                   ]
                 },
-                "style": "glm_xml",
+                "style": "json",
                 "any_order": false,
                 "max_whitespace_cnt": null
               },
-              "end": "</tool_call>"
+              "end": "}</tool_call>"
             },
             {
               "type": "tag",
-              "begin": "<tool_call>alt",
+              "begin": "<tool_call>{\"name\": \"alt\", \"arguments\": ",
               "content": {
                 "type": "json_schema",
                 "json_schema": {
@@ -585,23 +538,18 @@
                     "q"
                   ]
                 },
-                "style": "glm_xml",
+                "style": "json",
                 "any_order": false,
                 "max_whitespace_cnt": null
               },
-              "end": "</tool_call>"
+              "end": "}</tool_call>"
             }
           ],
           "at_least_one": false,
           "stop_after_first": true,
           "excludes": [
             "<think>",
-            "</think>",
-            "</tool_call>",
-            "<arg_key>",
-            "</arg_key>",
-            "<arg_value>",
-            "</arg_value>"
+            "</think>"
           ]
         }
       ]
@@ -615,24 +563,27 @@
         {
           "type": "optional",
           "content": {
-            "type": "tag",
-            "begin": "<think>",
-            "content": {
-              "type": "any_text",
-              "excludes": [
-                "<think>",
-                "</think>",
-                "<tool_call>",
-                "</tool_call>",
-                "<arg_key>",
-                "</arg_key>",
-                "<arg_value>",
-                "</arg_value>"
-              ],
-              "max_tokens": null,
-              "max_chars": null
-            },
-            "end": "</think>"
+            "type": "sequence",
+            "elements": [
+              {
+                "type": "tag",
+                "begin": "<think>",
+                "content": {
+                  "type": "any_text",
+                  "excludes": [
+                    "<think>",
+                    "</think>"
+                  ],
+                  "max_tokens": null,
+                  "max_chars": null
+                },
+                "end": "</think>"
+              },
+              {
+                "type": "const_string",
+                "value": "\n\n"
+              }
+            ]
           }
         },
         {
@@ -643,7 +594,7 @@
           "tags": [
             {
               "type": "tag",
-              "begin": "<tool_call>search",
+              "begin": "<tool_call>{\"name\": \"search\", \"arguments\": ",
               "content": {
                 "type": "json_schema",
                 "json_schema": {
@@ -657,15 +608,15 @@
                     "q"
                   ]
                 },
-                "style": "glm_xml",
+                "style": "json",
                 "any_order": false,
                 "max_whitespace_cnt": null
               },
-              "end": "</tool_call>"
+              "end": "}</tool_call>"
             },
             {
               "type": "tag",
-              "begin": "<tool_call>alt",
+              "begin": "<tool_call>{\"name\": \"alt\", \"arguments\": ",
               "content": {
                 "type": "json_schema",
                 "json_schema": {
@@ -679,23 +630,18 @@
                     "q"
                   ]
                 },
-                "style": "glm_xml",
+                "style": "json",
                 "any_order": false,
                 "max_whitespace_cnt": null
               },
-              "end": "</tool_call>"
+              "end": "}</tool_call>"
             }
           ],
           "at_least_one": true,
           "stop_after_first": false,
           "excludes": [
             "<think>",
-            "</think>",
-            "</tool_call>",
-            "<arg_key>",
-            "</arg_key>",
-            "<arg_value>",
-            "</arg_value>"
+            "</think>"
           ]
         }
       ]
@@ -707,24 +653,24 @@
       "type": "sequence",
       "elements": [
         {
-          "type": "tag",
-          "begin": "",
-          "content": {
-            "type": "any_text",
-            "excludes": [
-              "<think>",
-              "</think>",
-              "<tool_call>",
-              "</tool_call>",
-              "<arg_key>",
-              "</arg_key>",
-              "<arg_value>",
-              "</arg_value>"
-            ],
-            "max_tokens": null,
-            "max_chars": null
-          },
-          "end": "</think>"
+          "type": "sequence",
+          "elements": [
+            {
+              "type": "tag",
+              "begin": "",
+              "content": {
+                "type": "any_text",
+                "excludes": [],
+                "max_tokens": null,
+                "max_chars": null
+              },
+              "end": "</think>"
+            },
+            {
+              "type": "const_string",
+              "value": "\n\n"
+            }
+          ]
         },
         {
           "type": "triggered_tags",
@@ -734,7 +680,7 @@
           "tags": [
             {
               "type": "tag",
-              "begin": "<tool_call>search",
+              "begin": "<tool_call>{\"name\": \"search\", \"arguments\": ",
               "content": {
                 "type": "json_schema",
                 "json_schema": {
@@ -748,15 +694,15 @@
                     "q"
                   ]
                 },
-                "style": "glm_xml",
+                "style": "json",
                 "any_order": false,
                 "max_whitespace_cnt": null
               },
-              "end": "</tool_call>"
+              "end": "}</tool_call>"
             },
             {
               "type": "tag",
-              "begin": "<tool_call>alt",
+              "begin": "<tool_call>{\"name\": \"alt\", \"arguments\": ",
               "content": {
                 "type": "json_schema",
                 "json_schema": {
@@ -770,23 +716,18 @@
                     "q"
                   ]
                 },
-                "style": "glm_xml",
+                "style": "json",
                 "any_order": false,
                 "max_whitespace_cnt": null
               },
-              "end": "</tool_call>"
+              "end": "}</tool_call>"
             }
           ],
           "at_least_one": true,
           "stop_after_first": true,
           "excludes": [
             "<think>",
-            "</think>",
-            "</tool_call>",
-            "<arg_key>",
-            "</arg_key>",
-            "<arg_value>",
-            "</arg_value>"
+            "</think>"
           ]
         }
       ]
@@ -800,29 +741,32 @@
         {
           "type": "optional",
           "content": {
-            "type": "tag",
-            "begin": "<think>",
-            "content": {
-              "type": "any_text",
-              "excludes": [
-                "<think>",
-                "</think>",
-                "<tool_call>",
-                "</tool_call>",
-                "<arg_key>",
-                "</arg_key>",
-                "<arg_value>",
-                "</arg_value>"
-              ],
-              "max_tokens": null,
-              "max_chars": null
-            },
-            "end": "</think>"
+            "type": "sequence",
+            "elements": [
+              {
+                "type": "tag",
+                "begin": "<think>",
+                "content": {
+                  "type": "any_text",
+                  "excludes": [
+                    "<think>",
+                    "</think>"
+                  ],
+                  "max_tokens": null,
+                  "max_chars": null
+                },
+                "end": "</think>"
+              },
+              {
+                "type": "const_string",
+                "value": "\n\n"
+              }
+            ]
           }
         },
         {
           "type": "tag",
-          "begin": "<tool_call>search",
+          "begin": "<tool_call>{\"name\": \"search\", \"arguments\": ",
           "content": {
             "type": "json_schema",
             "json_schema": {
@@ -836,11 +780,11 @@
                 "q"
               ]
             },
-            "style": "glm_xml",
+            "style": "json",
             "any_order": false,
             "max_whitespace_cnt": null
           },
-          "end": "</tool_call>"
+          "end": "}</tool_call>"
         }
       ]
     }
@@ -851,28 +795,28 @@
       "type": "sequence",
       "elements": [
         {
-          "type": "tag",
-          "begin": "",
-          "content": {
-            "type": "any_text",
-            "excludes": [
-              "<think>",
-              "</think>",
-              "<tool_call>",
-              "</tool_call>",
-              "<arg_key>",
-              "</arg_key>",
-              "<arg_value>",
-              "</arg_value>"
-            ],
-            "max_tokens": null,
-            "max_chars": null
-          },
-          "end": "</think>"
+          "type": "sequence",
+          "elements": [
+            {
+              "type": "tag",
+              "begin": "",
+              "content": {
+                "type": "any_text",
+                "excludes": [],
+                "max_tokens": null,
+                "max_chars": null
+              },
+              "end": "</think>"
+            },
+            {
+              "type": "const_string",
+              "value": "\n\n"
+            }
+          ]
         },
         {
           "type": "tag",
-          "begin": "<tool_call>search",
+          "begin": "<tool_call>{\"name\": \"search\", \"arguments\": ",
           "content": {
             "type": "json_schema",
             "json_schema": {
@@ -886,11 +830,11 @@
                 "q"
               ]
             },
-            "style": "glm_xml",
+            "style": "json",
             "any_order": false,
             "max_whitespace_cnt": null
           },
-          "end": "</tool_call>"
+          "end": "}</tool_call>"
         }
       ]
     }
@@ -903,15 +847,24 @@
         {
           "type": "optional",
           "content": {
-            "type": "tag",
-            "begin": "<think>",
-            "content": {
-              "type": "any_text",
-              "excludes": [],
-              "max_tokens": null,
-              "max_chars": null
-            },
-            "end": "</think>"
+            "type": "sequence",
+            "elements": [
+              {
+                "type": "tag",
+                "begin": "<think>",
+                "content": {
+                  "type": "any_text",
+                  "excludes": [],
+                  "max_tokens": null,
+                  "max_chars": null
+                },
+                "end": "</think>"
+              },
+              {
+                "type": "const_string",
+                "value": "\n\n"
+              }
+            ]
           }
         },
         {
@@ -922,7 +875,7 @@
           "tags": [
             {
               "type": "tag",
-              "begin": "<tool_call>search",
+              "begin": "<tool_call>{\"name\": \"search\", \"arguments\": ",
               "content": {
                 "type": "json_schema",
                 "json_schema": {
@@ -936,15 +889,15 @@
                     "q"
                   ]
                 },
-                "style": "glm_xml",
+                "style": "json",
                 "any_order": true,
                 "max_whitespace_cnt": 2
               },
-              "end": "</tool_call>"
+              "end": "}</tool_call>"
             },
             {
               "type": "tag",
-              "begin": "<tool_call>alt",
+              "begin": "<tool_call>{\"name\": \"alt\", \"arguments\": ",
               "content": {
                 "type": "json_schema",
                 "json_schema": {
@@ -958,11 +911,11 @@
                     "q"
                   ]
                 },
-                "style": "glm_xml",
+                "style": "json",
                 "any_order": true,
                 "max_whitespace_cnt": 2
               },
-              "end": "</tool_call>"
+              "end": "}</tool_call>"
             }
           ],
           "at_least_one": true,

@@ -1,0 +1,96 @@
+{
+  "any_text_tokens": {
+    "type": "structural_tag",
+    "format": {
+      "type": "tag",
+      "begin": "<think>",
+      "content": {
+        "type": "any_text",
+        "excludes": [],
+        "max_tokens": 2,
+        "max_chars": null
+      },
+      "end": "</think>"
+    }
+  },
+  "any_text_chars": {
+    "type": "structural_tag",
+    "format": {
+      "type": "tag",
+      "begin": "<think>",
+      "content": {
+        "type": "any_text",
+        "excludes": [],
+        "max_tokens": null,
+        "max_chars": 3
+      },
+      "end": "</think>"
+    }
+  },
+  "any_text_both": {
+    "type": "structural_tag",
+    "format": {
+      "type": "tag",
+      "begin": "<think>",
+      "content": {
+        "type": "any_text",
+        "excludes": [],
+        "max_tokens": 2,
+        "max_chars": 3
+      },
+      "end": "</think>"
+    }
+  },
+  "any_text_zero": {
+    "type": "structural_tag",
+    "format": {
+      "type": "tag",
+      "begin": "<think>",
+      "content": {
+        "type": "any_text",
+        "excludes": [],
+        "max_tokens": 0,
+        "max_chars": null
+      },
+      "end": "</think>"
+    }
+  },
+  "any_tokens": {
+    "type": "structural_tag",
+    "format": {
+      "type": "tag",
+      "begin": {
+        "type": "token",
+        "token": "<think>"
+      },
+      "content": {
+        "type": "any_tokens",
+        "exclude_tokens": [],
+        "max_tokens": 2
+      },
+      "end": {
+        "type": "token",
+        "token": "</think>"
+      }
+    }
+  },
+  "any_tokens_zero": {
+    "type": "structural_tag",
+    "format": {
+      "type": "tag",
+      "begin": {
+        "type": "token",
+        "token": "<think>"
+      },
+      "content": {
+        "type": "any_tokens",
+        "exclude_tokens": [],
+        "max_tokens": 0
+      },
+      "end": {
+        "type": "token",
+        "token": "</think>"
+      }
+    }
+  }
+}

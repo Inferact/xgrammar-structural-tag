@@ -3,8 +3,8 @@ use crate::format::{Format, JsonSchemaStyle, StructuralTag};
 use crate::tool::{BuilderToolChoice, FunctionToolParam};
 
 use super::{
-    StructuralTagBuilder, StructuralTagContext, schema, structural, styled_schema, tag,
-    text_excludes, tools_with_separator, triggered_with_excludes,
+    StructuralTagBuilder, StructuralTagContext, assemble, reasoning_prefix, schema, structural,
+    styled_schema, tag, text_excludes, tools_with_separator, triggered_with_excludes,
 };
 
 /// MiniMax XML tool-calling structural-tag builder.
@@ -62,11 +62,12 @@ pub(super) fn build_minimax(
             if tags.is_empty() {
                 Format::any_text_excluding(text_excludes(options, THINK_EXCLUDES))
             } else {
-                let function_calling = tools_with_separator(tags, "", true);
+                let function_calling = tools_with_separator(tags, "", true, options);
                 triggered_with_excludes(
                     &[TOOL_CALL_TRIGGER],
                     vec![tag(TOOL_CALL_BEGIN, function_calling, TOOL_CALL_END)],
                     text_excludes(options, THINK_EXCLUDES),
+                    options,
                 )
             }
         }
@@ -77,19 +78,25 @@ pub(super) fn build_minimax(
         ]),
         BuilderToolChoice::Required => Format::sequence(vec![
             Format::const_string(format!("\n{TOOL_CALL_BEGIN}")),
-            tools_with_separator(tool_tags(), "", true),
+            tools_with_separator(tool_tags(), "", true, options),
             Format::const_string(TOOL_CALL_END),
         ]),
     };
 
-    let think = if options.reasoning {
-        Format::tag("", Format::any_text(), THINK_TAG_END)
+    if options.reasoning == super::ReasoningMode::Disabled {
+        return structural(Format::sequence(vec![
+            Format::const_string(EMPTY_THINK_CONTENT),
+            Format::const_string(THINK_SUFFIX),
+            suffix,
+        ]));
+    }
+    let excludes = if options.reasoning == super::ReasoningMode::Enabled {
+        &[][..]
     } else {
-        Format::const_string(EMPTY_THINK_CONTENT)
+        THINK_EXCLUDES
     };
-    structural(Format::sequence(vec![
-        think,
-        Format::const_string(THINK_SUFFIX),
+    assemble(
+        reasoning_prefix(options, "<think>", THINK_TAG_END, excludes, THINK_SUFFIX),
         suffix,
-    ]))
+    )
 }

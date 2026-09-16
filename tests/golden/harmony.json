@@ -5,10 +5,13 @@
       "type": "tags_with_separator",
       "tags": [
         {
+          "type": "tag",
           "begin": "<|channel|>final<|message|>",
           "content": {
             "type": "any_text",
-            "excludes": []
+            "excludes": [],
+            "max_tokens": null,
+            "max_chars": null
           },
           "end": [
             "<|end|>",
@@ -27,6 +30,7 @@
       "type": "tags_with_separator",
       "tags": [
         {
+          "type": "tag",
           "begin": "<|channel|>commentary to=functions.search<|constrain|>json<|message|>",
           "content": {
             "type": "json_schema",
@@ -48,6 +52,7 @@
           "end": "<|call|>"
         },
         {
+          "type": "tag",
           "begin": " to=functions.search<|channel|>commentary <|constrain|>json<|message|>",
           "content": {
             "type": "json_schema",
@@ -69,6 +74,7 @@
           "end": "<|call|>"
         },
         {
+          "type": "tag",
           "begin": " to=functions.search<|channel|>commentary json<|message|>",
           "content": {
             "type": "json_schema",
@@ -90,10 +96,13 @@
           "end": "<|call|>"
         },
         {
+          "type": "tag",
           "begin": "<|channel|>final<|message|>",
           "content": {
             "type": "any_text",
-            "excludes": []
+            "excludes": [],
+            "max_tokens": null,
+            "max_chars": null
           },
           "end": [
             "<|end|>",
@@ -112,6 +121,7 @@
       "type": "tags_with_separator",
       "tags": [
         {
+          "type": "tag",
           "begin": "<|channel|>commentary to=functions.search<|constrain|>json<|message|>",
           "content": {
             "type": "json_schema",
@@ -133,6 +143,7 @@
           "end": "<|call|>"
         },
         {
+          "type": "tag",
           "begin": " to=functions.search<|channel|>commentary <|constrain|>json<|message|>",
           "content": {
             "type": "json_schema",
@@ -154,6 +165,7 @@
           "end": "<|call|>"
         },
         {
+          "type": "tag",
           "begin": " to=functions.search<|channel|>commentary json<|message|>",
           "content": {
             "type": "json_schema",
@@ -175,6 +187,7 @@
           "end": "<|call|>"
         },
         {
+          "type": "tag",
           "begin": "<|channel|>commentary to=functions.alt<|constrain|>json<|message|>",
           "content": {
             "type": "json_schema",
@@ -196,6 +209,7 @@
           "end": "<|call|>"
         },
         {
+          "type": "tag",
           "begin": " to=functions.alt<|channel|>commentary <|constrain|>json<|message|>",
           "content": {
             "type": "json_schema",
@@ -217,6 +231,7 @@
           "end": "<|call|>"
         },
         {
+          "type": "tag",
           "begin": " to=functions.alt<|channel|>commentary json<|message|>",
           "content": {
             "type": "json_schema",
@@ -249,6 +264,7 @@
       "type": "tags_with_separator",
       "tags": [
         {
+          "type": "tag",
           "begin": "<|channel|>commentary to=functions.search<|constrain|>json<|message|>",
           "content": {
             "type": "json_schema",
@@ -270,6 +286,7 @@
           "end": "<|call|>"
         },
         {
+          "type": "tag",
           "begin": " to=functions.search<|channel|>commentary <|constrain|>json<|message|>",
           "content": {
             "type": "json_schema",
@@ -291,6 +308,7 @@
           "end": "<|call|>"
         },
         {
+          "type": "tag",
           "begin": " to=functions.search<|channel|>commentary json<|message|>",
           "content": {
             "type": "json_schema",
@@ -312,10 +330,13 @@
           "end": "<|call|>"
         },
         {
+          "type": "tag",
           "begin": "<|channel|>analysis<|message|>",
           "content": {
             "type": "any_text",
-            "excludes": []
+            "excludes": [],
+            "max_tokens": null,
+            "max_chars": null
           },
           "end": [
             "<|end|>",
@@ -334,6 +355,7 @@
       "type": "tags_with_separator",
       "tags": [
         {
+          "type": "tag",
           "begin": "<|channel|>commentary to=functions.search<|constrain|>json<|message|>",
           "content": {
             "type": "json_schema",
@@ -355,6 +377,7 @@
           "end": "<|call|>"
         },
         {
+          "type": "tag",
           "begin": " to=functions.search<|channel|>commentary <|constrain|>json<|message|>",
           "content": {
             "type": "json_schema",
@@ -376,6 +399,7 @@
           "end": "<|call|>"
         },
         {
+          "type": "tag",
           "begin": " to=functions.search<|channel|>commentary json<|message|>",
           "content": {
             "type": "json_schema",
@@ -408,6 +432,7 @@
       "type": "tags_with_separator",
       "tags": [
         {
+          "type": "tag",
           "begin": "<|channel|>commentary to=functions.alt<|constrain|>json<|message|>",
           "content": {
             "type": "json_schema",
@@ -429,6 +454,7 @@
           "end": "<|call|>"
         },
         {
+          "type": "tag",
           "begin": " to=functions.alt<|channel|>commentary <|constrain|>json<|message|>",
           "content": {
             "type": "json_schema",
@@ -450,6 +476,7 @@
           "end": "<|call|>"
         },
         {
+          "type": "tag",
           "begin": " to=functions.alt<|channel|>commentary json<|message|>",
           "content": {
             "type": "json_schema",
@@ -482,6 +509,7 @@
       "type": "tags_with_separator",
       "tags": [
         {
+          "type": "tag",
           "begin": "<|channel|>commentary to=functions.loose<|constrain|>json<|message|>",
           "content": {
             "type": "json_schema",
@@ -493,6 +521,7 @@
           "end": "<|call|>"
         },
         {
+          "type": "tag",
           "begin": " to=functions.loose<|channel|>commentary <|constrain|>json<|message|>",
           "content": {
             "type": "json_schema",
@@ -504,6 +533,7 @@
           "end": "<|call|>"
         },
         {
+          "type": "tag",
           "begin": " to=functions.loose<|channel|>commentary json<|message|>",
           "content": {
             "type": "json_schema",
@@ -515,10 +545,13 @@
           "end": "<|call|>"
         },
         {
+          "type": "tag",
           "begin": "<|channel|>final<|message|>",
           "content": {
             "type": "any_text",
-            "excludes": []
+            "excludes": [],
+            "max_tokens": null,
+            "max_chars": null
           },
           "end": [
             "<|end|>",
@@ -537,6 +570,7 @@
       "type": "tags_with_separator",
       "tags": [
         {
+          "type": "tag",
           "begin": "<|channel|>commentary to=functions.missing<|constrain|>json<|message|>",
           "content": {
             "type": "json_schema",
@@ -548,6 +582,7 @@
           "end": "<|call|>"
         },
         {
+          "type": "tag",
           "begin": " to=functions.missing<|channel|>commentary <|constrain|>json<|message|>",
           "content": {
             "type": "json_schema",
@@ -559,6 +594,7 @@
           "end": "<|call|>"
         },
         {
+          "type": "tag",
           "begin": " to=functions.missing<|channel|>commentary json<|message|>",
           "content": {
             "type": "json_schema",
@@ -570,10 +606,13 @@
           "end": "<|call|>"
         },
         {
+          "type": "tag",
           "begin": "<|channel|>final<|message|>",
           "content": {
             "type": "any_text",
-            "excludes": []
+            "excludes": [],
+            "max_tokens": null,
+            "max_chars": null
           },
           "end": [
             "<|end|>",
@@ -592,6 +631,7 @@
       "type": "tags_with_separator",
       "tags": [
         {
+          "type": "tag",
           "begin": "<|channel|>commentary to=browser.search code<|message|>",
           "content": {
             "type": "json_schema",
@@ -613,6 +653,7 @@
           "end": "<|call|>"
         },
         {
+          "type": "tag",
           "begin": " to=browser.search<|channel|>commentary code<|message|>",
           "content": {
             "type": "json_schema",
@@ -634,10 +675,13 @@
           "end": "<|call|>"
         },
         {
+          "type": "tag",
           "begin": "<|channel|>final<|message|>",
           "content": {
             "type": "any_text",
-            "excludes": []
+            "excludes": [],
+            "max_tokens": null,
+            "max_chars": null
           },
           "end": [
             "<|end|>",
@@ -648,6 +692,2060 @@
       "separator": "<|start|>assistant",
       "at_least_one": false,
       "stop_after_first": false
+    }
+  },
+  "adaptive_auto_no_tools": {
+    "type": "structural_tag",
+    "format": {
+      "type": "tags_with_separator",
+      "tags": [
+        {
+          "type": "tag",
+          "begin": "<|channel|>final<|message|>",
+          "content": {
+            "type": "any_text",
+            "excludes": [],
+            "max_tokens": null,
+            "max_chars": null
+          },
+          "end": [
+            "<|end|>",
+            "<|return|>"
+          ]
+        },
+        {
+          "type": "tag",
+          "begin": "<|channel|>analysis<|message|>",
+          "content": {
+            "type": "any_text",
+            "excludes": [],
+            "max_tokens": null,
+            "max_chars": null
+          },
+          "end": [
+            "<|end|>",
+            "<|return|>"
+          ]
+        }
+      ],
+      "separator": "<|start|>assistant",
+      "at_least_one": false,
+      "stop_after_first": false
+    }
+  },
+  "single_call_auto_no_tools": {
+    "type": "structural_tag",
+    "format": {
+      "type": "tags_with_separator",
+      "tags": [
+        {
+          "type": "tag",
+          "begin": "<|channel|>final<|message|>",
+          "content": {
+            "type": "any_text",
+            "excludes": [],
+            "max_tokens": null,
+            "max_chars": null
+          },
+          "end": [
+            "<|end|>",
+            "<|return|>"
+          ]
+        },
+        {
+          "type": "tag",
+          "begin": "<|channel|>analysis<|message|>",
+          "content": {
+            "type": "any_text",
+            "excludes": [],
+            "max_tokens": null,
+            "max_chars": null
+          },
+          "end": [
+            "<|end|>",
+            "<|return|>"
+          ]
+        }
+      ],
+      "separator": "<|start|>assistant",
+      "at_least_one": false,
+      "stop_after_first": false
+    }
+  },
+  "adaptive_auto_two_tools": {
+    "type": "structural_tag",
+    "format": {
+      "type": "tags_with_separator",
+      "tags": [
+        {
+          "type": "tag",
+          "begin": "<|channel|>commentary to=functions.search<|constrain|>json<|message|>",
+          "content": {
+            "type": "json_schema",
+            "json_schema": {
+              "type": "object",
+              "properties": {
+                "q": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "q"
+              ]
+            },
+            "style": "json",
+            "any_order": false,
+            "max_whitespace_cnt": null
+          },
+          "end": "<|call|>"
+        },
+        {
+          "type": "tag",
+          "begin": " to=functions.search<|channel|>commentary <|constrain|>json<|message|>",
+          "content": {
+            "type": "json_schema",
+            "json_schema": {
+              "type": "object",
+              "properties": {
+                "q": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "q"
+              ]
+            },
+            "style": "json",
+            "any_order": false,
+            "max_whitespace_cnt": null
+          },
+          "end": "<|call|>"
+        },
+        {
+          "type": "tag",
+          "begin": " to=functions.search<|channel|>commentary json<|message|>",
+          "content": {
+            "type": "json_schema",
+            "json_schema": {
+              "type": "object",
+              "properties": {
+                "q": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "q"
+              ]
+            },
+            "style": "json",
+            "any_order": false,
+            "max_whitespace_cnt": null
+          },
+          "end": "<|call|>"
+        },
+        {
+          "type": "tag",
+          "begin": "<|channel|>commentary to=functions.alt<|constrain|>json<|message|>",
+          "content": {
+            "type": "json_schema",
+            "json_schema": {
+              "type": "object",
+              "properties": {
+                "q": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "q"
+              ]
+            },
+            "style": "json",
+            "any_order": false,
+            "max_whitespace_cnt": null
+          },
+          "end": "<|call|>"
+        },
+        {
+          "type": "tag",
+          "begin": " to=functions.alt<|channel|>commentary <|constrain|>json<|message|>",
+          "content": {
+            "type": "json_schema",
+            "json_schema": {
+              "type": "object",
+              "properties": {
+                "q": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "q"
+              ]
+            },
+            "style": "json",
+            "any_order": false,
+            "max_whitespace_cnt": null
+          },
+          "end": "<|call|>"
+        },
+        {
+          "type": "tag",
+          "begin": " to=functions.alt<|channel|>commentary json<|message|>",
+          "content": {
+            "type": "json_schema",
+            "json_schema": {
+              "type": "object",
+              "properties": {
+                "q": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "q"
+              ]
+            },
+            "style": "json",
+            "any_order": false,
+            "max_whitespace_cnt": null
+          },
+          "end": "<|call|>"
+        },
+        {
+          "type": "tag",
+          "begin": "<|channel|>final<|message|>",
+          "content": {
+            "type": "any_text",
+            "excludes": [],
+            "max_tokens": null,
+            "max_chars": null
+          },
+          "end": [
+            "<|end|>",
+            "<|return|>"
+          ]
+        },
+        {
+          "type": "tag",
+          "begin": "<|channel|>analysis<|message|>",
+          "content": {
+            "type": "any_text",
+            "excludes": [],
+            "max_tokens": null,
+            "max_chars": null
+          },
+          "end": [
+            "<|end|>",
+            "<|return|>"
+          ]
+        }
+      ],
+      "separator": "<|start|>assistant",
+      "at_least_one": false,
+      "stop_after_first": false
+    }
+  },
+  "single_call_auto_two_tools": {
+    "type": "structural_tag",
+    "format": {
+      "type": "or",
+      "elements": [
+        {
+          "type": "tags_with_separator",
+          "tags": [
+            {
+              "type": "tag",
+              "begin": "<|channel|>final<|message|>",
+              "content": {
+                "type": "any_text",
+                "excludes": [],
+                "max_tokens": null,
+                "max_chars": null
+              },
+              "end": [
+                "<|end|>",
+                "<|return|>"
+              ]
+            },
+            {
+              "type": "tag",
+              "begin": "<|channel|>analysis<|message|>",
+              "content": {
+                "type": "any_text",
+                "excludes": [],
+                "max_tokens": null,
+                "max_chars": null
+              },
+              "end": [
+                "<|end|>",
+                "<|return|>"
+              ]
+            }
+          ],
+          "separator": "<|start|>assistant",
+          "at_least_one": false,
+          "stop_after_first": false
+        },
+        {
+          "type": "tags_with_separator",
+          "tags": [
+            {
+              "type": "tag",
+              "begin": "<|channel|>commentary to=functions.search<|constrain|>json<|message|>",
+              "content": {
+                "type": "json_schema",
+                "json_schema": {
+                  "type": "object",
+                  "properties": {
+                    "q": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "q"
+                  ]
+                },
+                "style": "json",
+                "any_order": false,
+                "max_whitespace_cnt": null
+              },
+              "end": "<|call|>"
+            },
+            {
+              "type": "tag",
+              "begin": " to=functions.search<|channel|>commentary <|constrain|>json<|message|>",
+              "content": {
+                "type": "json_schema",
+                "json_schema": {
+                  "type": "object",
+                  "properties": {
+                    "q": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "q"
+                  ]
+                },
+                "style": "json",
+                "any_order": false,
+                "max_whitespace_cnt": null
+              },
+              "end": "<|call|>"
+            },
+            {
+              "type": "tag",
+              "begin": " to=functions.search<|channel|>commentary json<|message|>",
+              "content": {
+                "type": "json_schema",
+                "json_schema": {
+                  "type": "object",
+                  "properties": {
+                    "q": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "q"
+                  ]
+                },
+                "style": "json",
+                "any_order": false,
+                "max_whitespace_cnt": null
+              },
+              "end": "<|call|>"
+            },
+            {
+              "type": "tag",
+              "begin": "<|channel|>commentary to=functions.alt<|constrain|>json<|message|>",
+              "content": {
+                "type": "json_schema",
+                "json_schema": {
+                  "type": "object",
+                  "properties": {
+                    "q": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "q"
+                  ]
+                },
+                "style": "json",
+                "any_order": false,
+                "max_whitespace_cnt": null
+              },
+              "end": "<|call|>"
+            },
+            {
+              "type": "tag",
+              "begin": " to=functions.alt<|channel|>commentary <|constrain|>json<|message|>",
+              "content": {
+                "type": "json_schema",
+                "json_schema": {
+                  "type": "object",
+                  "properties": {
+                    "q": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "q"
+                  ]
+                },
+                "style": "json",
+                "any_order": false,
+                "max_whitespace_cnt": null
+              },
+              "end": "<|call|>"
+            },
+            {
+              "type": "tag",
+              "begin": " to=functions.alt<|channel|>commentary json<|message|>",
+              "content": {
+                "type": "json_schema",
+                "json_schema": {
+                  "type": "object",
+                  "properties": {
+                    "q": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "q"
+                  ]
+                },
+                "style": "json",
+                "any_order": false,
+                "max_whitespace_cnt": null
+              },
+              "end": "<|call|>"
+            }
+          ],
+          "separator": "<|start|>assistant",
+          "at_least_one": true,
+          "stop_after_first": true
+        },
+        {
+          "type": "sequence",
+          "elements": [
+            {
+              "type": "tags_with_separator",
+              "tags": [
+                {
+                  "type": "tag",
+                  "begin": "<|channel|>final<|message|>",
+                  "content": {
+                    "type": "any_text",
+                    "excludes": [],
+                    "max_tokens": null,
+                    "max_chars": null
+                  },
+                  "end": [
+                    "<|end|>",
+                    "<|return|>"
+                  ]
+                },
+                {
+                  "type": "tag",
+                  "begin": "<|channel|>analysis<|message|>",
+                  "content": {
+                    "type": "any_text",
+                    "excludes": [],
+                    "max_tokens": null,
+                    "max_chars": null
+                  },
+                  "end": [
+                    "<|end|>",
+                    "<|return|>"
+                  ]
+                }
+              ],
+              "separator": "<|start|>assistant",
+              "at_least_one": true,
+              "stop_after_first": false
+            },
+            {
+              "type": "const_string",
+              "value": "<|start|>assistant"
+            },
+            {
+              "type": "tags_with_separator",
+              "tags": [
+                {
+                  "type": "tag",
+                  "begin": "<|channel|>commentary to=functions.search<|constrain|>json<|message|>",
+                  "content": {
+                    "type": "json_schema",
+                    "json_schema": {
+                      "type": "object",
+                      "properties": {
+                        "q": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "q"
+                      ]
+                    },
+                    "style": "json",
+                    "any_order": false,
+                    "max_whitespace_cnt": null
+                  },
+                  "end": "<|call|>"
+                },
+                {
+                  "type": "tag",
+                  "begin": " to=functions.search<|channel|>commentary <|constrain|>json<|message|>",
+                  "content": {
+                    "type": "json_schema",
+                    "json_schema": {
+                      "type": "object",
+                      "properties": {
+                        "q": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "q"
+                      ]
+                    },
+                    "style": "json",
+                    "any_order": false,
+                    "max_whitespace_cnt": null
+                  },
+                  "end": "<|call|>"
+                },
+                {
+                  "type": "tag",
+                  "begin": " to=functions.search<|channel|>commentary json<|message|>",
+                  "content": {
+                    "type": "json_schema",
+                    "json_schema": {
+                      "type": "object",
+                      "properties": {
+                        "q": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "q"
+                      ]
+                    },
+                    "style": "json",
+                    "any_order": false,
+                    "max_whitespace_cnt": null
+                  },
+                  "end": "<|call|>"
+                },
+                {
+                  "type": "tag",
+                  "begin": "<|channel|>commentary to=functions.alt<|constrain|>json<|message|>",
+                  "content": {
+                    "type": "json_schema",
+                    "json_schema": {
+                      "type": "object",
+                      "properties": {
+                        "q": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "q"
+                      ]
+                    },
+                    "style": "json",
+                    "any_order": false,
+                    "max_whitespace_cnt": null
+                  },
+                  "end": "<|call|>"
+                },
+                {
+                  "type": "tag",
+                  "begin": " to=functions.alt<|channel|>commentary <|constrain|>json<|message|>",
+                  "content": {
+                    "type": "json_schema",
+                    "json_schema": {
+                      "type": "object",
+                      "properties": {
+                        "q": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "q"
+                      ]
+                    },
+                    "style": "json",
+                    "any_order": false,
+                    "max_whitespace_cnt": null
+                  },
+                  "end": "<|call|>"
+                },
+                {
+                  "type": "tag",
+                  "begin": " to=functions.alt<|channel|>commentary json<|message|>",
+                  "content": {
+                    "type": "json_schema",
+                    "json_schema": {
+                      "type": "object",
+                      "properties": {
+                        "q": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "q"
+                      ]
+                    },
+                    "style": "json",
+                    "any_order": false,
+                    "max_whitespace_cnt": null
+                  },
+                  "end": "<|call|>"
+                }
+              ],
+              "separator": "<|start|>assistant",
+              "at_least_one": true,
+              "stop_after_first": true
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "adaptive_required_two_tools": {
+    "type": "structural_tag",
+    "format": {
+      "type": "tags_with_separator",
+      "tags": [
+        {
+          "type": "tag",
+          "begin": "<|channel|>commentary to=functions.search<|constrain|>json<|message|>",
+          "content": {
+            "type": "json_schema",
+            "json_schema": {
+              "type": "object",
+              "properties": {
+                "q": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "q"
+              ]
+            },
+            "style": "json",
+            "any_order": false,
+            "max_whitespace_cnt": null
+          },
+          "end": "<|call|>"
+        },
+        {
+          "type": "tag",
+          "begin": " to=functions.search<|channel|>commentary <|constrain|>json<|message|>",
+          "content": {
+            "type": "json_schema",
+            "json_schema": {
+              "type": "object",
+              "properties": {
+                "q": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "q"
+              ]
+            },
+            "style": "json",
+            "any_order": false,
+            "max_whitespace_cnt": null
+          },
+          "end": "<|call|>"
+        },
+        {
+          "type": "tag",
+          "begin": " to=functions.search<|channel|>commentary json<|message|>",
+          "content": {
+            "type": "json_schema",
+            "json_schema": {
+              "type": "object",
+              "properties": {
+                "q": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "q"
+              ]
+            },
+            "style": "json",
+            "any_order": false,
+            "max_whitespace_cnt": null
+          },
+          "end": "<|call|>"
+        },
+        {
+          "type": "tag",
+          "begin": "<|channel|>commentary to=functions.alt<|constrain|>json<|message|>",
+          "content": {
+            "type": "json_schema",
+            "json_schema": {
+              "type": "object",
+              "properties": {
+                "q": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "q"
+              ]
+            },
+            "style": "json",
+            "any_order": false,
+            "max_whitespace_cnt": null
+          },
+          "end": "<|call|>"
+        },
+        {
+          "type": "tag",
+          "begin": " to=functions.alt<|channel|>commentary <|constrain|>json<|message|>",
+          "content": {
+            "type": "json_schema",
+            "json_schema": {
+              "type": "object",
+              "properties": {
+                "q": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "q"
+              ]
+            },
+            "style": "json",
+            "any_order": false,
+            "max_whitespace_cnt": null
+          },
+          "end": "<|call|>"
+        },
+        {
+          "type": "tag",
+          "begin": " to=functions.alt<|channel|>commentary json<|message|>",
+          "content": {
+            "type": "json_schema",
+            "json_schema": {
+              "type": "object",
+              "properties": {
+                "q": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "q"
+              ]
+            },
+            "style": "json",
+            "any_order": false,
+            "max_whitespace_cnt": null
+          },
+          "end": "<|call|>"
+        },
+        {
+          "type": "tag",
+          "begin": "<|channel|>analysis<|message|>",
+          "content": {
+            "type": "any_text",
+            "excludes": [],
+            "max_tokens": null,
+            "max_chars": null
+          },
+          "end": [
+            "<|end|>",
+            "<|return|>"
+          ]
+        }
+      ],
+      "separator": "<|start|>assistant",
+      "at_least_one": false,
+      "stop_after_first": false
+    }
+  },
+  "single_call_required_two_tools": {
+    "type": "structural_tag",
+    "format": {
+      "type": "or",
+      "elements": [
+        {
+          "type": "tags_with_separator",
+          "tags": [
+            {
+              "type": "tag",
+              "begin": "<|channel|>analysis<|message|>",
+              "content": {
+                "type": "any_text",
+                "excludes": [],
+                "max_tokens": null,
+                "max_chars": null
+              },
+              "end": [
+                "<|end|>",
+                "<|return|>"
+              ]
+            }
+          ],
+          "separator": "<|start|>assistant",
+          "at_least_one": false,
+          "stop_after_first": false
+        },
+        {
+          "type": "tags_with_separator",
+          "tags": [
+            {
+              "type": "tag",
+              "begin": "<|channel|>commentary to=functions.search<|constrain|>json<|message|>",
+              "content": {
+                "type": "json_schema",
+                "json_schema": {
+                  "type": "object",
+                  "properties": {
+                    "q": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "q"
+                  ]
+                },
+                "style": "json",
+                "any_order": false,
+                "max_whitespace_cnt": null
+              },
+              "end": "<|call|>"
+            },
+            {
+              "type": "tag",
+              "begin": " to=functions.search<|channel|>commentary <|constrain|>json<|message|>",
+              "content": {
+                "type": "json_schema",
+                "json_schema": {
+                  "type": "object",
+                  "properties": {
+                    "q": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "q"
+                  ]
+                },
+                "style": "json",
+                "any_order": false,
+                "max_whitespace_cnt": null
+              },
+              "end": "<|call|>"
+            },
+            {
+              "type": "tag",
+              "begin": " to=functions.search<|channel|>commentary json<|message|>",
+              "content": {
+                "type": "json_schema",
+                "json_schema": {
+                  "type": "object",
+                  "properties": {
+                    "q": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "q"
+                  ]
+                },
+                "style": "json",
+                "any_order": false,
+                "max_whitespace_cnt": null
+              },
+              "end": "<|call|>"
+            },
+            {
+              "type": "tag",
+              "begin": "<|channel|>commentary to=functions.alt<|constrain|>json<|message|>",
+              "content": {
+                "type": "json_schema",
+                "json_schema": {
+                  "type": "object",
+                  "properties": {
+                    "q": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "q"
+                  ]
+                },
+                "style": "json",
+                "any_order": false,
+                "max_whitespace_cnt": null
+              },
+              "end": "<|call|>"
+            },
+            {
+              "type": "tag",
+              "begin": " to=functions.alt<|channel|>commentary <|constrain|>json<|message|>",
+              "content": {
+                "type": "json_schema",
+                "json_schema": {
+                  "type": "object",
+                  "properties": {
+                    "q": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "q"
+                  ]
+                },
+                "style": "json",
+                "any_order": false,
+                "max_whitespace_cnt": null
+              },
+              "end": "<|call|>"
+            },
+            {
+              "type": "tag",
+              "begin": " to=functions.alt<|channel|>commentary json<|message|>",
+              "content": {
+                "type": "json_schema",
+                "json_schema": {
+                  "type": "object",
+                  "properties": {
+                    "q": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "q"
+                  ]
+                },
+                "style": "json",
+                "any_order": false,
+                "max_whitespace_cnt": null
+              },
+              "end": "<|call|>"
+            }
+          ],
+          "separator": "<|start|>assistant",
+          "at_least_one": true,
+          "stop_after_first": true
+        },
+        {
+          "type": "sequence",
+          "elements": [
+            {
+              "type": "tags_with_separator",
+              "tags": [
+                {
+                  "type": "tag",
+                  "begin": "<|channel|>analysis<|message|>",
+                  "content": {
+                    "type": "any_text",
+                    "excludes": [],
+                    "max_tokens": null,
+                    "max_chars": null
+                  },
+                  "end": [
+                    "<|end|>",
+                    "<|return|>"
+                  ]
+                }
+              ],
+              "separator": "<|start|>assistant",
+              "at_least_one": true,
+              "stop_after_first": false
+            },
+            {
+              "type": "const_string",
+              "value": "<|start|>assistant"
+            },
+            {
+              "type": "tags_with_separator",
+              "tags": [
+                {
+                  "type": "tag",
+                  "begin": "<|channel|>commentary to=functions.search<|constrain|>json<|message|>",
+                  "content": {
+                    "type": "json_schema",
+                    "json_schema": {
+                      "type": "object",
+                      "properties": {
+                        "q": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "q"
+                      ]
+                    },
+                    "style": "json",
+                    "any_order": false,
+                    "max_whitespace_cnt": null
+                  },
+                  "end": "<|call|>"
+                },
+                {
+                  "type": "tag",
+                  "begin": " to=functions.search<|channel|>commentary <|constrain|>json<|message|>",
+                  "content": {
+                    "type": "json_schema",
+                    "json_schema": {
+                      "type": "object",
+                      "properties": {
+                        "q": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "q"
+                      ]
+                    },
+                    "style": "json",
+                    "any_order": false,
+                    "max_whitespace_cnt": null
+                  },
+                  "end": "<|call|>"
+                },
+                {
+                  "type": "tag",
+                  "begin": " to=functions.search<|channel|>commentary json<|message|>",
+                  "content": {
+                    "type": "json_schema",
+                    "json_schema": {
+                      "type": "object",
+                      "properties": {
+                        "q": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "q"
+                      ]
+                    },
+                    "style": "json",
+                    "any_order": false,
+                    "max_whitespace_cnt": null
+                  },
+                  "end": "<|call|>"
+                },
+                {
+                  "type": "tag",
+                  "begin": "<|channel|>commentary to=functions.alt<|constrain|>json<|message|>",
+                  "content": {
+                    "type": "json_schema",
+                    "json_schema": {
+                      "type": "object",
+                      "properties": {
+                        "q": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "q"
+                      ]
+                    },
+                    "style": "json",
+                    "any_order": false,
+                    "max_whitespace_cnt": null
+                  },
+                  "end": "<|call|>"
+                },
+                {
+                  "type": "tag",
+                  "begin": " to=functions.alt<|channel|>commentary <|constrain|>json<|message|>",
+                  "content": {
+                    "type": "json_schema",
+                    "json_schema": {
+                      "type": "object",
+                      "properties": {
+                        "q": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "q"
+                      ]
+                    },
+                    "style": "json",
+                    "any_order": false,
+                    "max_whitespace_cnt": null
+                  },
+                  "end": "<|call|>"
+                },
+                {
+                  "type": "tag",
+                  "begin": " to=functions.alt<|channel|>commentary json<|message|>",
+                  "content": {
+                    "type": "json_schema",
+                    "json_schema": {
+                      "type": "object",
+                      "properties": {
+                        "q": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "q"
+                      ]
+                    },
+                    "style": "json",
+                    "any_order": false,
+                    "max_whitespace_cnt": null
+                  },
+                  "end": "<|call|>"
+                }
+              ],
+              "separator": "<|start|>assistant",
+              "at_least_one": true,
+              "stop_after_first": true
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "adaptive_forced_search": {
+    "type": "structural_tag",
+    "format": {
+      "type": "tags_with_separator",
+      "tags": [
+        {
+          "type": "tag",
+          "begin": "<|channel|>commentary to=functions.search<|constrain|>json<|message|>",
+          "content": {
+            "type": "json_schema",
+            "json_schema": {
+              "type": "object",
+              "properties": {
+                "q": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "q"
+              ]
+            },
+            "style": "json",
+            "any_order": false,
+            "max_whitespace_cnt": null
+          },
+          "end": "<|call|>"
+        },
+        {
+          "type": "tag",
+          "begin": " to=functions.search<|channel|>commentary <|constrain|>json<|message|>",
+          "content": {
+            "type": "json_schema",
+            "json_schema": {
+              "type": "object",
+              "properties": {
+                "q": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "q"
+              ]
+            },
+            "style": "json",
+            "any_order": false,
+            "max_whitespace_cnt": null
+          },
+          "end": "<|call|>"
+        },
+        {
+          "type": "tag",
+          "begin": " to=functions.search<|channel|>commentary json<|message|>",
+          "content": {
+            "type": "json_schema",
+            "json_schema": {
+              "type": "object",
+              "properties": {
+                "q": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "q"
+              ]
+            },
+            "style": "json",
+            "any_order": false,
+            "max_whitespace_cnt": null
+          },
+          "end": "<|call|>"
+        },
+        {
+          "type": "tag",
+          "begin": "<|channel|>analysis<|message|>",
+          "content": {
+            "type": "any_text",
+            "excludes": [],
+            "max_tokens": null,
+            "max_chars": null
+          },
+          "end": [
+            "<|end|>",
+            "<|return|>"
+          ]
+        }
+      ],
+      "separator": "<|start|>assistant",
+      "at_least_one": false,
+      "stop_after_first": false
+    }
+  },
+  "single_call_forced_search": {
+    "type": "structural_tag",
+    "format": {
+      "type": "or",
+      "elements": [
+        {
+          "type": "tags_with_separator",
+          "tags": [
+            {
+              "type": "tag",
+              "begin": "<|channel|>analysis<|message|>",
+              "content": {
+                "type": "any_text",
+                "excludes": [],
+                "max_tokens": null,
+                "max_chars": null
+              },
+              "end": [
+                "<|end|>",
+                "<|return|>"
+              ]
+            }
+          ],
+          "separator": "<|start|>assistant",
+          "at_least_one": false,
+          "stop_after_first": false
+        },
+        {
+          "type": "tags_with_separator",
+          "tags": [
+            {
+              "type": "tag",
+              "begin": "<|channel|>commentary to=functions.search<|constrain|>json<|message|>",
+              "content": {
+                "type": "json_schema",
+                "json_schema": {
+                  "type": "object",
+                  "properties": {
+                    "q": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "q"
+                  ]
+                },
+                "style": "json",
+                "any_order": false,
+                "max_whitespace_cnt": null
+              },
+              "end": "<|call|>"
+            },
+            {
+              "type": "tag",
+              "begin": " to=functions.search<|channel|>commentary <|constrain|>json<|message|>",
+              "content": {
+                "type": "json_schema",
+                "json_schema": {
+                  "type": "object",
+                  "properties": {
+                    "q": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "q"
+                  ]
+                },
+                "style": "json",
+                "any_order": false,
+                "max_whitespace_cnt": null
+              },
+              "end": "<|call|>"
+            },
+            {
+              "type": "tag",
+              "begin": " to=functions.search<|channel|>commentary json<|message|>",
+              "content": {
+                "type": "json_schema",
+                "json_schema": {
+                  "type": "object",
+                  "properties": {
+                    "q": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "q"
+                  ]
+                },
+                "style": "json",
+                "any_order": false,
+                "max_whitespace_cnt": null
+              },
+              "end": "<|call|>"
+            }
+          ],
+          "separator": "<|start|>assistant",
+          "at_least_one": true,
+          "stop_after_first": true
+        },
+        {
+          "type": "sequence",
+          "elements": [
+            {
+              "type": "tags_with_separator",
+              "tags": [
+                {
+                  "type": "tag",
+                  "begin": "<|channel|>analysis<|message|>",
+                  "content": {
+                    "type": "any_text",
+                    "excludes": [],
+                    "max_tokens": null,
+                    "max_chars": null
+                  },
+                  "end": [
+                    "<|end|>",
+                    "<|return|>"
+                  ]
+                }
+              ],
+              "separator": "<|start|>assistant",
+              "at_least_one": true,
+              "stop_after_first": false
+            },
+            {
+              "type": "const_string",
+              "value": "<|start|>assistant"
+            },
+            {
+              "type": "tags_with_separator",
+              "tags": [
+                {
+                  "type": "tag",
+                  "begin": "<|channel|>commentary to=functions.search<|constrain|>json<|message|>",
+                  "content": {
+                    "type": "json_schema",
+                    "json_schema": {
+                      "type": "object",
+                      "properties": {
+                        "q": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "q"
+                      ]
+                    },
+                    "style": "json",
+                    "any_order": false,
+                    "max_whitespace_cnt": null
+                  },
+                  "end": "<|call|>"
+                },
+                {
+                  "type": "tag",
+                  "begin": " to=functions.search<|channel|>commentary <|constrain|>json<|message|>",
+                  "content": {
+                    "type": "json_schema",
+                    "json_schema": {
+                      "type": "object",
+                      "properties": {
+                        "q": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "q"
+                      ]
+                    },
+                    "style": "json",
+                    "any_order": false,
+                    "max_whitespace_cnt": null
+                  },
+                  "end": "<|call|>"
+                },
+                {
+                  "type": "tag",
+                  "begin": " to=functions.search<|channel|>commentary json<|message|>",
+                  "content": {
+                    "type": "json_schema",
+                    "json_schema": {
+                      "type": "object",
+                      "properties": {
+                        "q": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "q"
+                      ]
+                    },
+                    "style": "json",
+                    "any_order": false,
+                    "max_whitespace_cnt": null
+                  },
+                  "end": "<|call|>"
+                }
+              ],
+              "separator": "<|start|>assistant",
+              "at_least_one": true,
+              "stop_after_first": true
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "adaptive_single_call_relaxed_schema": {
+    "type": "structural_tag",
+    "format": {
+      "type": "or",
+      "elements": [
+        {
+          "type": "tags_with_separator",
+          "tags": [
+            {
+              "type": "tag",
+              "begin": "<|channel|>analysis<|message|>",
+              "content": {
+                "type": "any_text",
+                "excludes": [],
+                "max_tokens": null,
+                "max_chars": null
+              },
+              "end": [
+                "<|end|>",
+                "<|return|>"
+              ]
+            }
+          ],
+          "separator": "<|start|>assistant",
+          "at_least_one": false,
+          "stop_after_first": false
+        },
+        {
+          "type": "tags_with_separator",
+          "tags": [
+            {
+              "type": "tag",
+              "begin": "<|channel|>commentary to=functions.search<|constrain|>json<|message|>",
+              "content": {
+                "type": "json_schema",
+                "json_schema": {
+                  "type": "object",
+                  "properties": {
+                    "q": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "q"
+                  ]
+                },
+                "style": "json",
+                "any_order": true,
+                "max_whitespace_cnt": 2
+              },
+              "end": "<|call|>"
+            },
+            {
+              "type": "tag",
+              "begin": " to=functions.search<|channel|>commentary <|constrain|>json<|message|>",
+              "content": {
+                "type": "json_schema",
+                "json_schema": {
+                  "type": "object",
+                  "properties": {
+                    "q": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "q"
+                  ]
+                },
+                "style": "json",
+                "any_order": true,
+                "max_whitespace_cnt": 2
+              },
+              "end": "<|call|>"
+            },
+            {
+              "type": "tag",
+              "begin": " to=functions.search<|channel|>commentary json<|message|>",
+              "content": {
+                "type": "json_schema",
+                "json_schema": {
+                  "type": "object",
+                  "properties": {
+                    "q": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "q"
+                  ]
+                },
+                "style": "json",
+                "any_order": true,
+                "max_whitespace_cnt": 2
+              },
+              "end": "<|call|>"
+            },
+            {
+              "type": "tag",
+              "begin": "<|channel|>commentary to=functions.alt<|constrain|>json<|message|>",
+              "content": {
+                "type": "json_schema",
+                "json_schema": {
+                  "type": "object",
+                  "properties": {
+                    "q": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "q"
+                  ]
+                },
+                "style": "json",
+                "any_order": true,
+                "max_whitespace_cnt": 2
+              },
+              "end": "<|call|>"
+            },
+            {
+              "type": "tag",
+              "begin": " to=functions.alt<|channel|>commentary <|constrain|>json<|message|>",
+              "content": {
+                "type": "json_schema",
+                "json_schema": {
+                  "type": "object",
+                  "properties": {
+                    "q": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "q"
+                  ]
+                },
+                "style": "json",
+                "any_order": true,
+                "max_whitespace_cnt": 2
+              },
+              "end": "<|call|>"
+            },
+            {
+              "type": "tag",
+              "begin": " to=functions.alt<|channel|>commentary json<|message|>",
+              "content": {
+                "type": "json_schema",
+                "json_schema": {
+                  "type": "object",
+                  "properties": {
+                    "q": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "q"
+                  ]
+                },
+                "style": "json",
+                "any_order": true,
+                "max_whitespace_cnt": 2
+              },
+              "end": "<|call|>"
+            }
+          ],
+          "separator": "<|start|>assistant",
+          "at_least_one": true,
+          "stop_after_first": true
+        },
+        {
+          "type": "sequence",
+          "elements": [
+            {
+              "type": "tags_with_separator",
+              "tags": [
+                {
+                  "type": "tag",
+                  "begin": "<|channel|>analysis<|message|>",
+                  "content": {
+                    "type": "any_text",
+                    "excludes": [],
+                    "max_tokens": null,
+                    "max_chars": null
+                  },
+                  "end": [
+                    "<|end|>",
+                    "<|return|>"
+                  ]
+                }
+              ],
+              "separator": "<|start|>assistant",
+              "at_least_one": true,
+              "stop_after_first": false
+            },
+            {
+              "type": "const_string",
+              "value": "<|start|>assistant"
+            },
+            {
+              "type": "tags_with_separator",
+              "tags": [
+                {
+                  "type": "tag",
+                  "begin": "<|channel|>commentary to=functions.search<|constrain|>json<|message|>",
+                  "content": {
+                    "type": "json_schema",
+                    "json_schema": {
+                      "type": "object",
+                      "properties": {
+                        "q": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "q"
+                      ]
+                    },
+                    "style": "json",
+                    "any_order": true,
+                    "max_whitespace_cnt": 2
+                  },
+                  "end": "<|call|>"
+                },
+                {
+                  "type": "tag",
+                  "begin": " to=functions.search<|channel|>commentary <|constrain|>json<|message|>",
+                  "content": {
+                    "type": "json_schema",
+                    "json_schema": {
+                      "type": "object",
+                      "properties": {
+                        "q": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "q"
+                      ]
+                    },
+                    "style": "json",
+                    "any_order": true,
+                    "max_whitespace_cnt": 2
+                  },
+                  "end": "<|call|>"
+                },
+                {
+                  "type": "tag",
+                  "begin": " to=functions.search<|channel|>commentary json<|message|>",
+                  "content": {
+                    "type": "json_schema",
+                    "json_schema": {
+                      "type": "object",
+                      "properties": {
+                        "q": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "q"
+                      ]
+                    },
+                    "style": "json",
+                    "any_order": true,
+                    "max_whitespace_cnt": 2
+                  },
+                  "end": "<|call|>"
+                },
+                {
+                  "type": "tag",
+                  "begin": "<|channel|>commentary to=functions.alt<|constrain|>json<|message|>",
+                  "content": {
+                    "type": "json_schema",
+                    "json_schema": {
+                      "type": "object",
+                      "properties": {
+                        "q": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "q"
+                      ]
+                    },
+                    "style": "json",
+                    "any_order": true,
+                    "max_whitespace_cnt": 2
+                  },
+                  "end": "<|call|>"
+                },
+                {
+                  "type": "tag",
+                  "begin": " to=functions.alt<|channel|>commentary <|constrain|>json<|message|>",
+                  "content": {
+                    "type": "json_schema",
+                    "json_schema": {
+                      "type": "object",
+                      "properties": {
+                        "q": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "q"
+                      ]
+                    },
+                    "style": "json",
+                    "any_order": true,
+                    "max_whitespace_cnt": 2
+                  },
+                  "end": "<|call|>"
+                },
+                {
+                  "type": "tag",
+                  "begin": " to=functions.alt<|channel|>commentary json<|message|>",
+                  "content": {
+                    "type": "json_schema",
+                    "json_schema": {
+                      "type": "object",
+                      "properties": {
+                        "q": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "q"
+                      ]
+                    },
+                    "style": "json",
+                    "any_order": true,
+                    "max_whitespace_cnt": 2
+                  },
+                  "end": "<|call|>"
+                }
+              ],
+              "separator": "<|start|>assistant",
+              "at_least_one": true,
+              "stop_after_first": true
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "harmony_single_builtin": {
+    "type": "structural_tag",
+    "format": {
+      "type": "or",
+      "elements": [
+        {
+          "type": "tags_with_separator",
+          "tags": [
+            {
+              "type": "tag",
+              "begin": "<|channel|>analysis<|message|>",
+              "content": {
+                "type": "any_text",
+                "excludes": [],
+                "max_tokens": null,
+                "max_chars": null
+              },
+              "end": [
+                "<|end|>",
+                "<|return|>"
+              ]
+            }
+          ],
+          "separator": "<|start|>assistant",
+          "at_least_one": false,
+          "stop_after_first": false
+        },
+        {
+          "type": "tags_with_separator",
+          "tags": [
+            {
+              "type": "tag",
+              "begin": "<|channel|>commentary to=browser.search code<|message|>",
+              "content": {
+                "type": "json_schema",
+                "json_schema": {
+                  "type": "object",
+                  "properties": {
+                    "query": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "query"
+                  ]
+                },
+                "style": "json",
+                "any_order": false,
+                "max_whitespace_cnt": null
+              },
+              "end": "<|call|>"
+            },
+            {
+              "type": "tag",
+              "begin": " to=browser.search<|channel|>commentary code<|message|>",
+              "content": {
+                "type": "json_schema",
+                "json_schema": {
+                  "type": "object",
+                  "properties": {
+                    "query": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "query"
+                  ]
+                },
+                "style": "json",
+                "any_order": false,
+                "max_whitespace_cnt": null
+              },
+              "end": "<|call|>"
+            },
+            {
+              "type": "tag",
+              "begin": "<|channel|>commentary to=functions.search<|constrain|>json<|message|>",
+              "content": {
+                "type": "json_schema",
+                "json_schema": {
+                  "type": "object",
+                  "properties": {
+                    "q": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "q"
+                  ]
+                },
+                "style": "json",
+                "any_order": false,
+                "max_whitespace_cnt": null
+              },
+              "end": "<|call|>"
+            },
+            {
+              "type": "tag",
+              "begin": " to=functions.search<|channel|>commentary <|constrain|>json<|message|>",
+              "content": {
+                "type": "json_schema",
+                "json_schema": {
+                  "type": "object",
+                  "properties": {
+                    "q": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "q"
+                  ]
+                },
+                "style": "json",
+                "any_order": false,
+                "max_whitespace_cnt": null
+              },
+              "end": "<|call|>"
+            },
+            {
+              "type": "tag",
+              "begin": " to=functions.search<|channel|>commentary json<|message|>",
+              "content": {
+                "type": "json_schema",
+                "json_schema": {
+                  "type": "object",
+                  "properties": {
+                    "q": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "q"
+                  ]
+                },
+                "style": "json",
+                "any_order": false,
+                "max_whitespace_cnt": null
+              },
+              "end": "<|call|>"
+            }
+          ],
+          "separator": "<|start|>assistant",
+          "at_least_one": true,
+          "stop_after_first": true
+        },
+        {
+          "type": "sequence",
+          "elements": [
+            {
+              "type": "tags_with_separator",
+              "tags": [
+                {
+                  "type": "tag",
+                  "begin": "<|channel|>analysis<|message|>",
+                  "content": {
+                    "type": "any_text",
+                    "excludes": [],
+                    "max_tokens": null,
+                    "max_chars": null
+                  },
+                  "end": [
+                    "<|end|>",
+                    "<|return|>"
+                  ]
+                }
+              ],
+              "separator": "<|start|>assistant",
+              "at_least_one": true,
+              "stop_after_first": false
+            },
+            {
+              "type": "const_string",
+              "value": "<|start|>assistant"
+            },
+            {
+              "type": "tags_with_separator",
+              "tags": [
+                {
+                  "type": "tag",
+                  "begin": "<|channel|>commentary to=browser.search code<|message|>",
+                  "content": {
+                    "type": "json_schema",
+                    "json_schema": {
+                      "type": "object",
+                      "properties": {
+                        "query": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "query"
+                      ]
+                    },
+                    "style": "json",
+                    "any_order": false,
+                    "max_whitespace_cnt": null
+                  },
+                  "end": "<|call|>"
+                },
+                {
+                  "type": "tag",
+                  "begin": " to=browser.search<|channel|>commentary code<|message|>",
+                  "content": {
+                    "type": "json_schema",
+                    "json_schema": {
+                      "type": "object",
+                      "properties": {
+                        "query": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "query"
+                      ]
+                    },
+                    "style": "json",
+                    "any_order": false,
+                    "max_whitespace_cnt": null
+                  },
+                  "end": "<|call|>"
+                },
+                {
+                  "type": "tag",
+                  "begin": "<|channel|>commentary to=functions.search<|constrain|>json<|message|>",
+                  "content": {
+                    "type": "json_schema",
+                    "json_schema": {
+                      "type": "object",
+                      "properties": {
+                        "q": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "q"
+                      ]
+                    },
+                    "style": "json",
+                    "any_order": false,
+                    "max_whitespace_cnt": null
+                  },
+                  "end": "<|call|>"
+                },
+                {
+                  "type": "tag",
+                  "begin": " to=functions.search<|channel|>commentary <|constrain|>json<|message|>",
+                  "content": {
+                    "type": "json_schema",
+                    "json_schema": {
+                      "type": "object",
+                      "properties": {
+                        "q": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "q"
+                      ]
+                    },
+                    "style": "json",
+                    "any_order": false,
+                    "max_whitespace_cnt": null
+                  },
+                  "end": "<|call|>"
+                },
+                {
+                  "type": "tag",
+                  "begin": " to=functions.search<|channel|>commentary json<|message|>",
+                  "content": {
+                    "type": "json_schema",
+                    "json_schema": {
+                      "type": "object",
+                      "properties": {
+                        "q": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "q"
+                      ]
+                    },
+                    "style": "json",
+                    "any_order": false,
+                    "max_whitespace_cnt": null
+                  },
+                  "end": "<|call|>"
+                }
+              ],
+              "separator": "<|start|>assistant",
+              "at_least_one": true,
+              "stop_after_first": true
+            }
+          ]
+        }
+      ]
     }
   }
 }

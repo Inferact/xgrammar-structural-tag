@@ -6,7 +6,9 @@
       "excludes": [
         "<think>",
         "</think>"
-      ]
+      ],
+      "max_tokens": null,
+      "max_chars": null
     }
   },
   "auto_one_tool": {
@@ -18,11 +20,13 @@
       ],
       "tags": [
         {
+          "type": "tag",
           "begin": "<｜DSML｜tool_calls>\n",
           "content": {
             "type": "tags_with_separator",
             "tags": [
               {
+                "type": "tag",
                 "begin": "<｜DSML｜invoke name=\"search\">\n",
                 "content": {
                   "type": "json_schema",
@@ -72,6 +76,7 @@
           "type": "tags_with_separator",
           "tags": [
             {
+              "type": "tag",
               "begin": "<｜DSML｜invoke name=\"search\">\n",
               "content": {
                 "type": "json_schema",
@@ -93,6 +98,7 @@
               "end": "</｜DSML｜invoke>\n"
             },
             {
+              "type": "tag",
               "begin": "<｜DSML｜invoke name=\"alt\">\n",
               "content": {
                 "type": "json_schema",
@@ -135,7 +141,12 @@
           "begin": "",
           "content": {
             "type": "any_text",
-            "excludes": []
+            "excludes": [
+              "<think>",
+              "</think>"
+            ],
+            "max_tokens": null,
+            "max_chars": null
           },
           "end": "</think>"
         },
@@ -150,6 +161,7 @@
               "type": "tags_with_separator",
               "tags": [
                 {
+                  "type": "tag",
                   "begin": "<｜DSML｜invoke name=\"search\">\n",
                   "content": {
                     "type": "json_schema",
@@ -235,6 +247,7 @@
           "type": "tags_with_separator",
           "tags": [
             {
+              "type": "tag",
               "begin": "<｜DSML｜invoke name=\"alt\">\n",
               "content": {
                 "type": "json_schema",
@@ -276,11 +289,13 @@
       ],
       "tags": [
         {
+          "type": "tag",
           "begin": "<｜DSML｜tool_calls>\n",
           "content": {
             "type": "tags_with_separator",
             "tags": [
               {
+                "type": "tag",
                 "begin": "<｜DSML｜invoke name=\"loose\">\n",
                 "content": {
                   "type": "json_schema",
@@ -316,11 +331,13 @@
       ],
       "tags": [
         {
+          "type": "tag",
           "begin": "<｜DSML｜tool_calls>\n",
           "content": {
             "type": "tags_with_separator",
             "tags": [
               {
+                "type": "tag",
                 "begin": "<｜DSML｜invoke name=\"missing\">\n",
                 "content": {
                   "type": "json_schema",
@@ -344,6 +361,641 @@
       "excludes": [
         "<think>",
         "</think>"
+      ]
+    }
+  },
+  "adaptive_auto_no_tools": {
+    "type": "structural_tag",
+    "format": {
+      "type": "sequence",
+      "elements": [
+        {
+          "type": "optional",
+          "content": {
+            "type": "tag",
+            "begin": "<think>",
+            "content": {
+              "type": "any_text",
+              "excludes": [
+                "<think>",
+                "</think>"
+              ],
+              "max_tokens": null,
+              "max_chars": null
+            },
+            "end": "</think>"
+          }
+        },
+        {
+          "type": "any_text",
+          "excludes": [
+            "<think>",
+            "</think>"
+          ],
+          "max_tokens": null,
+          "max_chars": null
+        }
+      ]
+    }
+  },
+  "single_call_auto_no_tools": {
+    "type": "structural_tag",
+    "format": {
+      "type": "sequence",
+      "elements": [
+        {
+          "type": "tag",
+          "begin": "",
+          "content": {
+            "type": "any_text",
+            "excludes": [
+              "<think>",
+              "</think>"
+            ],
+            "max_tokens": null,
+            "max_chars": null
+          },
+          "end": "</think>"
+        },
+        {
+          "type": "any_text",
+          "excludes": [
+            "<think>",
+            "</think>"
+          ],
+          "max_tokens": null,
+          "max_chars": null
+        }
+      ]
+    }
+  },
+  "adaptive_auto_two_tools": {
+    "type": "structural_tag",
+    "format": {
+      "type": "sequence",
+      "elements": [
+        {
+          "type": "optional",
+          "content": {
+            "type": "tag",
+            "begin": "<think>",
+            "content": {
+              "type": "any_text",
+              "excludes": [
+                "<think>",
+                "</think>"
+              ],
+              "max_tokens": null,
+              "max_chars": null
+            },
+            "end": "</think>"
+          }
+        },
+        {
+          "type": "triggered_tags",
+          "triggers": [
+            "<｜DSML｜tool_calls>"
+          ],
+          "tags": [
+            {
+              "type": "tag",
+              "begin": "<｜DSML｜tool_calls>\n",
+              "content": {
+                "type": "tags_with_separator",
+                "tags": [
+                  {
+                    "type": "tag",
+                    "begin": "<｜DSML｜invoke name=\"search\">\n",
+                    "content": {
+                      "type": "json_schema",
+                      "json_schema": {
+                        "type": "object",
+                        "properties": {
+                          "q": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "q"
+                        ]
+                      },
+                      "style": "deepseek_xml",
+                      "any_order": false,
+                      "max_whitespace_cnt": null
+                    },
+                    "end": "</｜DSML｜invoke>\n"
+                  },
+                  {
+                    "type": "tag",
+                    "begin": "<｜DSML｜invoke name=\"alt\">\n",
+                    "content": {
+                      "type": "json_schema",
+                      "json_schema": {
+                        "type": "object",
+                        "properties": {
+                          "q": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "q"
+                        ]
+                      },
+                      "style": "deepseek_xml",
+                      "any_order": false,
+                      "max_whitespace_cnt": null
+                    },
+                    "end": "</｜DSML｜invoke>\n"
+                  }
+                ],
+                "separator": "",
+                "at_least_one": true,
+                "stop_after_first": false
+              },
+              "end": "</｜DSML｜tool_calls>"
+            }
+          ],
+          "at_least_one": false,
+          "stop_after_first": false,
+          "excludes": [
+            "<think>",
+            "</think>"
+          ]
+        }
+      ]
+    }
+  },
+  "single_call_auto_two_tools": {
+    "type": "structural_tag",
+    "format": {
+      "type": "sequence",
+      "elements": [
+        {
+          "type": "tag",
+          "begin": "",
+          "content": {
+            "type": "any_text",
+            "excludes": [
+              "<think>",
+              "</think>"
+            ],
+            "max_tokens": null,
+            "max_chars": null
+          },
+          "end": "</think>"
+        },
+        {
+          "type": "triggered_tags",
+          "triggers": [
+            "<｜DSML｜tool_calls>"
+          ],
+          "tags": [
+            {
+              "type": "tag",
+              "begin": "<｜DSML｜tool_calls>\n",
+              "content": {
+                "type": "tags_with_separator",
+                "tags": [
+                  {
+                    "type": "tag",
+                    "begin": "<｜DSML｜invoke name=\"search\">\n",
+                    "content": {
+                      "type": "json_schema",
+                      "json_schema": {
+                        "type": "object",
+                        "properties": {
+                          "q": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "q"
+                        ]
+                      },
+                      "style": "deepseek_xml",
+                      "any_order": false,
+                      "max_whitespace_cnt": null
+                    },
+                    "end": "</｜DSML｜invoke>\n"
+                  },
+                  {
+                    "type": "tag",
+                    "begin": "<｜DSML｜invoke name=\"alt\">\n",
+                    "content": {
+                      "type": "json_schema",
+                      "json_schema": {
+                        "type": "object",
+                        "properties": {
+                          "q": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "q"
+                        ]
+                      },
+                      "style": "deepseek_xml",
+                      "any_order": false,
+                      "max_whitespace_cnt": null
+                    },
+                    "end": "</｜DSML｜invoke>\n"
+                  }
+                ],
+                "separator": "",
+                "at_least_one": true,
+                "stop_after_first": true
+              },
+              "end": "</｜DSML｜tool_calls>"
+            }
+          ],
+          "at_least_one": false,
+          "stop_after_first": true,
+          "excludes": [
+            "<think>",
+            "</think>"
+          ]
+        }
+      ]
+    }
+  },
+  "adaptive_required_two_tools": {
+    "type": "structural_tag",
+    "format": {
+      "type": "sequence",
+      "elements": [
+        {
+          "type": "optional",
+          "content": {
+            "type": "tag",
+            "begin": "<think>",
+            "content": {
+              "type": "any_text",
+              "excludes": [
+                "<think>",
+                "</think>"
+              ],
+              "max_tokens": null,
+              "max_chars": null
+            },
+            "end": "</think>"
+          }
+        },
+        {
+          "type": "sequence",
+          "elements": [
+            {
+              "type": "const_string",
+              "value": "\n\n<｜DSML｜tool_calls>\n"
+            },
+            {
+              "type": "tags_with_separator",
+              "tags": [
+                {
+                  "type": "tag",
+                  "begin": "<｜DSML｜invoke name=\"search\">\n",
+                  "content": {
+                    "type": "json_schema",
+                    "json_schema": {
+                      "type": "object",
+                      "properties": {
+                        "q": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "q"
+                      ]
+                    },
+                    "style": "deepseek_xml",
+                    "any_order": false,
+                    "max_whitespace_cnt": null
+                  },
+                  "end": "</｜DSML｜invoke>\n"
+                },
+                {
+                  "type": "tag",
+                  "begin": "<｜DSML｜invoke name=\"alt\">\n",
+                  "content": {
+                    "type": "json_schema",
+                    "json_schema": {
+                      "type": "object",
+                      "properties": {
+                        "q": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "q"
+                      ]
+                    },
+                    "style": "deepseek_xml",
+                    "any_order": false,
+                    "max_whitespace_cnt": null
+                  },
+                  "end": "</｜DSML｜invoke>\n"
+                }
+              ],
+              "separator": "",
+              "at_least_one": true,
+              "stop_after_first": false
+            },
+            {
+              "type": "const_string",
+              "value": "</｜DSML｜tool_calls>"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "single_call_required_two_tools": {
+    "type": "structural_tag",
+    "format": {
+      "type": "sequence",
+      "elements": [
+        {
+          "type": "tag",
+          "begin": "",
+          "content": {
+            "type": "any_text",
+            "excludes": [
+              "<think>",
+              "</think>"
+            ],
+            "max_tokens": null,
+            "max_chars": null
+          },
+          "end": "</think>"
+        },
+        {
+          "type": "sequence",
+          "elements": [
+            {
+              "type": "const_string",
+              "value": "\n\n<｜DSML｜tool_calls>\n"
+            },
+            {
+              "type": "tags_with_separator",
+              "tags": [
+                {
+                  "type": "tag",
+                  "begin": "<｜DSML｜invoke name=\"search\">\n",
+                  "content": {
+                    "type": "json_schema",
+                    "json_schema": {
+                      "type": "object",
+                      "properties": {
+                        "q": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "q"
+                      ]
+                    },
+                    "style": "deepseek_xml",
+                    "any_order": false,
+                    "max_whitespace_cnt": null
+                  },
+                  "end": "</｜DSML｜invoke>\n"
+                },
+                {
+                  "type": "tag",
+                  "begin": "<｜DSML｜invoke name=\"alt\">\n",
+                  "content": {
+                    "type": "json_schema",
+                    "json_schema": {
+                      "type": "object",
+                      "properties": {
+                        "q": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "q"
+                      ]
+                    },
+                    "style": "deepseek_xml",
+                    "any_order": false,
+                    "max_whitespace_cnt": null
+                  },
+                  "end": "</｜DSML｜invoke>\n"
+                }
+              ],
+              "separator": "",
+              "at_least_one": true,
+              "stop_after_first": true
+            },
+            {
+              "type": "const_string",
+              "value": "</｜DSML｜tool_calls>"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "adaptive_forced_search": {
+    "type": "structural_tag",
+    "format": {
+      "type": "sequence",
+      "elements": [
+        {
+          "type": "optional",
+          "content": {
+            "type": "tag",
+            "begin": "<think>",
+            "content": {
+              "type": "any_text",
+              "excludes": [
+                "<think>",
+                "</think>"
+              ],
+              "max_tokens": null,
+              "max_chars": null
+            },
+            "end": "</think>"
+          }
+        },
+        {
+          "type": "sequence",
+          "elements": [
+            {
+              "type": "const_string",
+              "value": "\n\n<｜DSML｜tool_calls>\n"
+            },
+            {
+              "type": "tag",
+              "begin": "<｜DSML｜invoke name=\"search\">\n",
+              "content": {
+                "type": "json_schema",
+                "json_schema": {
+                  "type": "object",
+                  "properties": {
+                    "q": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "q"
+                  ]
+                },
+                "style": "deepseek_xml",
+                "any_order": false,
+                "max_whitespace_cnt": null
+              },
+              "end": "</｜DSML｜invoke>\n"
+            },
+            {
+              "type": "const_string",
+              "value": "</｜DSML｜tool_calls>"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "single_call_forced_search": {
+    "type": "structural_tag",
+    "format": {
+      "type": "sequence",
+      "elements": [
+        {
+          "type": "tag",
+          "begin": "",
+          "content": {
+            "type": "any_text",
+            "excludes": [
+              "<think>",
+              "</think>"
+            ],
+            "max_tokens": null,
+            "max_chars": null
+          },
+          "end": "</think>"
+        },
+        {
+          "type": "sequence",
+          "elements": [
+            {
+              "type": "const_string",
+              "value": "\n\n<｜DSML｜tool_calls>\n"
+            },
+            {
+              "type": "tag",
+              "begin": "<｜DSML｜invoke name=\"search\">\n",
+              "content": {
+                "type": "json_schema",
+                "json_schema": {
+                  "type": "object",
+                  "properties": {
+                    "q": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "q"
+                  ]
+                },
+                "style": "deepseek_xml",
+                "any_order": false,
+                "max_whitespace_cnt": null
+              },
+              "end": "</｜DSML｜invoke>\n"
+            },
+            {
+              "type": "const_string",
+              "value": "</｜DSML｜tool_calls>"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "adaptive_single_call_relaxed_schema": {
+    "type": "structural_tag",
+    "format": {
+      "type": "sequence",
+      "elements": [
+        {
+          "type": "optional",
+          "content": {
+            "type": "tag",
+            "begin": "<think>",
+            "content": {
+              "type": "any_text",
+              "excludes": [],
+              "max_tokens": null,
+              "max_chars": null
+            },
+            "end": "</think>"
+          }
+        },
+        {
+          "type": "sequence",
+          "elements": [
+            {
+              "type": "const_string",
+              "value": "\n\n<｜DSML｜tool_calls>\n"
+            },
+            {
+              "type": "tags_with_separator",
+              "tags": [
+                {
+                  "type": "tag",
+                  "begin": "<｜DSML｜invoke name=\"search\">\n",
+                  "content": {
+                    "type": "json_schema",
+                    "json_schema": {
+                      "type": "object",
+                      "properties": {
+                        "q": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "q"
+                      ]
+                    },
+                    "style": "deepseek_xml",
+                    "any_order": true,
+                    "max_whitespace_cnt": 2
+                  },
+                  "end": "</｜DSML｜invoke>\n"
+                },
+                {
+                  "type": "tag",
+                  "begin": "<｜DSML｜invoke name=\"alt\">\n",
+                  "content": {
+                    "type": "json_schema",
+                    "json_schema": {
+                      "type": "object",
+                      "properties": {
+                        "q": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "q"
+                      ]
+                    },
+                    "style": "deepseek_xml",
+                    "any_order": true,
+                    "max_whitespace_cnt": 2
+                  },
+                  "end": "</｜DSML｜invoke>\n"
+                }
+              ],
+              "separator": "",
+              "at_least_one": true,
+              "stop_after_first": true
+            },
+            {
+              "type": "const_string",
+              "value": "</｜DSML｜tool_calls>"
+            }
+          ]
+        }
       ]
     }
   }

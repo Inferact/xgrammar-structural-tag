@@ -1,0 +1,1518 @@
+{
+  "auto_no_tools": {
+    "type": "structural_tag",
+    "format": {
+      "type": "sequence",
+      "elements": [
+        {
+          "type": "tag",
+          "begin": "",
+          "content": {
+            "type": "any_text",
+            "excludes": [
+              "<|open|>",
+              "<|close|>"
+            ],
+            "max_tokens": null,
+            "max_chars": null
+          },
+          "end": "<|close|>response<|sep|>"
+        },
+        {
+          "type": "const_string",
+          "value": "<|close|>message<|sep|>"
+        }
+      ]
+    }
+  },
+  "auto_one_tool": {
+    "type": "structural_tag",
+    "format": {
+      "type": "sequence",
+      "elements": [
+        {
+          "type": "tag",
+          "begin": "",
+          "content": {
+            "type": "any_text",
+            "excludes": [
+              "<|open|>",
+              "<|close|>"
+            ],
+            "max_tokens": null,
+            "max_chars": null
+          },
+          "end": "<|close|>response<|sep|>"
+        },
+        {
+          "type": "optional",
+          "content": {
+            "type": "tag",
+            "begin": "<|open|>tools<|sep|>",
+            "content": {
+              "type": "tags_with_separator",
+              "tags": [
+                {
+                  "type": "tag",
+                  "begin": "<|open|>call tool=\"search\" index=\"",
+                  "content": {
+                    "type": "sequence",
+                    "elements": [
+                      {
+                        "type": "regex",
+                        "pattern": "\\d+"
+                      },
+                      {
+                        "type": "const_string",
+                        "value": "\"<|sep|>"
+                      },
+                      {
+                        "type": "json_schema",
+                        "json_schema": {
+                          "type": "object",
+                          "properties": {
+                            "q": {
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "q"
+                          ]
+                        },
+                        "style": "kimi_k3_xml",
+                        "any_order": false,
+                        "max_whitespace_cnt": null
+                      }
+                    ]
+                  },
+                  "end": "<|close|>call<|sep|>"
+                }
+              ],
+              "separator": "",
+              "at_least_one": true,
+              "stop_after_first": false
+            },
+            "end": "<|close|>tools<|sep|>"
+          }
+        },
+        {
+          "type": "const_string",
+          "value": "<|close|>message<|sep|>"
+        }
+      ]
+    }
+  },
+  "required_two_tools": {
+    "type": "structural_tag",
+    "format": {
+      "type": "sequence",
+      "elements": [
+        {
+          "type": "tag",
+          "begin": "",
+          "content": {
+            "type": "any_text",
+            "excludes": [
+              "<|open|>",
+              "<|close|>"
+            ],
+            "max_tokens": null,
+            "max_chars": null
+          },
+          "end": "<|close|>response<|sep|>"
+        },
+        {
+          "type": "sequence",
+          "elements": [
+            {
+              "type": "const_string",
+              "value": "<|open|>tools<|sep|>"
+            },
+            {
+              "type": "tags_with_separator",
+              "tags": [
+                {
+                  "type": "tag",
+                  "begin": "<|open|>call tool=\"search\" index=\"",
+                  "content": {
+                    "type": "sequence",
+                    "elements": [
+                      {
+                        "type": "regex",
+                        "pattern": "\\d+"
+                      },
+                      {
+                        "type": "const_string",
+                        "value": "\"<|sep|>"
+                      },
+                      {
+                        "type": "json_schema",
+                        "json_schema": {
+                          "type": "object",
+                          "properties": {
+                            "q": {
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "q"
+                          ]
+                        },
+                        "style": "kimi_k3_xml",
+                        "any_order": false,
+                        "max_whitespace_cnt": null
+                      }
+                    ]
+                  },
+                  "end": "<|close|>call<|sep|>"
+                },
+                {
+                  "type": "tag",
+                  "begin": "<|open|>call tool=\"alt\" index=\"",
+                  "content": {
+                    "type": "sequence",
+                    "elements": [
+                      {
+                        "type": "regex",
+                        "pattern": "\\d+"
+                      },
+                      {
+                        "type": "const_string",
+                        "value": "\"<|sep|>"
+                      },
+                      {
+                        "type": "json_schema",
+                        "json_schema": {
+                          "type": "object",
+                          "properties": {
+                            "q": {
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "q"
+                          ]
+                        },
+                        "style": "kimi_k3_xml",
+                        "any_order": false,
+                        "max_whitespace_cnt": null
+                      }
+                    ]
+                  },
+                  "end": "<|close|>call<|sep|>"
+                }
+              ],
+              "separator": "",
+              "at_least_one": true,
+              "stop_after_first": false
+            },
+            {
+              "type": "const_string",
+              "value": "<|close|>tools<|sep|>"
+            }
+          ]
+        },
+        {
+          "type": "const_string",
+          "value": "<|close|>message<|sep|>"
+        }
+      ]
+    }
+  },
+  "reasoning_required_one_tool": {
+    "type": "structural_tag",
+    "format": {
+      "type": "sequence",
+      "elements": [
+        {
+          "type": "tag",
+          "begin": "",
+          "content": {
+            "type": "any_text",
+            "excludes": [
+              "<|open|>",
+              "<|close|>"
+            ],
+            "max_tokens": null,
+            "max_chars": null
+          },
+          "end": "<|close|>think<|sep|>"
+        },
+        {
+          "type": "tag",
+          "begin": "<|open|>response<|sep|>",
+          "content": {
+            "type": "any_text",
+            "excludes": [
+              "<|open|>",
+              "<|close|>"
+            ],
+            "max_tokens": null,
+            "max_chars": null
+          },
+          "end": "<|close|>response<|sep|>"
+        },
+        {
+          "type": "sequence",
+          "elements": [
+            {
+              "type": "const_string",
+              "value": "<|open|>tools<|sep|>"
+            },
+            {
+              "type": "tags_with_separator",
+              "tags": [
+                {
+                  "type": "tag",
+                  "begin": "<|open|>call tool=\"search\" index=\"",
+                  "content": {
+                    "type": "sequence",
+                    "elements": [
+                      {
+                        "type": "regex",
+                        "pattern": "\\d+"
+                      },
+                      {
+                        "type": "const_string",
+                        "value": "\"<|sep|>"
+                      },
+                      {
+                        "type": "json_schema",
+                        "json_schema": {
+                          "type": "object",
+                          "properties": {
+                            "q": {
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "q"
+                          ]
+                        },
+                        "style": "kimi_k3_xml",
+                        "any_order": false,
+                        "max_whitespace_cnt": null
+                      }
+                    ]
+                  },
+                  "end": "<|close|>call<|sep|>"
+                }
+              ],
+              "separator": "",
+              "at_least_one": true,
+              "stop_after_first": false
+            },
+            {
+              "type": "const_string",
+              "value": "<|close|>tools<|sep|>"
+            }
+          ]
+        },
+        {
+          "type": "const_string",
+          "value": "<|close|>message<|sep|>"
+        }
+      ]
+    }
+  },
+  "forced_search": {
+    "type": "structural_tag",
+    "format": {
+      "type": "sequence",
+      "elements": [
+        {
+          "type": "tag",
+          "begin": "",
+          "content": {
+            "type": "any_text",
+            "excludes": [
+              "<|open|>",
+              "<|close|>"
+            ],
+            "max_tokens": null,
+            "max_chars": null
+          },
+          "end": "<|close|>response<|sep|>"
+        },
+        {
+          "type": "sequence",
+          "elements": [
+            {
+              "type": "const_string",
+              "value": "<|open|>tools<|sep|>"
+            },
+            {
+              "type": "tag",
+              "begin": "<|open|>call tool=\"search\" index=\"",
+              "content": {
+                "type": "sequence",
+                "elements": [
+                  {
+                    "type": "regex",
+                    "pattern": "\\d+"
+                  },
+                  {
+                    "type": "const_string",
+                    "value": "\"<|sep|>"
+                  },
+                  {
+                    "type": "json_schema",
+                    "json_schema": {
+                      "type": "object",
+                      "properties": {
+                        "q": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "q"
+                      ]
+                    },
+                    "style": "kimi_k3_xml",
+                    "any_order": false,
+                    "max_whitespace_cnt": null
+                  }
+                ]
+              },
+              "end": "<|close|>call<|sep|>"
+            },
+            {
+              "type": "const_string",
+              "value": "<|close|>tools<|sep|>"
+            }
+          ]
+        },
+        {
+          "type": "const_string",
+          "value": "<|close|>message<|sep|>"
+        }
+      ]
+    }
+  },
+  "allowed_required_alt": {
+    "type": "structural_tag",
+    "format": {
+      "type": "sequence",
+      "elements": [
+        {
+          "type": "tag",
+          "begin": "",
+          "content": {
+            "type": "any_text",
+            "excludes": [
+              "<|open|>",
+              "<|close|>"
+            ],
+            "max_tokens": null,
+            "max_chars": null
+          },
+          "end": "<|close|>response<|sep|>"
+        },
+        {
+          "type": "sequence",
+          "elements": [
+            {
+              "type": "const_string",
+              "value": "<|open|>tools<|sep|>"
+            },
+            {
+              "type": "tags_with_separator",
+              "tags": [
+                {
+                  "type": "tag",
+                  "begin": "<|open|>call tool=\"alt\" index=\"",
+                  "content": {
+                    "type": "sequence",
+                    "elements": [
+                      {
+                        "type": "regex",
+                        "pattern": "\\d+"
+                      },
+                      {
+                        "type": "const_string",
+                        "value": "\"<|sep|>"
+                      },
+                      {
+                        "type": "json_schema",
+                        "json_schema": {
+                          "type": "object",
+                          "properties": {
+                            "q": {
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "q"
+                          ]
+                        },
+                        "style": "kimi_k3_xml",
+                        "any_order": false,
+                        "max_whitespace_cnt": null
+                      }
+                    ]
+                  },
+                  "end": "<|close|>call<|sep|>"
+                }
+              ],
+              "separator": "",
+              "at_least_one": true,
+              "stop_after_first": false
+            },
+            {
+              "type": "const_string",
+              "value": "<|close|>tools<|sep|>"
+            }
+          ]
+        },
+        {
+          "type": "const_string",
+          "value": "<|close|>message<|sep|>"
+        }
+      ]
+    }
+  },
+  "strict_false": {
+    "type": "structural_tag",
+    "format": {
+      "type": "sequence",
+      "elements": [
+        {
+          "type": "tag",
+          "begin": "",
+          "content": {
+            "type": "any_text",
+            "excludes": [
+              "<|open|>",
+              "<|close|>"
+            ],
+            "max_tokens": null,
+            "max_chars": null
+          },
+          "end": "<|close|>response<|sep|>"
+        },
+        {
+          "type": "optional",
+          "content": {
+            "type": "tag",
+            "begin": "<|open|>tools<|sep|>",
+            "content": {
+              "type": "tags_with_separator",
+              "tags": [
+                {
+                  "type": "tag",
+                  "begin": "<|open|>call tool=\"loose\" index=\"",
+                  "content": {
+                    "type": "sequence",
+                    "elements": [
+                      {
+                        "type": "regex",
+                        "pattern": "\\d+"
+                      },
+                      {
+                        "type": "const_string",
+                        "value": "\"<|sep|>"
+                      },
+                      {
+                        "type": "json_schema",
+                        "json_schema": true,
+                        "style": "kimi_k3_xml",
+                        "any_order": false,
+                        "max_whitespace_cnt": null
+                      }
+                    ]
+                  },
+                  "end": "<|close|>call<|sep|>"
+                }
+              ],
+              "separator": "",
+              "at_least_one": true,
+              "stop_after_first": false
+            },
+            "end": "<|close|>tools<|sep|>"
+          }
+        },
+        {
+          "type": "const_string",
+          "value": "<|close|>message<|sep|>"
+        }
+      ]
+    }
+  },
+  "missing_parameters": {
+    "type": "structural_tag",
+    "format": {
+      "type": "sequence",
+      "elements": [
+        {
+          "type": "tag",
+          "begin": "",
+          "content": {
+            "type": "any_text",
+            "excludes": [
+              "<|open|>",
+              "<|close|>"
+            ],
+            "max_tokens": null,
+            "max_chars": null
+          },
+          "end": "<|close|>response<|sep|>"
+        },
+        {
+          "type": "optional",
+          "content": {
+            "type": "tag",
+            "begin": "<|open|>tools<|sep|>",
+            "content": {
+              "type": "tags_with_separator",
+              "tags": [
+                {
+                  "type": "tag",
+                  "begin": "<|open|>call tool=\"missing\" index=\"",
+                  "content": {
+                    "type": "sequence",
+                    "elements": [
+                      {
+                        "type": "regex",
+                        "pattern": "\\d+"
+                      },
+                      {
+                        "type": "const_string",
+                        "value": "\"<|sep|>"
+                      },
+                      {
+                        "type": "json_schema",
+                        "json_schema": true,
+                        "style": "kimi_k3_xml",
+                        "any_order": false,
+                        "max_whitespace_cnt": null
+                      }
+                    ]
+                  },
+                  "end": "<|close|>call<|sep|>"
+                }
+              ],
+              "separator": "",
+              "at_least_one": true,
+              "stop_after_first": false
+            },
+            "end": "<|close|>tools<|sep|>"
+          }
+        },
+        {
+          "type": "const_string",
+          "value": "<|close|>message<|sep|>"
+        }
+      ]
+    }
+  },
+  "adaptive_auto_no_tools": {
+    "type": "structural_tag",
+    "format": {
+      "type": "sequence",
+      "elements": [
+        {
+          "type": "optional",
+          "content": {
+            "type": "tag",
+            "begin": "<|open|>think<|sep|>",
+            "content": {
+              "type": "any_text",
+              "excludes": [
+                "<|open|>",
+                "<|close|>"
+              ],
+              "max_tokens": null,
+              "max_chars": null
+            },
+            "end": "<|close|>think<|sep|>"
+          }
+        },
+        {
+          "type": "tag",
+          "begin": "<|open|>response<|sep|>",
+          "content": {
+            "type": "any_text",
+            "excludes": [
+              "<|open|>",
+              "<|close|>"
+            ],
+            "max_tokens": null,
+            "max_chars": null
+          },
+          "end": "<|close|>response<|sep|>"
+        },
+        {
+          "type": "const_string",
+          "value": "<|close|>message<|sep|>"
+        }
+      ]
+    }
+  },
+  "single_call_auto_no_tools": {
+    "type": "structural_tag",
+    "format": {
+      "type": "sequence",
+      "elements": [
+        {
+          "type": "tag",
+          "begin": "",
+          "content": {
+            "type": "any_text",
+            "excludes": [
+              "<|open|>",
+              "<|close|>"
+            ],
+            "max_tokens": null,
+            "max_chars": null
+          },
+          "end": "<|close|>think<|sep|>"
+        },
+        {
+          "type": "tag",
+          "begin": "<|open|>response<|sep|>",
+          "content": {
+            "type": "any_text",
+            "excludes": [
+              "<|open|>",
+              "<|close|>"
+            ],
+            "max_tokens": null,
+            "max_chars": null
+          },
+          "end": "<|close|>response<|sep|>"
+        },
+        {
+          "type": "const_string",
+          "value": "<|close|>message<|sep|>"
+        }
+      ]
+    }
+  },
+  "adaptive_auto_two_tools": {
+    "type": "structural_tag",
+    "format": {
+      "type": "sequence",
+      "elements": [
+        {
+          "type": "optional",
+          "content": {
+            "type": "tag",
+            "begin": "<|open|>think<|sep|>",
+            "content": {
+              "type": "any_text",
+              "excludes": [
+                "<|open|>",
+                "<|close|>"
+              ],
+              "max_tokens": null,
+              "max_chars": null
+            },
+            "end": "<|close|>think<|sep|>"
+          }
+        },
+        {
+          "type": "tag",
+          "begin": "<|open|>response<|sep|>",
+          "content": {
+            "type": "any_text",
+            "excludes": [
+              "<|open|>",
+              "<|close|>"
+            ],
+            "max_tokens": null,
+            "max_chars": null
+          },
+          "end": "<|close|>response<|sep|>"
+        },
+        {
+          "type": "optional",
+          "content": {
+            "type": "tag",
+            "begin": "<|open|>tools<|sep|>",
+            "content": {
+              "type": "tags_with_separator",
+              "tags": [
+                {
+                  "type": "tag",
+                  "begin": "<|open|>call tool=\"search\" index=\"",
+                  "content": {
+                    "type": "sequence",
+                    "elements": [
+                      {
+                        "type": "regex",
+                        "pattern": "\\d+"
+                      },
+                      {
+                        "type": "const_string",
+                        "value": "\"<|sep|>"
+                      },
+                      {
+                        "type": "json_schema",
+                        "json_schema": {
+                          "type": "object",
+                          "properties": {
+                            "q": {
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "q"
+                          ]
+                        },
+                        "style": "kimi_k3_xml",
+                        "any_order": false,
+                        "max_whitespace_cnt": null
+                      }
+                    ]
+                  },
+                  "end": "<|close|>call<|sep|>"
+                },
+                {
+                  "type": "tag",
+                  "begin": "<|open|>call tool=\"alt\" index=\"",
+                  "content": {
+                    "type": "sequence",
+                    "elements": [
+                      {
+                        "type": "regex",
+                        "pattern": "\\d+"
+                      },
+                      {
+                        "type": "const_string",
+                        "value": "\"<|sep|>"
+                      },
+                      {
+                        "type": "json_schema",
+                        "json_schema": {
+                          "type": "object",
+                          "properties": {
+                            "q": {
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "q"
+                          ]
+                        },
+                        "style": "kimi_k3_xml",
+                        "any_order": false,
+                        "max_whitespace_cnt": null
+                      }
+                    ]
+                  },
+                  "end": "<|close|>call<|sep|>"
+                }
+              ],
+              "separator": "",
+              "at_least_one": true,
+              "stop_after_first": false
+            },
+            "end": "<|close|>tools<|sep|>"
+          }
+        },
+        {
+          "type": "const_string",
+          "value": "<|close|>message<|sep|>"
+        }
+      ]
+    }
+  },
+  "single_call_auto_two_tools": {
+    "type": "structural_tag",
+    "format": {
+      "type": "sequence",
+      "elements": [
+        {
+          "type": "tag",
+          "begin": "",
+          "content": {
+            "type": "any_text",
+            "excludes": [
+              "<|open|>",
+              "<|close|>"
+            ],
+            "max_tokens": null,
+            "max_chars": null
+          },
+          "end": "<|close|>think<|sep|>"
+        },
+        {
+          "type": "tag",
+          "begin": "<|open|>response<|sep|>",
+          "content": {
+            "type": "any_text",
+            "excludes": [
+              "<|open|>",
+              "<|close|>"
+            ],
+            "max_tokens": null,
+            "max_chars": null
+          },
+          "end": "<|close|>response<|sep|>"
+        },
+        {
+          "type": "optional",
+          "content": {
+            "type": "tag",
+            "begin": "<|open|>tools<|sep|>",
+            "content": {
+              "type": "tags_with_separator",
+              "tags": [
+                {
+                  "type": "tag",
+                  "begin": "<|open|>call tool=\"search\" index=\"",
+                  "content": {
+                    "type": "sequence",
+                    "elements": [
+                      {
+                        "type": "regex",
+                        "pattern": "\\d+"
+                      },
+                      {
+                        "type": "const_string",
+                        "value": "\"<|sep|>"
+                      },
+                      {
+                        "type": "json_schema",
+                        "json_schema": {
+                          "type": "object",
+                          "properties": {
+                            "q": {
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "q"
+                          ]
+                        },
+                        "style": "kimi_k3_xml",
+                        "any_order": false,
+                        "max_whitespace_cnt": null
+                      }
+                    ]
+                  },
+                  "end": "<|close|>call<|sep|>"
+                },
+                {
+                  "type": "tag",
+                  "begin": "<|open|>call tool=\"alt\" index=\"",
+                  "content": {
+                    "type": "sequence",
+                    "elements": [
+                      {
+                        "type": "regex",
+                        "pattern": "\\d+"
+                      },
+                      {
+                        "type": "const_string",
+                        "value": "\"<|sep|>"
+                      },
+                      {
+                        "type": "json_schema",
+                        "json_schema": {
+                          "type": "object",
+                          "properties": {
+                            "q": {
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "q"
+                          ]
+                        },
+                        "style": "kimi_k3_xml",
+                        "any_order": false,
+                        "max_whitespace_cnt": null
+                      }
+                    ]
+                  },
+                  "end": "<|close|>call<|sep|>"
+                }
+              ],
+              "separator": "",
+              "at_least_one": true,
+              "stop_after_first": true
+            },
+            "end": "<|close|>tools<|sep|>"
+          }
+        },
+        {
+          "type": "const_string",
+          "value": "<|close|>message<|sep|>"
+        }
+      ]
+    }
+  },
+  "adaptive_required_two_tools": {
+    "type": "structural_tag",
+    "format": {
+      "type": "sequence",
+      "elements": [
+        {
+          "type": "optional",
+          "content": {
+            "type": "tag",
+            "begin": "<|open|>think<|sep|>",
+            "content": {
+              "type": "any_text",
+              "excludes": [
+                "<|open|>",
+                "<|close|>"
+              ],
+              "max_tokens": null,
+              "max_chars": null
+            },
+            "end": "<|close|>think<|sep|>"
+          }
+        },
+        {
+          "type": "tag",
+          "begin": "<|open|>response<|sep|>",
+          "content": {
+            "type": "any_text",
+            "excludes": [
+              "<|open|>",
+              "<|close|>"
+            ],
+            "max_tokens": null,
+            "max_chars": null
+          },
+          "end": "<|close|>response<|sep|>"
+        },
+        {
+          "type": "sequence",
+          "elements": [
+            {
+              "type": "const_string",
+              "value": "<|open|>tools<|sep|>"
+            },
+            {
+              "type": "tags_with_separator",
+              "tags": [
+                {
+                  "type": "tag",
+                  "begin": "<|open|>call tool=\"search\" index=\"",
+                  "content": {
+                    "type": "sequence",
+                    "elements": [
+                      {
+                        "type": "regex",
+                        "pattern": "\\d+"
+                      },
+                      {
+                        "type": "const_string",
+                        "value": "\"<|sep|>"
+                      },
+                      {
+                        "type": "json_schema",
+                        "json_schema": {
+                          "type": "object",
+                          "properties": {
+                            "q": {
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "q"
+                          ]
+                        },
+                        "style": "kimi_k3_xml",
+                        "any_order": false,
+                        "max_whitespace_cnt": null
+                      }
+                    ]
+                  },
+                  "end": "<|close|>call<|sep|>"
+                },
+                {
+                  "type": "tag",
+                  "begin": "<|open|>call tool=\"alt\" index=\"",
+                  "content": {
+                    "type": "sequence",
+                    "elements": [
+                      {
+                        "type": "regex",
+                        "pattern": "\\d+"
+                      },
+                      {
+                        "type": "const_string",
+                        "value": "\"<|sep|>"
+                      },
+                      {
+                        "type": "json_schema",
+                        "json_schema": {
+                          "type": "object",
+                          "properties": {
+                            "q": {
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "q"
+                          ]
+                        },
+                        "style": "kimi_k3_xml",
+                        "any_order": false,
+                        "max_whitespace_cnt": null
+                      }
+                    ]
+                  },
+                  "end": "<|close|>call<|sep|>"
+                }
+              ],
+              "separator": "",
+              "at_least_one": true,
+              "stop_after_first": false
+            },
+            {
+              "type": "const_string",
+              "value": "<|close|>tools<|sep|>"
+            }
+          ]
+        },
+        {
+          "type": "const_string",
+          "value": "<|close|>message<|sep|>"
+        }
+      ]
+    }
+  },
+  "single_call_required_two_tools": {
+    "type": "structural_tag",
+    "format": {
+      "type": "sequence",
+      "elements": [
+        {
+          "type": "tag",
+          "begin": "",
+          "content": {
+            "type": "any_text",
+            "excludes": [
+              "<|open|>",
+              "<|close|>"
+            ],
+            "max_tokens": null,
+            "max_chars": null
+          },
+          "end": "<|close|>think<|sep|>"
+        },
+        {
+          "type": "tag",
+          "begin": "<|open|>response<|sep|>",
+          "content": {
+            "type": "any_text",
+            "excludes": [
+              "<|open|>",
+              "<|close|>"
+            ],
+            "max_tokens": null,
+            "max_chars": null
+          },
+          "end": "<|close|>response<|sep|>"
+        },
+        {
+          "type": "sequence",
+          "elements": [
+            {
+              "type": "const_string",
+              "value": "<|open|>tools<|sep|>"
+            },
+            {
+              "type": "tags_with_separator",
+              "tags": [
+                {
+                  "type": "tag",
+                  "begin": "<|open|>call tool=\"search\" index=\"",
+                  "content": {
+                    "type": "sequence",
+                    "elements": [
+                      {
+                        "type": "regex",
+                        "pattern": "\\d+"
+                      },
+                      {
+                        "type": "const_string",
+                        "value": "\"<|sep|>"
+                      },
+                      {
+                        "type": "json_schema",
+                        "json_schema": {
+                          "type": "object",
+                          "properties": {
+                            "q": {
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "q"
+                          ]
+                        },
+                        "style": "kimi_k3_xml",
+                        "any_order": false,
+                        "max_whitespace_cnt": null
+                      }
+                    ]
+                  },
+                  "end": "<|close|>call<|sep|>"
+                },
+                {
+                  "type": "tag",
+                  "begin": "<|open|>call tool=\"alt\" index=\"",
+                  "content": {
+                    "type": "sequence",
+                    "elements": [
+                      {
+                        "type": "regex",
+                        "pattern": "\\d+"
+                      },
+                      {
+                        "type": "const_string",
+                        "value": "\"<|sep|>"
+                      },
+                      {
+                        "type": "json_schema",
+                        "json_schema": {
+                          "type": "object",
+                          "properties": {
+                            "q": {
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "q"
+                          ]
+                        },
+                        "style": "kimi_k3_xml",
+                        "any_order": false,
+                        "max_whitespace_cnt": null
+                      }
+                    ]
+                  },
+                  "end": "<|close|>call<|sep|>"
+                }
+              ],
+              "separator": "",
+              "at_least_one": true,
+              "stop_after_first": true
+            },
+            {
+              "type": "const_string",
+              "value": "<|close|>tools<|sep|>"
+            }
+          ]
+        },
+        {
+          "type": "const_string",
+          "value": "<|close|>message<|sep|>"
+        }
+      ]
+    }
+  },
+  "adaptive_forced_search": {
+    "type": "structural_tag",
+    "format": {
+      "type": "sequence",
+      "elements": [
+        {
+          "type": "optional",
+          "content": {
+            "type": "tag",
+            "begin": "<|open|>think<|sep|>",
+            "content": {
+              "type": "any_text",
+              "excludes": [
+                "<|open|>",
+                "<|close|>"
+              ],
+              "max_tokens": null,
+              "max_chars": null
+            },
+            "end": "<|close|>think<|sep|>"
+          }
+        },
+        {
+          "type": "tag",
+          "begin": "<|open|>response<|sep|>",
+          "content": {
+            "type": "any_text",
+            "excludes": [
+              "<|open|>",
+              "<|close|>"
+            ],
+            "max_tokens": null,
+            "max_chars": null
+          },
+          "end": "<|close|>response<|sep|>"
+        },
+        {
+          "type": "sequence",
+          "elements": [
+            {
+              "type": "const_string",
+              "value": "<|open|>tools<|sep|>"
+            },
+            {
+              "type": "tag",
+              "begin": "<|open|>call tool=\"search\" index=\"",
+              "content": {
+                "type": "sequence",
+                "elements": [
+                  {
+                    "type": "regex",
+                    "pattern": "\\d+"
+                  },
+                  {
+                    "type": "const_string",
+                    "value": "\"<|sep|>"
+                  },
+                  {
+                    "type": "json_schema",
+                    "json_schema": {
+                      "type": "object",
+                      "properties": {
+                        "q": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "q"
+                      ]
+                    },
+                    "style": "kimi_k3_xml",
+                    "any_order": false,
+                    "max_whitespace_cnt": null
+                  }
+                ]
+              },
+              "end": "<|close|>call<|sep|>"
+            },
+            {
+              "type": "const_string",
+              "value": "<|close|>tools<|sep|>"
+            }
+          ]
+        },
+        {
+          "type": "const_string",
+          "value": "<|close|>message<|sep|>"
+        }
+      ]
+    }
+  },
+  "single_call_forced_search": {
+    "type": "structural_tag",
+    "format": {
+      "type": "sequence",
+      "elements": [
+        {
+          "type": "tag",
+          "begin": "",
+          "content": {
+            "type": "any_text",
+            "excludes": [
+              "<|open|>",
+              "<|close|>"
+            ],
+            "max_tokens": null,
+            "max_chars": null
+          },
+          "end": "<|close|>think<|sep|>"
+        },
+        {
+          "type": "tag",
+          "begin": "<|open|>response<|sep|>",
+          "content": {
+            "type": "any_text",
+            "excludes": [
+              "<|open|>",
+              "<|close|>"
+            ],
+            "max_tokens": null,
+            "max_chars": null
+          },
+          "end": "<|close|>response<|sep|>"
+        },
+        {
+          "type": "sequence",
+          "elements": [
+            {
+              "type": "const_string",
+              "value": "<|open|>tools<|sep|>"
+            },
+            {
+              "type": "tag",
+              "begin": "<|open|>call tool=\"search\" index=\"",
+              "content": {
+                "type": "sequence",
+                "elements": [
+                  {
+                    "type": "regex",
+                    "pattern": "\\d+"
+                  },
+                  {
+                    "type": "const_string",
+                    "value": "\"<|sep|>"
+                  },
+                  {
+                    "type": "json_schema",
+                    "json_schema": {
+                      "type": "object",
+                      "properties": {
+                        "q": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "q"
+                      ]
+                    },
+                    "style": "kimi_k3_xml",
+                    "any_order": false,
+                    "max_whitespace_cnt": null
+                  }
+                ]
+              },
+              "end": "<|close|>call<|sep|>"
+            },
+            {
+              "type": "const_string",
+              "value": "<|close|>tools<|sep|>"
+            }
+          ]
+        },
+        {
+          "type": "const_string",
+          "value": "<|close|>message<|sep|>"
+        }
+      ]
+    }
+  },
+  "adaptive_single_call_relaxed_schema": {
+    "type": "structural_tag",
+    "format": {
+      "type": "sequence",
+      "elements": [
+        {
+          "type": "optional",
+          "content": {
+            "type": "tag",
+            "begin": "<|open|>think<|sep|>",
+            "content": {
+              "type": "any_text",
+              "excludes": [],
+              "max_tokens": null,
+              "max_chars": null
+            },
+            "end": "<|close|>think<|sep|>"
+          }
+        },
+        {
+          "type": "tag",
+          "begin": "<|open|>response<|sep|>",
+          "content": {
+            "type": "any_text",
+            "excludes": [],
+            "max_tokens": null,
+            "max_chars": null
+          },
+          "end": "<|close|>response<|sep|>"
+        },
+        {
+          "type": "sequence",
+          "elements": [
+            {
+              "type": "const_string",
+              "value": "<|open|>tools<|sep|>"
+            },
+            {
+              "type": "tags_with_separator",
+              "tags": [
+                {
+                  "type": "tag",
+                  "begin": "<|open|>call tool=\"search\" index=\"",
+                  "content": {
+                    "type": "sequence",
+                    "elements": [
+                      {
+                        "type": "regex",
+                        "pattern": "\\d+"
+                      },
+                      {
+                        "type": "const_string",
+                        "value": "\"<|sep|>"
+                      },
+                      {
+                        "type": "json_schema",
+                        "json_schema": {
+                          "type": "object",
+                          "properties": {
+                            "q": {
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "q"
+                          ]
+                        },
+                        "style": "kimi_k3_xml",
+                        "any_order": true,
+                        "max_whitespace_cnt": 2
+                      }
+                    ]
+                  },
+                  "end": "<|close|>call<|sep|>"
+                },
+                {
+                  "type": "tag",
+                  "begin": "<|open|>call tool=\"alt\" index=\"",
+                  "content": {
+                    "type": "sequence",
+                    "elements": [
+                      {
+                        "type": "regex",
+                        "pattern": "\\d+"
+                      },
+                      {
+                        "type": "const_string",
+                        "value": "\"<|sep|>"
+                      },
+                      {
+                        "type": "json_schema",
+                        "json_schema": {
+                          "type": "object",
+                          "properties": {
+                            "q": {
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "q"
+                          ]
+                        },
+                        "style": "kimi_k3_xml",
+                        "any_order": true,
+                        "max_whitespace_cnt": 2
+                      }
+                    ]
+                  },
+                  "end": "<|close|>call<|sep|>"
+                }
+              ],
+              "separator": "",
+              "at_least_one": true,
+              "stop_after_first": true
+            },
+            {
+              "type": "const_string",
+              "value": "<|close|>tools<|sep|>"
+            }
+          ]
+        },
+        {
+          "type": "const_string",
+          "value": "<|close|>message<|sep|>"
+        }
+      ]
+    }
+  }
+}
