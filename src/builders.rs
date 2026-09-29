@@ -488,6 +488,22 @@ mod tests {
     }
 
     #[test]
+    fn normalize_tool_choice_is_public_and_validates() {
+        let tools = vec![tool("search")];
+        let normalized =
+            crate::normalize_tool_choice(&tools, ToolChoice::function("search")).unwrap();
+        assert_eq!(normalized.choice, BuilderToolChoice::Forced);
+        assert!(matches!(
+            crate::normalize_tool_choice(&[], ToolChoice::required()),
+            Err(crate::Error::RequiredWithoutTools)
+        ));
+        assert!(matches!(
+            crate::normalize_tool_choice(&tools, ToolChoice::function("missing")),
+            Err(crate::Error::ToolNotFound { .. })
+        ));
+    }
+
+    #[test]
     fn normalize_allowed_tools_filters_functions() {
         let tools = vec![tool("search"), tool("alt")];
         let normalized = normalize_tool_choice(

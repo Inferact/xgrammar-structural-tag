@@ -17,9 +17,10 @@ serving stack.
   trait/object API if extension hooks become necessary later.
 - The `format` module is intentionally public. It exposes the structural-tag
   AST DTOs for advanced callers.
-- Tool-choice normalization is crate-internal. Keep `NormalizedToolChoice`,
-  `SimplifiedToolChoice`, and `normalize_tool_choice` private to the crate
-  unless a dedicated extension API is designed.
+- `normalize_tool_choice` and `NormalizedToolChoice` are public so callers that
+  build `Format`s directly (model-owned grammars) get the same validation and
+  filtering as `build_structural_tag`. Keep `StructuralTagContext` construction
+  private: it carries `options.reasoning`, which full-output grammars avoid.
 
 ## Relationship To Upstream xgrammar
 

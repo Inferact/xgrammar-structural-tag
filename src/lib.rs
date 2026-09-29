@@ -110,5 +110,5 @@ pub use format::StructuralTag;
 pub use model::Model;
 pub use tool::{
     AllowedToolRef, AllowedToolsMode, BuiltinToolParam, FunctionDefinition, FunctionToolParam,
-    ToolChoice, ToolParam,
+    NormalizedToolChoice, ToolChoice, ToolParam, normalize_tool_choice,
 };

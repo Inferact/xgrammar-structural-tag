@@ -461,8 +461,11 @@ impl BuilderToolChoice {
 }
 
 /// Normalized inputs for model-specific builders.
+///
+/// This is the result of [`normalize_tool_choice`], the step
+/// [`build_structural_tag`](crate::build_structural_tag) applies before calling a builder.
 #[derive(Debug, Clone, PartialEq)]
-pub(crate) struct NormalizedToolChoice {
+pub struct NormalizedToolChoice {
     /// Function tools remaining after tool-choice filtering.
     pub function_tools: Vec<FunctionToolParam>,
     /// Builtin tools remaining after tool-choice filtering.
@@ -478,7 +481,18 @@ pub(crate) struct NormalizedToolChoice {
 /// and yields `Auto` (builders treat auto-with-no-tools as text-only); named
 /// and builtin choices filter to a single tool and yield `Forced`; allowed
 /// tools filter to the referenced set and carry the nested mode through.
-pub(crate) fn normalize_tool_choice(
+///
+/// [`build_structural_tag`](crate::build_structural_tag) applies this before it calls a
+/// [`StructuralTagBuilder`](crate::builders::StructuralTagBuilder). Callers that build
+/// [`Format`](crate::format::Format)s directly, such as model-owned grammars, can call it to get
+/// the same validation and filtering:
+///
+/// - `Required` without any remaining tool fails with [`Error::RequiredWithoutTools`].
+/// - `Forced` that does not resolve to exactly one tool fails with
+///   [`Error::ForcedToolChoiceInvalid`].
+/// - Unknown named tools, ambiguous builtin choices, and allowed-tools references that match no
+///   tool are rejected.
+pub fn normalize_tool_choice(
     tools: &[ToolParam],
     tool_choice: ToolChoice,
 ) -> Result<NormalizedToolChoice> {
