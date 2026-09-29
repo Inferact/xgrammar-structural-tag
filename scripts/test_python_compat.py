@@ -2,7 +2,7 @@
 # /// script
 # requires-python = ">=3.10"
 # dependencies = [
-#     "xgrammar==0.2.7",
+#     "xgrammar==0.2.8",
 # ]
 # ///
 """Compile Rust fixtures and exercise their constraints with the real XGrammar runtime.
@@ -88,6 +88,24 @@ def check_models():
         assert accepts("minimax_m3", "adaptive_required_two_tools", prefix + call), (
             prefix
         )
+    # MiMo uses the compact Qwen XML layout; Qwen3-Coder's newline layout must not match.
+    call = "<tool_call><function=search><parameter=q>x</parameter></function></tool_call>"
+    newline_call = "<tool_call>\n<function=search>\n<parameter=q>\nx\n</parameter>\n</function>\n</tool_call>"
+    assert accepts("mimo", "required_two_tools", call)
+    assert not accepts("mimo", "required_two_tools", newline_call)
+    assert accepts("mimo", "reasoning_required_one_tool", "<think>t</think>" + call)
+    assert not accepts("mimo", "reasoning_required_one_tool", call)
+    assert accepts("mimo", "adaptive_required_two_tools", call)
+    assert accepts("mimo", "adaptive_required_two_tools", "<think>t</think>" + call)
+
+    # Kimi K3 argument strings may not contain its channel markers.
+    kimi_call = (
+        'r<|close|>response<|sep|><|open|>tools<|sep|><|open|>call tool="search" index="1"<|sep|>'
+        '<|open|>argument key="q" type="string"<|sep|>%s<|close|>argument<|sep|>'
+        "<|close|>call<|sep|><|close|>tools<|sep|><|close|>message<|sep|>"
+    )
+    assert accepts("kimi_k3", "required_two_tools", kimi_call % "x")
+    assert not accepts("kimi_k3", "required_two_tools", kimi_call % "a<|sep|>b")
     print(
         f"Compiled {compiled_count} model cases; confirmed {expected_rejections} upstream schema rejections and single-call/adaptive behavior."
     )

@@ -2,7 +2,7 @@
 # /// script
 # requires-python = ">=3.10"
 # dependencies = [
-#     "xgrammar==0.2.7",
+#     "xgrammar==0.2.8",
 # ]
 # ///
 """Generate xgrammar-origin golden fixtures for this crate.

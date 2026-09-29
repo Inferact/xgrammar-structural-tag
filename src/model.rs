@@ -40,6 +40,8 @@ pub enum Model {
     Qwen35,
     /// Qwen 3 Coder alias for Qwen 3.5 XML tool calling.
     Qwen3Coder,
+    /// MiMo compact-XML tool calling.
+    Mimo,
     /// Qwen 3 JSON-in-tag tool calling.
     Qwen3,
     /// OpenAI Harmony / GPT-OSS tool calling.
@@ -77,6 +79,7 @@ impl Model {
             Self::DeepSeekV31 => "deepseek_v3_1",
             Self::Qwen35 => "qwen_3_5",
             Self::Qwen3Coder => "qwen_3_coder",
+            Self::Mimo => "mimo",
             Self::Qwen3 => "qwen_3",
             Self::Harmony => "harmony",
             Self::DeepSeekV32 => "deepseek_v3_2",
@@ -101,6 +104,7 @@ impl Model {
             Self::DeepSeekR1 => &DeepSeekR1Builder,
             Self::DeepSeekV31 => &DeepSeekV31Builder,
             Self::Qwen35 | Self::Qwen3Coder => &Qwen35Builder,
+            Self::Mimo => &MimoBuilder,
             Self::Qwen3 => &Qwen3Builder,
             Self::Harmony => &HarmonyBuilder,
             Self::DeepSeekV32 => &DeepSeekV32Builder,
@@ -143,6 +147,7 @@ impl FromStr for Model {
             "deepseek_v3_1" => Self::DeepSeekV31,
             "qwen_3_5" => Self::Qwen35,
             "qwen_3_coder" => Self::Qwen3Coder,
+            "mimo" => Self::Mimo,
             "qwen_3" => Self::Qwen3,
             "harmony" => Self::Harmony,
             "deepseek_v3_2" => Self::DeepSeekV32,

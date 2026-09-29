@@ -34,7 +34,8 @@
             },
             "style": "json",
             "any_order": false,
-            "max_whitespace_cnt": null
+            "max_whitespace_cnt": null,
+            "excludes": []
           },
           "end": "}\n</tool_call>"
         },
@@ -56,7 +57,8 @@
             },
             "style": "json",
             "any_order": false,
-            "max_whitespace_cnt": null
+            "max_whitespace_cnt": null,
+            "excludes": []
           },
           "end": "}</tool_call>"
         }
@@ -89,7 +91,8 @@
             },
             "style": "json",
             "any_order": false,
-            "max_whitespace_cnt": null
+            "max_whitespace_cnt": null,
+            "excludes": []
           },
           "end": "}\n</tool_call>"
         },
@@ -111,7 +114,8 @@
             },
             "style": "json",
             "any_order": false,
-            "max_whitespace_cnt": null
+            "max_whitespace_cnt": null,
+            "excludes": []
           },
           "end": "}</tool_call>"
         },
@@ -133,7 +137,8 @@
             },
             "style": "json",
             "any_order": false,
-            "max_whitespace_cnt": null
+            "max_whitespace_cnt": null,
+            "excludes": []
           },
           "end": "}\n</tool_call>"
         },
@@ -155,7 +160,8 @@
             },
             "style": "json",
             "any_order": false,
-            "max_whitespace_cnt": null
+            "max_whitespace_cnt": null,
+            "excludes": []
           },
           "end": "}</tool_call>"
         }
@@ -188,7 +194,8 @@
             },
             "style": "json",
             "any_order": false,
-            "max_whitespace_cnt": null
+            "max_whitespace_cnt": null,
+            "excludes": []
           },
           "end": "}\n</tool_call>"
         },
@@ -210,7 +217,8 @@
             },
             "style": "json",
             "any_order": false,
-            "max_whitespace_cnt": null
+            "max_whitespace_cnt": null,
+            "excludes": []
           },
           "end": "}</tool_call>"
         }
@@ -243,7 +251,8 @@
             },
             "style": "json",
             "any_order": false,
-            "max_whitespace_cnt": null
+            "max_whitespace_cnt": null,
+            "excludes": []
           },
           "end": "}\n</tool_call>"
         },
@@ -265,7 +274,8 @@
             },
             "style": "json",
             "any_order": false,
-            "max_whitespace_cnt": null
+            "max_whitespace_cnt": null,
+            "excludes": []
           },
           "end": "}</tool_call>"
         }
@@ -298,7 +308,8 @@
             },
             "style": "json",
             "any_order": false,
-            "max_whitespace_cnt": null
+            "max_whitespace_cnt": null,
+            "excludes": []
           },
           "end": "}\n</tool_call>"
         },
@@ -320,7 +331,8 @@
             },
             "style": "json",
             "any_order": false,
-            "max_whitespace_cnt": null
+            "max_whitespace_cnt": null,
+            "excludes": []
           },
           "end": "}</tool_call>"
         }
@@ -346,7 +358,8 @@
             "json_schema": true,
             "style": "json",
             "any_order": false,
-            "max_whitespace_cnt": null
+            "max_whitespace_cnt": null,
+            "excludes": []
           },
           "end": "}\n</tool_call>"
         },
@@ -358,7 +371,8 @@
             "json_schema": true,
             "style": "json",
             "any_order": false,
-            "max_whitespace_cnt": null
+            "max_whitespace_cnt": null,
+            "excludes": []
           },
           "end": "}</tool_call>"
         }
@@ -384,7 +398,8 @@
             "json_schema": true,
             "style": "json",
             "any_order": false,
-            "max_whitespace_cnt": null
+            "max_whitespace_cnt": null,
+            "excludes": []
           },
           "end": "}\n</tool_call>"
         },
@@ -396,7 +411,8 @@
             "json_schema": true,
             "style": "json",
             "any_order": false,
-            "max_whitespace_cnt": null
+            "max_whitespace_cnt": null,
+            "excludes": []
           },
           "end": "}</tool_call>"
         }
@@ -450,7 +466,8 @@
             },
             "style": "json",
             "any_order": false,
-            "max_whitespace_cnt": null
+            "max_whitespace_cnt": null,
+            "excludes": []
           },
           "end": "}\n</tool_call>"
         },
@@ -472,7 +489,8 @@
             },
             "style": "json",
             "any_order": false,
-            "max_whitespace_cnt": null
+            "max_whitespace_cnt": null,
+            "excludes": []
           },
           "end": "}</tool_call>"
         },
@@ -494,7 +512,8 @@
             },
             "style": "json",
             "any_order": false,
-            "max_whitespace_cnt": null
+            "max_whitespace_cnt": null,
+            "excludes": []
           },
           "end": "}\n</tool_call>"
         },
@@ -516,7 +535,8 @@
             },
             "style": "json",
             "any_order": false,
-            "max_whitespace_cnt": null
+            "max_whitespace_cnt": null,
+            "excludes": []
           },
           "end": "}</tool_call>"
         }
@@ -552,7 +572,8 @@
             },
             "style": "json",
             "any_order": false,
-            "max_whitespace_cnt": null
+            "max_whitespace_cnt": null,
+            "excludes": []
           },
           "end": "}\n</tool_call>"
         },
@@ -574,7 +595,8 @@
             },
             "style": "json",
             "any_order": false,
-            "max_whitespace_cnt": null
+            "max_whitespace_cnt": null,
+            "excludes": []
           },
           "end": "}</tool_call>"
         },
@@ -596,7 +618,8 @@
             },
             "style": "json",
             "any_order": false,
-            "max_whitespace_cnt": null
+            "max_whitespace_cnt": null,
+            "excludes": []
           },
           "end": "}\n</tool_call>"
         },
@@ -618,7 +641,8 @@
             },
             "style": "json",
             "any_order": false,
-            "max_whitespace_cnt": null
+            "max_whitespace_cnt": null,
+            "excludes": []
           },
           "end": "}</tool_call>"
         }
@@ -651,7 +675,8 @@
             },
             "style": "json",
             "any_order": false,
-            "max_whitespace_cnt": null
+            "max_whitespace_cnt": null,
+            "excludes": []
           },
           "end": "}\n</tool_call>"
         },
@@ -673,7 +698,8 @@
             },
             "style": "json",
             "any_order": false,
-            "max_whitespace_cnt": null
+            "max_whitespace_cnt": null,
+            "excludes": []
           },
           "end": "}</tool_call>"
         },
@@ -695,7 +721,8 @@
             },
             "style": "json",
             "any_order": false,
-            "max_whitespace_cnt": null
+            "max_whitespace_cnt": null,
+            "excludes": []
           },
           "end": "}\n</tool_call>"
         },
@@ -717,7 +744,8 @@
             },
             "style": "json",
             "any_order": false,
-            "max_whitespace_cnt": null
+            "max_whitespace_cnt": null,
+            "excludes": []
           },
           "end": "}</tool_call>"
         }
@@ -750,7 +778,8 @@
             },
             "style": "json",
             "any_order": false,
-            "max_whitespace_cnt": null
+            "max_whitespace_cnt": null,
+            "excludes": []
           },
           "end": "}\n</tool_call>"
         },
@@ -772,7 +801,8 @@
             },
             "style": "json",
             "any_order": false,
-            "max_whitespace_cnt": null
+            "max_whitespace_cnt": null,
+            "excludes": []
           },
           "end": "}</tool_call>"
         },
@@ -794,7 +824,8 @@
             },
             "style": "json",
             "any_order": false,
-            "max_whitespace_cnt": null
+            "max_whitespace_cnt": null,
+            "excludes": []
           },
           "end": "}\n</tool_call>"
         },
@@ -816,7 +847,8 @@
             },
             "style": "json",
             "any_order": false,
-            "max_whitespace_cnt": null
+            "max_whitespace_cnt": null,
+            "excludes": []
           },
           "end": "}</tool_call>"
         }
@@ -849,7 +881,8 @@
             },
             "style": "json",
             "any_order": false,
-            "max_whitespace_cnt": null
+            "max_whitespace_cnt": null,
+            "excludes": []
           },
           "end": "}\n</tool_call>"
         },
@@ -871,7 +904,8 @@
             },
             "style": "json",
             "any_order": false,
-            "max_whitespace_cnt": null
+            "max_whitespace_cnt": null,
+            "excludes": []
           },
           "end": "}</tool_call>"
         }
@@ -904,7 +938,8 @@
             },
             "style": "json",
             "any_order": false,
-            "max_whitespace_cnt": null
+            "max_whitespace_cnt": null,
+            "excludes": []
           },
           "end": "}\n</tool_call>"
         },
@@ -926,7 +961,8 @@
             },
             "style": "json",
             "any_order": false,
-            "max_whitespace_cnt": null
+            "max_whitespace_cnt": null,
+            "excludes": []
           },
           "end": "}</tool_call>"
         }
@@ -959,7 +995,8 @@
             },
             "style": "json",
             "any_order": true,
-            "max_whitespace_cnt": 2
+            "max_whitespace_cnt": 2,
+            "excludes": []
           },
           "end": "}\n</tool_call>"
         },
@@ -981,7 +1018,8 @@
             },
             "style": "json",
             "any_order": true,
-            "max_whitespace_cnt": 2
+            "max_whitespace_cnt": 2,
+            "excludes": []
           },
           "end": "}</tool_call>"
         },
@@ -1003,7 +1041,8 @@
             },
             "style": "json",
             "any_order": true,
-            "max_whitespace_cnt": 2
+            "max_whitespace_cnt": 2,
+            "excludes": []
           },
           "end": "}\n</tool_call>"
         },
@@ -1025,7 +1064,8 @@
             },
             "style": "json",
             "any_order": true,
-            "max_whitespace_cnt": 2
+            "max_whitespace_cnt": 2,
+            "excludes": []
           },
           "end": "}</tool_call>"
         }

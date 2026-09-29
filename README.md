@@ -15,6 +15,7 @@ does not compile grammars or parse model output.
 - `deepseek_v3_1`
 - `qwen_3_5`
 - `qwen_3_coder`
+- `mimo`
 - `qwen_3`
 - `harmony`
 - `deepseek_v3_2`
@@ -124,7 +125,7 @@ serving frontends still own prompt-state alignment and grammar activation.
 The 0.3 API changes `StructuralTagOptions::reasoning` from `bool` to
 `ReasoningMode` and adds budget fields to `AnyTextFormat` and `AnyTokensFormat`.
 Existing `with_reasoning(bool)` calls continue to work; use `..Default::default()`
-with direct free-region struct literals. Generated JSON follows XGrammar 0.2.7,
+with direct free-region struct literals. Generated JSON follows XGrammar 0.2.8,
 including reasoning-region exclusions and explicit embedded-tag discriminators.
 
 ## Development

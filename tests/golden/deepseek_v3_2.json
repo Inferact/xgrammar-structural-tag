@@ -43,7 +43,8 @@
                   },
                   "style": "deepseek_xml",
                   "any_order": false,
-                  "max_whitespace_cnt": null
+                  "max_whitespace_cnt": null,
+                  "excludes": []
                 },
                 "end": "</｜DSML｜invoke>\n"
               }
@@ -93,7 +94,8 @@
                 },
                 "style": "deepseek_xml",
                 "any_order": false,
-                "max_whitespace_cnt": null
+                "max_whitespace_cnt": null,
+                "excludes": []
               },
               "end": "</｜DSML｜invoke>\n"
             },
@@ -115,7 +117,8 @@
                 },
                 "style": "deepseek_xml",
                 "any_order": false,
-                "max_whitespace_cnt": null
+                "max_whitespace_cnt": null,
+                "excludes": []
               },
               "end": "</｜DSML｜invoke>\n"
             }
@@ -178,7 +181,8 @@
                     },
                     "style": "deepseek_xml",
                     "any_order": false,
-                    "max_whitespace_cnt": null
+                    "max_whitespace_cnt": null,
+                    "excludes": []
                   },
                   "end": "</｜DSML｜invoke>\n"
                 }
@@ -223,7 +227,8 @@
             },
             "style": "deepseek_xml",
             "any_order": false,
-            "max_whitespace_cnt": null
+            "max_whitespace_cnt": null,
+            "excludes": []
           },
           "end": "</｜DSML｜invoke>\n"
         },
@@ -264,7 +269,8 @@
                 },
                 "style": "deepseek_xml",
                 "any_order": false,
-                "max_whitespace_cnt": null
+                "max_whitespace_cnt": null,
+                "excludes": []
               },
               "end": "</｜DSML｜invoke>\n"
             }
@@ -302,7 +308,8 @@
                   "json_schema": true,
                   "style": "deepseek_xml",
                   "any_order": false,
-                  "max_whitespace_cnt": null
+                  "max_whitespace_cnt": null,
+                  "excludes": []
                 },
                 "end": "</｜DSML｜invoke>\n"
               }
@@ -344,7 +351,8 @@
                   "json_schema": true,
                   "style": "deepseek_xml",
                   "any_order": false,
-                  "max_whitespace_cnt": null
+                  "max_whitespace_cnt": null,
+                  "excludes": []
                 },
                 "end": "</｜DSML｜invoke>\n"
               }
@@ -481,7 +489,8 @@
                       },
                       "style": "deepseek_xml",
                       "any_order": false,
-                      "max_whitespace_cnt": null
+                      "max_whitespace_cnt": null,
+                      "excludes": []
                     },
                     "end": "</｜DSML｜invoke>\n"
                   },
@@ -503,7 +512,8 @@
                       },
                       "style": "deepseek_xml",
                       "any_order": false,
-                      "max_whitespace_cnt": null
+                      "max_whitespace_cnt": null,
+                      "excludes": []
                     },
                     "end": "</｜DSML｜invoke>\n"
                   }
@@ -574,7 +584,8 @@
                       },
                       "style": "deepseek_xml",
                       "any_order": false,
-                      "max_whitespace_cnt": null
+                      "max_whitespace_cnt": null,
+                      "excludes": []
                     },
                     "end": "</｜DSML｜invoke>\n"
                   },
@@ -596,7 +607,8 @@
                       },
                       "style": "deepseek_xml",
                       "any_order": false,
-                      "max_whitespace_cnt": null
+                      "max_whitespace_cnt": null,
+                      "excludes": []
                     },
                     "end": "</｜DSML｜invoke>\n"
                   }
@@ -668,7 +680,8 @@
                     },
                     "style": "deepseek_xml",
                     "any_order": false,
-                    "max_whitespace_cnt": null
+                    "max_whitespace_cnt": null,
+                    "excludes": []
                   },
                   "end": "</｜DSML｜invoke>\n"
                 },
@@ -690,7 +703,8 @@
                     },
                     "style": "deepseek_xml",
                     "any_order": false,
-                    "max_whitespace_cnt": null
+                    "max_whitespace_cnt": null,
+                    "excludes": []
                   },
                   "end": "</｜DSML｜invoke>\n"
                 }
@@ -755,7 +769,8 @@
                     },
                     "style": "deepseek_xml",
                     "any_order": false,
-                    "max_whitespace_cnt": null
+                    "max_whitespace_cnt": null,
+                    "excludes": []
                   },
                   "end": "</｜DSML｜invoke>\n"
                 },
@@ -777,7 +792,8 @@
                     },
                     "style": "deepseek_xml",
                     "any_order": false,
-                    "max_whitespace_cnt": null
+                    "max_whitespace_cnt": null,
+                    "excludes": []
                   },
                   "end": "</｜DSML｜invoke>\n"
                 }
@@ -842,7 +858,8 @@
                 },
                 "style": "deepseek_xml",
                 "any_order": false,
-                "max_whitespace_cnt": null
+                "max_whitespace_cnt": null,
+                "excludes": []
               },
               "end": "</｜DSML｜invoke>\n"
             },
@@ -899,7 +916,8 @@
                 },
                 "style": "deepseek_xml",
                 "any_order": false,
-                "max_whitespace_cnt": null
+                "max_whitespace_cnt": null,
+                "excludes": []
               },
               "end": "</｜DSML｜invoke>\n"
             },
@@ -959,7 +977,8 @@
                     },
                     "style": "deepseek_xml",
                     "any_order": true,
-                    "max_whitespace_cnt": 2
+                    "max_whitespace_cnt": 2,
+                    "excludes": []
                   },
                   "end": "</｜DSML｜invoke>\n"
                 },
@@ -981,7 +1000,8 @@
                     },
                     "style": "deepseek_xml",
                     "any_order": true,
-                    "max_whitespace_cnt": 2
+                    "max_whitespace_cnt": 2,
+                    "excludes": []
                   },
                   "end": "</｜DSML｜invoke>\n"
                 }

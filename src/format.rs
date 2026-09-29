@@ -83,6 +83,18 @@ pub struct JsonSchemaFormat {
     pub any_order: bool,
     /// Maximum consecutive whitespace characters, or no limit when unset.
     pub max_whitespace_cnt: Option<i32>,
+    /// Non-empty substrings forbidden in string values and property names.
+    ///
+    /// Applies to string values without `pattern` or `format`, and to property names, nested JSON
+    /// strings included. Matching uses the emitted text before JSON or XML unescaping; quotes,
+    /// punctuation, and XML parameter wrappers are never part of a match. A string with `pattern`
+    /// or `format` is matched by that constraint alone and is not filtered. `minLength` and
+    /// `maxLength` are dropped with a warning while the exclusions apply, and `const` / `enum`
+    /// alternatives containing an excluded substring are removed. XML styles reject exclusions
+    /// that start or end with whitespace, and [`JsonSchemaStyle::CohereXml`] and
+    /// [`JsonSchemaStyle::MinimaxM3Xml`] reject non-empty lists.
+    #[serde(default)]
+    pub excludes: Vec<String>,
 }
 
 impl JsonSchemaFormat {
@@ -93,6 +105,7 @@ impl JsonSchemaFormat {
             style: JsonSchemaStyle::Json,
             any_order: false,
             max_whitespace_cnt: None,
+            excludes: vec![],
         }
     }
 
@@ -111,6 +124,12 @@ impl JsonSchemaFormat {
     /// Limit consecutive whitespace characters in the generated schema grammar.
     pub fn with_max_whitespace_cnt(mut self, max_whitespace_cnt: Option<i32>) -> Self {
         self.max_whitespace_cnt = max_whitespace_cnt;
+        self
+    }
+
+    /// Forbid substrings in string values and property names.
+    pub fn with_excludes(mut self, excludes: &[&str]) -> Self {
+        self.excludes = excludes.iter().map(|s| (*s).to_string()).collect();
         self
     }
 }

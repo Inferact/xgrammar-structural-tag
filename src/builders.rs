@@ -12,6 +12,7 @@ mod hy_v3;
 mod kimi;
 mod kimi_k3;
 mod llama;
+mod mimo;
 mod minimax;
 mod minimax_m3;
 mod qwen_3;
@@ -38,6 +39,7 @@ pub use hy_v3::HyV3Builder;
 pub use kimi::KimiBuilder;
 pub use kimi_k3::KimiK3Builder;
 pub use llama::LlamaBuilder;
+pub use mimo::MimoBuilder;
 pub use minimax::MinimaxBuilder;
 pub use minimax_m3::MinimaxM3Builder;
 pub use qwen_3::Qwen3Builder;
@@ -254,6 +256,21 @@ pub(super) fn styled_schema(
     )
 }
 
+pub(super) fn styled_schema_excluding(
+    value: serde_json::Value,
+    style: JsonSchemaStyle,
+    excludes: &[&str],
+    options: StructuralTagOptions,
+) -> Format {
+    Format::JsonSchema(
+        JsonSchemaFormat::new(value)
+            .with_style(style)
+            .with_any_order(options.any_order)
+            .with_max_whitespace_cnt(options.max_whitespace_cnt)
+            .with_excludes(excludes),
+    )
+}
+
 pub(super) fn tag(
     begin: impl Into<crate::format::TagBoundary>,
     content: Format,
@@ -314,8 +331,30 @@ pub(super) fn tools_with_separator(
 }
 
 /// Build a conventional reasoning prefix from the model's prompt convention.
+///
+/// Enabled mode continues an opener already present in the generation prompt.
 pub(super) fn reasoning_prefix(
     options: StructuralTagOptions,
+    think_tag_begin: &str,
+    think_tag_end: &str,
+    excludes: &[&str],
+    reasoning_suffix: &str,
+) -> Option<Format> {
+    reasoning_prefix_with_opener(
+        options,
+        true,
+        think_tag_begin,
+        think_tag_end,
+        excludes,
+        reasoning_suffix,
+    )
+}
+
+/// Like [`reasoning_prefix`], for models whose generation prompt may end before the reasoning
+/// opener. With `prompt_ends_with_think = false`, enabled mode also generates the opener.
+pub(super) fn reasoning_prefix_with_opener(
+    options: StructuralTagOptions,
+    prompt_ends_with_think: bool,
     think_tag_begin: &str,
     think_tag_end: &str,
     excludes: &[&str],
@@ -324,7 +363,7 @@ pub(super) fn reasoning_prefix(
     if options.reasoning == ReasoningMode::Disabled {
         return None;
     }
-    let begin = if options.reasoning == ReasoningMode::Enabled {
+    let begin = if options.reasoning == ReasoningMode::Enabled && prompt_ends_with_think {
         ""
     } else {
         think_tag_begin
@@ -477,6 +516,44 @@ mod tests {
         assert_eq!(value["format"]["type"], "triggered_tags");
         assert_eq!(value["format"]["at_least_one"], true);
         assert_eq!(value["format"]["tags"][0]["content"]["style"], "qwen_xml");
+    }
+
+    #[test]
+    fn mimo_uses_compact_tags_and_generates_think_opener() {
+        let tag = build_structural_tag(
+            Model::Mimo,
+            &[tool("run_sql")],
+            ToolChoice::required(),
+            StructuralTagOptions::default(),
+        )
+        .unwrap();
+        let value: Value = serde_json::to_value(tag).unwrap();
+        let elements = &value["format"]["elements"];
+        assert_eq!(elements[0]["begin"], "<think>");
+        let call = &elements[1];
+        assert_eq!(call["triggers"], json!(["<tool_call>"]));
+        assert_eq!(call["tags"][0]["begin"], "<tool_call><function=run_sql>");
+        assert_eq!(call["tags"][0]["end"], "</function></tool_call>");
+    }
+
+    #[test]
+    fn kimi_k3_arguments_exclude_channel_markers_unless_disabled() {
+        let excludes = |exclude_special_tokens| {
+            let tag = build_structural_tag(
+                Model::KimiK3,
+                &[tool("search")],
+                ToolChoice::function("search"),
+                StructuralTagOptions::default()
+                    .with_reasoning(false)
+                    .with_exclude_special_tokens(exclude_special_tokens),
+            )
+            .unwrap();
+            serde_json::to_value(tag).unwrap()["format"]["elements"][1]["elements"][1]["content"]
+                ["elements"][2]["excludes"]
+                .clone()
+        };
+        assert_eq!(excludes(true), json!(["<|open|>", "<|close|>", "<|sep|>"]));
+        assert_eq!(excludes(false), json!([]));
     }
 
     #[test]

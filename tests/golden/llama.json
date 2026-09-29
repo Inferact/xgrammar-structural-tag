@@ -37,7 +37,8 @@
             },
             "style": "json",
             "any_order": false,
-            "max_whitespace_cnt": null
+            "max_whitespace_cnt": null,
+            "excludes": []
           },
           "end": "}"
         }
@@ -76,7 +77,8 @@
             },
             "style": "json",
             "any_order": false,
-            "max_whitespace_cnt": null
+            "max_whitespace_cnt": null,
+            "excludes": []
           },
           "end": "}"
         },
@@ -98,7 +100,8 @@
             },
             "style": "json",
             "any_order": false,
-            "max_whitespace_cnt": null
+            "max_whitespace_cnt": null,
+            "excludes": []
           },
           "end": "}"
         }
@@ -137,7 +140,8 @@
             },
             "style": "json",
             "any_order": false,
-            "max_whitespace_cnt": null
+            "max_whitespace_cnt": null,
+            "excludes": []
           },
           "end": "}"
         }
@@ -170,7 +174,8 @@
         },
         "style": "json",
         "any_order": false,
-        "max_whitespace_cnt": null
+        "max_whitespace_cnt": null,
+        "excludes": []
       },
       "end": "}"
     }
@@ -201,7 +206,8 @@
             },
             "style": "json",
             "any_order": false,
-            "max_whitespace_cnt": null
+            "max_whitespace_cnt": null,
+            "excludes": []
           },
           "end": "}"
         }
@@ -230,7 +236,8 @@
             "json_schema": true,
             "style": "json",
             "any_order": false,
-            "max_whitespace_cnt": null
+            "max_whitespace_cnt": null,
+            "excludes": []
           },
           "end": "}"
         }
@@ -259,7 +266,8 @@
             "json_schema": true,
             "style": "json",
             "any_order": false,
-            "max_whitespace_cnt": null
+            "max_whitespace_cnt": null,
+            "excludes": []
           },
           "end": "}"
         }
@@ -322,7 +330,8 @@
             },
             "style": "json",
             "any_order": false,
-            "max_whitespace_cnt": null
+            "max_whitespace_cnt": null,
+            "excludes": []
           },
           "end": "}"
         },
@@ -344,7 +353,8 @@
             },
             "style": "json",
             "any_order": false,
-            "max_whitespace_cnt": null
+            "max_whitespace_cnt": null,
+            "excludes": []
           },
           "end": "}"
         }
@@ -383,7 +393,8 @@
             },
             "style": "json",
             "any_order": false,
-            "max_whitespace_cnt": null
+            "max_whitespace_cnt": null,
+            "excludes": []
           },
           "end": "}"
         },
@@ -405,7 +416,8 @@
             },
             "style": "json",
             "any_order": false,
-            "max_whitespace_cnt": null
+            "max_whitespace_cnt": null,
+            "excludes": []
           },
           "end": "}"
         }
@@ -444,7 +456,8 @@
             },
             "style": "json",
             "any_order": false,
-            "max_whitespace_cnt": null
+            "max_whitespace_cnt": null,
+            "excludes": []
           },
           "end": "}"
         },
@@ -466,7 +479,8 @@
             },
             "style": "json",
             "any_order": false,
-            "max_whitespace_cnt": null
+            "max_whitespace_cnt": null,
+            "excludes": []
           },
           "end": "}"
         }
@@ -505,7 +519,8 @@
             },
             "style": "json",
             "any_order": false,
-            "max_whitespace_cnt": null
+            "max_whitespace_cnt": null,
+            "excludes": []
           },
           "end": "}"
         },
@@ -527,7 +542,8 @@
             },
             "style": "json",
             "any_order": false,
-            "max_whitespace_cnt": null
+            "max_whitespace_cnt": null,
+            "excludes": []
           },
           "end": "}"
         }
@@ -560,7 +576,8 @@
         },
         "style": "json",
         "any_order": false,
-        "max_whitespace_cnt": null
+        "max_whitespace_cnt": null,
+        "excludes": []
       },
       "end": "}"
     }
@@ -585,7 +602,8 @@
         },
         "style": "json",
         "any_order": false,
-        "max_whitespace_cnt": null
+        "max_whitespace_cnt": null,
+        "excludes": []
       },
       "end": "}"
     }
@@ -616,7 +634,8 @@
             },
             "style": "json",
             "any_order": true,
-            "max_whitespace_cnt": 2
+            "max_whitespace_cnt": 2,
+            "excludes": []
           },
           "end": "}"
         },
@@ -638,7 +657,8 @@
             },
             "style": "json",
             "any_order": true,
-            "max_whitespace_cnt": 2
+            "max_whitespace_cnt": 2,
+            "excludes": []
           },
           "end": "}"
         }

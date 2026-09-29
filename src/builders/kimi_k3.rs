@@ -4,7 +4,7 @@ use crate::tool::{BuilderToolChoice, FunctionToolParam};
 
 use super::{
     ReasoningMode, StructuralTagBuilder, StructuralTagContext, reasoning_prefix, schema,
-    structural, styled_schema, tag, text_excludes, tools_with_separator,
+    structural, styled_schema_excluding, tag, text_excludes, tools_with_separator,
 };
 
 /// Kimi K3 channel-format structural-tag builder.
@@ -37,7 +37,9 @@ impl StructuralTagBuilder for KimiK3Builder {
 /// ```
 ///
 /// Line breaks above are illustrative. Arguments use the Kimi K3 XML schema
-/// style: strings are raw text and other values use JSON-style encoding.
+/// style: strings are raw text and other values use JSON-style encoding. Unless special-token
+/// exclusion is disabled, argument strings and property names may not contain `<|open|>`,
+/// `<|close|>`, or `<|sep|>`; the argument and call wrappers stay outside that scope.
 pub(super) fn build_kimi_k3(
     tools: &[FunctionToolParam],
     choice: BuilderToolChoice,
@@ -46,13 +48,19 @@ pub(super) fn build_kimi_k3(
     const TOOLS_BEGIN: &str = "<|open|>tools<|sep|>";
     const TOOLS_END: &str = "<|close|>tools<|sep|>";
     const SPECIAL_EXCLUDES: &[&str] = &["<|open|>", "<|close|>"];
+    const ARGUMENT_EXCLUDES: &[&str] = &["<|open|>", "<|close|>", "<|sep|>"];
     let tool_tag = |tool: &FunctionToolParam| {
         tag(
             format!("<|open|>call tool=\"{}\" index=\"", tool.function.name),
             Format::sequence(vec![
                 Format::regex(r"\d+"),
                 Format::const_string("\"<|sep|>"),
-                styled_schema(schema(&tool.function), JsonSchemaStyle::KimiK3Xml, options),
+                styled_schema_excluding(
+                    schema(&tool.function),
+                    JsonSchemaStyle::KimiK3Xml,
+                    text_excludes(options, ARGUMENT_EXCLUDES),
+                    options,
+                ),
             ]),
             "<|close|>call<|sep|>",
         )
