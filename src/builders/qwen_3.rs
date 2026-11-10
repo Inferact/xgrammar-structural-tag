@@ -19,6 +19,9 @@ impl StructuralTagBuilder for Qwen3Builder {
             ctx.options,
         ))
     }
+    fn marker_tokens(&self) -> Option<&'static [&'static str]> {
+        Some(super::qwen_35::QWEN_MARKER_TOKENS)
+    }
 }
 
 /// Build a Qwen3-style structural tag.

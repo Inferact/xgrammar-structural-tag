@@ -1,0 +1,975 @@
+{
+  "auto_no_tools": {
+    "type": "structural_tag",
+    "format": {
+      "type": "any_text",
+      "excludes": [
+        "<|channel>",
+        "<channel|>",
+        "<|tool_call>"
+      ],
+      "max_tokens": null,
+      "max_chars": null
+    }
+  },
+  "auto_one_tool": {
+    "type": "structural_tag",
+    "format": {
+      "type": "triggered_tags",
+      "triggers": [
+        "<|tool_call>"
+      ],
+      "tags": [
+        {
+          "type": "tag",
+          "begin": "<|tool_call>call:search",
+          "content": {
+            "type": "json_schema",
+            "json_schema": {
+              "type": "object",
+              "properties": {
+                "q": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "q"
+              ]
+            },
+            "style": "gemma",
+            "any_order": false,
+            "max_whitespace_cnt": null,
+            "excludes": [
+              "<|channel>",
+              "<channel|>",
+              "<|tool_call>",
+              "<tool_call|>"
+            ]
+          },
+          "end": "<tool_call|>"
+        }
+      ],
+      "at_least_one": false,
+      "stop_after_first": false,
+      "excludes": [
+        "<|channel>",
+        "<channel|>"
+      ]
+    }
+  },
+  "required_two_tools": {
+    "type": "structural_tag",
+    "format": {
+      "type": "triggered_tags",
+      "triggers": [
+        "<|tool_call>"
+      ],
+      "tags": [
+        {
+          "type": "tag",
+          "begin": "<|tool_call>call:search",
+          "content": {
+            "type": "json_schema",
+            "json_schema": {
+              "type": "object",
+              "properties": {
+                "q": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "q"
+              ]
+            },
+            "style": "gemma",
+            "any_order": false,
+            "max_whitespace_cnt": null,
+            "excludes": [
+              "<|channel>",
+              "<channel|>",
+              "<|tool_call>",
+              "<tool_call|>"
+            ]
+          },
+          "end": "<tool_call|>"
+        },
+        {
+          "type": "tag",
+          "begin": "<|tool_call>call:alt",
+          "content": {
+            "type": "json_schema",
+            "json_schema": {
+              "type": "object",
+              "properties": {
+                "q": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "q"
+              ]
+            },
+            "style": "gemma",
+            "any_order": false,
+            "max_whitespace_cnt": null,
+            "excludes": [
+              "<|channel>",
+              "<channel|>",
+              "<|tool_call>",
+              "<tool_call|>"
+            ]
+          },
+          "end": "<tool_call|>"
+        }
+      ],
+      "at_least_one": true,
+      "stop_after_first": false,
+      "excludes": [
+        "<|channel>",
+        "<channel|>"
+      ]
+    }
+  },
+  "reasoning_required_one_tool": {
+    "type": "structural_tag",
+    "format": {
+      "type": "sequence",
+      "elements": [
+        {
+          "type": "tag",
+          "begin": "<|channel>thought\n",
+          "content": {
+            "type": "any_text",
+            "excludes": [
+              "<|channel>",
+              "<channel|>",
+              "<|tool_call>"
+            ],
+            "max_tokens": null,
+            "max_chars": null
+          },
+          "end": "<channel|>"
+        },
+        {
+          "type": "triggered_tags",
+          "triggers": [
+            "<|tool_call>"
+          ],
+          "tags": [
+            {
+              "type": "tag",
+              "begin": "<|tool_call>call:search",
+              "content": {
+                "type": "json_schema",
+                "json_schema": {
+                  "type": "object",
+                  "properties": {
+                    "q": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "q"
+                  ]
+                },
+                "style": "gemma",
+                "any_order": false,
+                "max_whitespace_cnt": null,
+                "excludes": [
+                  "<|channel>",
+                  "<channel|>",
+                  "<|tool_call>",
+                  "<tool_call|>"
+                ]
+              },
+              "end": "<tool_call|>"
+            }
+          ],
+          "at_least_one": true,
+          "stop_after_first": false,
+          "excludes": [
+            "<|channel>",
+            "<channel|>"
+          ]
+        }
+      ]
+    }
+  },
+  "forced_search": {
+    "type": "structural_tag",
+    "format": {
+      "type": "tag",
+      "begin": "<|tool_call>call:search",
+      "content": {
+        "type": "json_schema",
+        "json_schema": {
+          "type": "object",
+          "properties": {
+            "q": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "q"
+          ]
+        },
+        "style": "gemma",
+        "any_order": false,
+        "max_whitespace_cnt": null,
+        "excludes": [
+          "<|channel>",
+          "<channel|>",
+          "<|tool_call>",
+          "<tool_call|>"
+        ]
+      },
+      "end": "<tool_call|>"
+    }
+  },
+  "allowed_required_alt": {
+    "type": "structural_tag",
+    "format": {
+      "type": "triggered_tags",
+      "triggers": [
+        "<|tool_call>"
+      ],
+      "tags": [
+        {
+          "type": "tag",
+          "begin": "<|tool_call>call:alt",
+          "content": {
+            "type": "json_schema",
+            "json_schema": {
+              "type": "object",
+              "properties": {
+                "q": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "q"
+              ]
+            },
+            "style": "gemma",
+            "any_order": false,
+            "max_whitespace_cnt": null,
+            "excludes": [
+              "<|channel>",
+              "<channel|>",
+              "<|tool_call>",
+              "<tool_call|>"
+            ]
+          },
+          "end": "<tool_call|>"
+        }
+      ],
+      "at_least_one": true,
+      "stop_after_first": false,
+      "excludes": [
+        "<|channel>",
+        "<channel|>"
+      ]
+    }
+  },
+  "strict_false": {
+    "type": "structural_tag",
+    "format": {
+      "type": "triggered_tags",
+      "triggers": [
+        "<|tool_call>"
+      ],
+      "tags": [
+        {
+          "type": "tag",
+          "begin": "<|tool_call>call:loose",
+          "content": {
+            "type": "json_schema",
+            "json_schema": true,
+            "style": "gemma",
+            "any_order": false,
+            "max_whitespace_cnt": null,
+            "excludes": [
+              "<|channel>",
+              "<channel|>",
+              "<|tool_call>",
+              "<tool_call|>"
+            ]
+          },
+          "end": "<tool_call|>"
+        }
+      ],
+      "at_least_one": false,
+      "stop_after_first": false,
+      "excludes": [
+        "<|channel>",
+        "<channel|>"
+      ]
+    }
+  },
+  "missing_parameters": {
+    "type": "structural_tag",
+    "format": {
+      "type": "triggered_tags",
+      "triggers": [
+        "<|tool_call>"
+      ],
+      "tags": [
+        {
+          "type": "tag",
+          "begin": "<|tool_call>call:missing",
+          "content": {
+            "type": "json_schema",
+            "json_schema": true,
+            "style": "gemma",
+            "any_order": false,
+            "max_whitespace_cnt": null,
+            "excludes": [
+              "<|channel>",
+              "<channel|>",
+              "<|tool_call>",
+              "<tool_call|>"
+            ]
+          },
+          "end": "<tool_call|>"
+        }
+      ],
+      "at_least_one": false,
+      "stop_after_first": false,
+      "excludes": [
+        "<|channel>",
+        "<channel|>"
+      ]
+    }
+  },
+  "adaptive_auto_no_tools": {
+    "type": "structural_tag",
+    "format": {
+      "type": "sequence",
+      "elements": [
+        {
+          "type": "optional",
+          "content": {
+            "type": "tag",
+            "begin": "<|channel>thought\n",
+            "content": {
+              "type": "any_text",
+              "excludes": [
+                "<|channel>",
+                "<channel|>",
+                "<|tool_call>"
+              ],
+              "max_tokens": null,
+              "max_chars": null
+            },
+            "end": "<channel|>"
+          }
+        },
+        {
+          "type": "any_text",
+          "excludes": [
+            "<|channel>",
+            "<channel|>",
+            "<|tool_call>"
+          ],
+          "max_tokens": null,
+          "max_chars": null
+        }
+      ]
+    }
+  },
+  "single_call_auto_no_tools": {
+    "type": "structural_tag",
+    "format": {
+      "type": "sequence",
+      "elements": [
+        {
+          "type": "tag",
+          "begin": "<|channel>thought\n",
+          "content": {
+            "type": "any_text",
+            "excludes": [
+              "<|channel>",
+              "<channel|>",
+              "<|tool_call>"
+            ],
+            "max_tokens": null,
+            "max_chars": null
+          },
+          "end": "<channel|>"
+        },
+        {
+          "type": "any_text",
+          "excludes": [
+            "<|channel>",
+            "<channel|>",
+            "<|tool_call>"
+          ],
+          "max_tokens": null,
+          "max_chars": null
+        }
+      ]
+    }
+  },
+  "adaptive_auto_two_tools": {
+    "type": "structural_tag",
+    "format": {
+      "type": "sequence",
+      "elements": [
+        {
+          "type": "optional",
+          "content": {
+            "type": "tag",
+            "begin": "<|channel>thought\n",
+            "content": {
+              "type": "any_text",
+              "excludes": [
+                "<|channel>",
+                "<channel|>",
+                "<|tool_call>"
+              ],
+              "max_tokens": null,
+              "max_chars": null
+            },
+            "end": "<channel|>"
+          }
+        },
+        {
+          "type": "triggered_tags",
+          "triggers": [
+            "<|tool_call>"
+          ],
+          "tags": [
+            {
+              "type": "tag",
+              "begin": "<|tool_call>call:search",
+              "content": {
+                "type": "json_schema",
+                "json_schema": {
+                  "type": "object",
+                  "properties": {
+                    "q": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "q"
+                  ]
+                },
+                "style": "gemma",
+                "any_order": false,
+                "max_whitespace_cnt": null,
+                "excludes": [
+                  "<|channel>",
+                  "<channel|>",
+                  "<|tool_call>",
+                  "<tool_call|>"
+                ]
+              },
+              "end": "<tool_call|>"
+            },
+            {
+              "type": "tag",
+              "begin": "<|tool_call>call:alt",
+              "content": {
+                "type": "json_schema",
+                "json_schema": {
+                  "type": "object",
+                  "properties": {
+                    "q": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "q"
+                  ]
+                },
+                "style": "gemma",
+                "any_order": false,
+                "max_whitespace_cnt": null,
+                "excludes": [
+                  "<|channel>",
+                  "<channel|>",
+                  "<|tool_call>",
+                  "<tool_call|>"
+                ]
+              },
+              "end": "<tool_call|>"
+            }
+          ],
+          "at_least_one": false,
+          "stop_after_first": false,
+          "excludes": [
+            "<|channel>",
+            "<channel|>"
+          ]
+        }
+      ]
+    }
+  },
+  "single_call_auto_two_tools": {
+    "type": "structural_tag",
+    "format": {
+      "type": "sequence",
+      "elements": [
+        {
+          "type": "tag",
+          "begin": "<|channel>thought\n",
+          "content": {
+            "type": "any_text",
+            "excludes": [
+              "<|channel>",
+              "<channel|>",
+              "<|tool_call>"
+            ],
+            "max_tokens": null,
+            "max_chars": null
+          },
+          "end": "<channel|>"
+        },
+        {
+          "type": "triggered_tags",
+          "triggers": [
+            "<|tool_call>"
+          ],
+          "tags": [
+            {
+              "type": "tag",
+              "begin": "<|tool_call>call:search",
+              "content": {
+                "type": "json_schema",
+                "json_schema": {
+                  "type": "object",
+                  "properties": {
+                    "q": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "q"
+                  ]
+                },
+                "style": "gemma",
+                "any_order": false,
+                "max_whitespace_cnt": null,
+                "excludes": [
+                  "<|channel>",
+                  "<channel|>",
+                  "<|tool_call>",
+                  "<tool_call|>"
+                ]
+              },
+              "end": "<tool_call|>"
+            },
+            {
+              "type": "tag",
+              "begin": "<|tool_call>call:alt",
+              "content": {
+                "type": "json_schema",
+                "json_schema": {
+                  "type": "object",
+                  "properties": {
+                    "q": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "q"
+                  ]
+                },
+                "style": "gemma",
+                "any_order": false,
+                "max_whitespace_cnt": null,
+                "excludes": [
+                  "<|channel>",
+                  "<channel|>",
+                  "<|tool_call>",
+                  "<tool_call|>"
+                ]
+              },
+              "end": "<tool_call|>"
+            }
+          ],
+          "at_least_one": false,
+          "stop_after_first": true,
+          "excludes": [
+            "<|channel>",
+            "<channel|>"
+          ]
+        }
+      ]
+    }
+  },
+  "adaptive_required_two_tools": {
+    "type": "structural_tag",
+    "format": {
+      "type": "sequence",
+      "elements": [
+        {
+          "type": "optional",
+          "content": {
+            "type": "tag",
+            "begin": "<|channel>thought\n",
+            "content": {
+              "type": "any_text",
+              "excludes": [
+                "<|channel>",
+                "<channel|>",
+                "<|tool_call>"
+              ],
+              "max_tokens": null,
+              "max_chars": null
+            },
+            "end": "<channel|>"
+          }
+        },
+        {
+          "type": "triggered_tags",
+          "triggers": [
+            "<|tool_call>"
+          ],
+          "tags": [
+            {
+              "type": "tag",
+              "begin": "<|tool_call>call:search",
+              "content": {
+                "type": "json_schema",
+                "json_schema": {
+                  "type": "object",
+                  "properties": {
+                    "q": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "q"
+                  ]
+                },
+                "style": "gemma",
+                "any_order": false,
+                "max_whitespace_cnt": null,
+                "excludes": [
+                  "<|channel>",
+                  "<channel|>",
+                  "<|tool_call>",
+                  "<tool_call|>"
+                ]
+              },
+              "end": "<tool_call|>"
+            },
+            {
+              "type": "tag",
+              "begin": "<|tool_call>call:alt",
+              "content": {
+                "type": "json_schema",
+                "json_schema": {
+                  "type": "object",
+                  "properties": {
+                    "q": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "q"
+                  ]
+                },
+                "style": "gemma",
+                "any_order": false,
+                "max_whitespace_cnt": null,
+                "excludes": [
+                  "<|channel>",
+                  "<channel|>",
+                  "<|tool_call>",
+                  "<tool_call|>"
+                ]
+              },
+              "end": "<tool_call|>"
+            }
+          ],
+          "at_least_one": true,
+          "stop_after_first": false,
+          "excludes": [
+            "<|channel>",
+            "<channel|>"
+          ]
+        }
+      ]
+    }
+  },
+  "single_call_required_two_tools": {
+    "type": "structural_tag",
+    "format": {
+      "type": "sequence",
+      "elements": [
+        {
+          "type": "tag",
+          "begin": "<|channel>thought\n",
+          "content": {
+            "type": "any_text",
+            "excludes": [
+              "<|channel>",
+              "<channel|>",
+              "<|tool_call>"
+            ],
+            "max_tokens": null,
+            "max_chars": null
+          },
+          "end": "<channel|>"
+        },
+        {
+          "type": "triggered_tags",
+          "triggers": [
+            "<|tool_call>"
+          ],
+          "tags": [
+            {
+              "type": "tag",
+              "begin": "<|tool_call>call:search",
+              "content": {
+                "type": "json_schema",
+                "json_schema": {
+                  "type": "object",
+                  "properties": {
+                    "q": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "q"
+                  ]
+                },
+                "style": "gemma",
+                "any_order": false,
+                "max_whitespace_cnt": null,
+                "excludes": [
+                  "<|channel>",
+                  "<channel|>",
+                  "<|tool_call>",
+                  "<tool_call|>"
+                ]
+              },
+              "end": "<tool_call|>"
+            },
+            {
+              "type": "tag",
+              "begin": "<|tool_call>call:alt",
+              "content": {
+                "type": "json_schema",
+                "json_schema": {
+                  "type": "object",
+                  "properties": {
+                    "q": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "q"
+                  ]
+                },
+                "style": "gemma",
+                "any_order": false,
+                "max_whitespace_cnt": null,
+                "excludes": [
+                  "<|channel>",
+                  "<channel|>",
+                  "<|tool_call>",
+                  "<tool_call|>"
+                ]
+              },
+              "end": "<tool_call|>"
+            }
+          ],
+          "at_least_one": true,
+          "stop_after_first": true,
+          "excludes": [
+            "<|channel>",
+            "<channel|>"
+          ]
+        }
+      ]
+    }
+  },
+  "adaptive_forced_search": {
+    "type": "structural_tag",
+    "format": {
+      "type": "sequence",
+      "elements": [
+        {
+          "type": "optional",
+          "content": {
+            "type": "tag",
+            "begin": "<|channel>thought\n",
+            "content": {
+              "type": "any_text",
+              "excludes": [
+                "<|channel>",
+                "<channel|>",
+                "<|tool_call>"
+              ],
+              "max_tokens": null,
+              "max_chars": null
+            },
+            "end": "<channel|>"
+          }
+        },
+        {
+          "type": "tag",
+          "begin": "<|tool_call>call:search",
+          "content": {
+            "type": "json_schema",
+            "json_schema": {
+              "type": "object",
+              "properties": {
+                "q": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "q"
+              ]
+            },
+            "style": "gemma",
+            "any_order": false,
+            "max_whitespace_cnt": null,
+            "excludes": [
+              "<|channel>",
+              "<channel|>",
+              "<|tool_call>",
+              "<tool_call|>"
+            ]
+          },
+          "end": "<tool_call|>"
+        }
+      ]
+    }
+  },
+  "single_call_forced_search": {
+    "type": "structural_tag",
+    "format": {
+      "type": "sequence",
+      "elements": [
+        {
+          "type": "tag",
+          "begin": "<|channel>thought\n",
+          "content": {
+            "type": "any_text",
+            "excludes": [
+              "<|channel>",
+              "<channel|>",
+              "<|tool_call>"
+            ],
+            "max_tokens": null,
+            "max_chars": null
+          },
+          "end": "<channel|>"
+        },
+        {
+          "type": "tag",
+          "begin": "<|tool_call>call:search",
+          "content": {
+            "type": "json_schema",
+            "json_schema": {
+              "type": "object",
+              "properties": {
+                "q": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "q"
+              ]
+            },
+            "style": "gemma",
+            "any_order": false,
+            "max_whitespace_cnt": null,
+            "excludes": [
+              "<|channel>",
+              "<channel|>",
+              "<|tool_call>",
+              "<tool_call|>"
+            ]
+          },
+          "end": "<tool_call|>"
+        }
+      ]
+    }
+  },
+  "adaptive_single_call_relaxed_schema": {
+    "type": "structural_tag",
+    "format": {
+      "type": "sequence",
+      "elements": [
+        {
+          "type": "optional",
+          "content": {
+            "type": "tag",
+            "begin": "<|channel>thought\n",
+            "content": {
+              "type": "any_text",
+              "excludes": [],
+              "max_tokens": null,
+              "max_chars": null
+            },
+            "end": "<channel|>"
+          }
+        },
+        {
+          "type": "triggered_tags",
+          "triggers": [
+            "<|tool_call>"
+          ],
+          "tags": [
+            {
+              "type": "tag",
+              "begin": "<|tool_call>call:search",
+              "content": {
+                "type": "json_schema",
+                "json_schema": {
+                  "type": "object",
+                  "properties": {
+                    "q": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "q"
+                  ]
+                },
+                "style": "gemma",
+                "any_order": true,
+                "max_whitespace_cnt": 2,
+                "excludes": []
+              },
+              "end": "<tool_call|>"
+            },
+            {
+              "type": "tag",
+              "begin": "<|tool_call>call:alt",
+              "content": {
+                "type": "json_schema",
+                "json_schema": {
+                  "type": "object",
+                  "properties": {
+                    "q": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "q"
+                  ]
+                },
+                "style": "gemma",
+                "any_order": true,
+                "max_whitespace_cnt": 2,
+                "excludes": []
+              },
+              "end": "<tool_call|>"
+            }
+          ],
+          "at_least_one": true,
+          "stop_after_first": true,
+          "excludes": []
+        }
+      ]
+    }
+  }
+}

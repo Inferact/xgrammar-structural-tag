@@ -57,6 +57,9 @@ pub enum JsonSchemaStyle {
     CohereXml,
     /// Kimi K3: `<|open|>argument key="key" type="type"<|sep|>value<|close|>argument<|sep|>`.
     KimiK3Xml,
+    /// Gemma 4: `{key:<|"|>string value<|"|>,key2:123}`; unquoted keys and `<|"|>`-delimited
+    /// strings at every nesting level.
+    Gemma,
 }
 
 /// A format that matches a constant string.
@@ -225,11 +228,42 @@ mod region_limit {
     }
 }
 
-/// A format that embeds an EBNF grammar.
+/// The syntax of a [`GrammarFormat`] grammar.
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
+pub enum GrammarSyntax {
+    /// XGrammar EBNF.
+    #[default]
+    Ebnf,
+    /// Lark, as accepted by XGrammar's `Grammar.from_lark`. Named special tokens are resolved
+    /// with the tokenizer info the structural tag is compiled with.
+    Lark,
+}
+
+/// A format that embeds an EBNF or Lark grammar.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct GrammarFormat {
-    /// EBNF grammar text.
+    /// Grammar text, written in [`syntax`](Self::syntax).
     pub grammar: String,
+    /// Syntax of the grammar text.
+    #[serde(default)]
+    pub syntax: GrammarSyntax,
+}
+
+impl GrammarFormat {
+    /// Build an EBNF grammar format.
+    pub fn new(grammar: impl Into<String>) -> Self {
+        Self {
+            grammar: grammar.into(),
+            syntax: GrammarSyntax::Ebnf,
+        }
+    }
+
+    /// Set the syntax of the grammar text.
+    pub fn with_syntax(mut self, syntax: GrammarSyntax) -> Self {
+        self.syntax = syntax;
+        self
+    }
 }
 
 /// A format that matches a regex pattern.
@@ -589,7 +623,7 @@ pub enum Format {
     ExcludeToken(ExcludeTokenFormat),
     /// Match arbitrary tokens excluding a set.
     AnyTokens(AnyTokensFormat),
-    /// Match an EBNF grammar.
+    /// Match an EBNF or Lark grammar.
     Grammar(GrammarFormat),
     /// Match a regex pattern.
     Regex(RegexFormat),
@@ -787,9 +821,10 @@ mod tests {
             exclude_tokens: vec![TokenValue::Id(2)],
             ..Default::default()
         }));
-        round_trip(Format::Grammar(GrammarFormat {
-            grammar: "root ::= \"x\"".to_string(),
-        }));
+        round_trip(Format::Grammar(GrammarFormat::new("root ::= \"x\"")));
+        round_trip(Format::Grammar(
+            GrammarFormat::new("start: \"x\"").with_syntax(GrammarSyntax::Lark),
+        ));
         round_trip(Format::regex("[a-z]+"));
         round_trip(Format::sequence(vec![Format::const_string("x")]));
         round_trip(Format::or(vec![
@@ -856,6 +891,21 @@ mod tests {
         let value = serde_json::to_value(format).unwrap();
         assert_eq!(value["any_order"], true);
         assert_eq!(value["max_whitespace_cnt"], 2);
+    }
+
+    #[test]
+    fn grammar_syntax_defaults_to_ebnf_and_is_always_serialized() {
+        let old: Format =
+            serde_json::from_value(json!({"type": "grammar", "grammar": "root ::= \"x\""}))
+                .unwrap();
+        assert_eq!(old, Format::Grammar(GrammarFormat::new("root ::= \"x\"")));
+        assert_eq!(
+            serde_json::to_value(old).unwrap(),
+            json!({"type": "grammar", "grammar": "root ::= \"x\"", "syntax": "ebnf"})
+        );
+        let lark =
+            Format::Grammar(GrammarFormat::new("start: \"x\"").with_syntax(GrammarSyntax::Lark));
+        assert_eq!(serde_json::to_value(lark).unwrap()["syntax"], "lark");
     }
 
     #[test]

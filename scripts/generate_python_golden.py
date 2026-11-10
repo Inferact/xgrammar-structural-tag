@@ -2,7 +2,7 @@
 # /// script
 # requires-python = ">=3.10"
 # dependencies = [
-#     "xgrammar==0.2.8",
+#     "xgrammar==0.2.9",
 # ]
 # ///
 """Generate xgrammar-origin golden fixtures for this crate.
@@ -46,6 +46,7 @@ def prepare_cases() -> list[dict[str, Any]]:
                 "any_order": case.get("any_order", False),
                 "exclude_special_tokens": case.get("exclude_special_tokens", True),
                 "max_whitespace_cnt": case.get("max_whitespace_cnt"),
+                "token_markers": case.get("token_markers", False),
             }
         )
     return cases
@@ -84,6 +85,7 @@ def build_cases(model: str) -> dict[str, Any]:
             any_order=case["any_order"],
             exclude_special_tokens=case["exclude_special_tokens"],
             max_whitespace_cnt=case["max_whitespace_cnt"],
+            token_markers=case["token_markers"],
         )
     return cases
 

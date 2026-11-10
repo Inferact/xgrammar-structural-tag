@@ -30,6 +30,8 @@ struct RawCase {
     #[serde(default = "default_true")]
     exclude_special_tokens: bool,
     max_whitespace_cnt: Option<i32>,
+    #[serde(default)]
+    token_markers: bool,
 }
 
 fn default_true() -> bool {
@@ -80,7 +82,8 @@ fn spec() -> &'static PreparedSpec {
                         .with_parallel_tool_calls(case.parallel_tool_calls)
                         .with_any_order(case.any_order)
                         .with_exclude_special_tokens(case.exclude_special_tokens)
-                        .with_max_whitespace_cnt(case.max_whitespace_cnt),
+                        .with_max_whitespace_cnt(case.max_whitespace_cnt)
+                        .with_token_markers(case.token_markers),
                 }
             })
             .collect();
