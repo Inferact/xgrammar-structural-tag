@@ -2,7 +2,7 @@
 # /// script
 # requires-python = ">=3.10"
 # dependencies = [
-#     "xgrammar==0.2.8",
+#     "xgrammar==0.2.9",
 # ]
 # ///
 """Compile Rust fixtures and exercise their constraints with the real XGrammar runtime.
@@ -25,9 +25,26 @@ def read(name):
 
 
 def check_models():
-    # A byte vocabulary exercises compilation without downloading model assets.
-    vocab = [bytes([i]) for i in range(256)] + [b"<eos>"]
-    compiler = xgr.GrammarCompiler(xgr.TokenizerInfo(vocab, stop_token_ids=[256]))
+    # A byte vocabulary exercises compilation without downloading model assets. Token-marker
+    # cases also need their markers as dedicated tokens.
+    markers = [
+        "<think>",
+        "</think>",
+        "<tool_call>",
+        "</tool_call>",
+        "<arg_key>",
+        "</arg_key>",
+        "<arg_value>",
+        "</arg_value>",
+    ]
+    vocab = (
+        [bytes([i]) for i in range(256)]
+        + [marker.encode() for marker in markers]
+        + [b"<eos>"]
+    )
+    compiler = xgr.GrammarCompiler(
+        xgr.TokenizerInfo(vocab, stop_token_ids=[len(vocab) - 1])
+    )
     fixtures = {}
     compiled_count = 0
     expected_rejections = 0
@@ -70,7 +87,13 @@ def check_models():
         "single_call_auto_two_tools",
         reasoning + "<｜DSML｜ calls>\n" + invoke * 2 + "</｜DSML｜ calls>",
     )
-    assert accepts("deepseek_v4_1", "auto_one_tool", call + call)
+    # V4 and V4.1 end the turn after one calls block, which may still hold parallel calls.
+    assert not accepts("deepseek_v4_1", "auto_one_tool", reasoning + call + call)
+    assert accepts(
+        "deepseek_v4_1",
+        "required_two_tools",
+        "\n\n<｜DSML｜ calls>\n" + invoke * 2 + "</｜DSML｜ calls>",
+    )
 
     # Harmony's single-call setting keeps analysis messages ahead of the call.
     analysis = "<|channel|>analysis<|message|>thinking<|end|><|start|>assistant"
@@ -106,6 +129,46 @@ def check_models():
     )
     assert accepts("kimi_k3", "required_two_tools", kimi_call % "x")
     assert not accepts("kimi_k3", "required_two_tools", kimi_call % "a<|sep|>b")
+    # Gemma 4 arguments use unquoted keys and <|"|>-delimited strings, never JSON quotes.
+    gemma_call = '<|tool_call>call:search{q:<|"|>%s<|"|>}<tool_call|>'
+    assert accepts("gemma_4", "required_two_tools", gemma_call % "x")
+    assert not accepts(
+        "gemma_4", "required_two_tools", '<|tool_call>call:search{"q":"x"}<tool_call|>'
+    )
+    assert not accepts("gemma_4", "required_two_tools", gemma_call % "a<tool_call|>b")
+    assert accepts(
+        "gemma_4",
+        "reasoning_required_one_tool",
+        "<|channel>thought\nt<channel|>" + gemma_call % "x",
+    )
+
+    # Token markers match the dedicated tokens only; a marker spelled from bytes does not.
+    def accepts_tokens(model, case, pieces):
+        matcher = xgr.GrammarMatcher(
+            compiler.compile_structural_tag(fixtures[model][case])
+        )
+        for piece in pieces:
+            ids = (
+                [vocab.index(piece.encode())]
+                if piece in markers
+                else list(piece.encode())
+            )
+            if not all(matcher.accept_token(token_id) for token_id in ids):
+                return False
+        return matcher.is_completed()
+
+    body = '\n{"name": "search", "arguments": {"q": "x"}}\n'
+    tokens_case = "token_markers_auto_one_tool"
+    assert accepts_tokens(
+        "qwen_3", tokens_case, ["t", "</think>", "\n\n", "<tool_call>", body, "</tool_call>"]
+    )
+    assert not accepts_tokens(
+        "qwen_3", tokens_case, ["t", "</think>", "\n\n", "<tool_call>", body + "</tool_call>"]
+    )
+    assert not accepts_tokens(
+        "qwen_3", tokens_case, ["t</think>\n\n", "<tool_call>", body, "</tool_call>"]
+    )
+
     print(
         f"Compiled {compiled_count} model cases; confirmed {expected_rejections} upstream schema rejections and single-call/adaptive behavior."
     )
@@ -156,8 +219,11 @@ def check_budgets():
     assert allowed(matcher, "</")
     matcher.rollback(1)
     assert allowed(matcher, "c")
+    # A Lark grammar leaf compiles as Lark, not as EBNF.
+    assert accepts("lark_grammar", ["a", "b", "b"])
+    assert not accepts("lark_grammar", ["a"])
     print(
-        "Region budgets enforce token/codepoint limits, zero budgets, multi-token closes, and rollback."
+        "Lark grammar leaves compile; region budgets enforce token/codepoint limits, zero budgets, multi-token closes, and rollback."
     )
 
 

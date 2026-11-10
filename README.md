@@ -22,6 +22,7 @@ does not compile grammars or parse model output.
 - `minimax`
 - `minimax_m3`
 - `glm_4_7`
+- `gemma_4`
 - `deepseek_v4`
 - `deepseek_v4_1`
 - `cohere`
@@ -125,8 +126,20 @@ serving frontends still own prompt-state alignment and grammar activation.
 The 0.3 API changes `StructuralTagOptions::reasoning` from `bool` to
 `ReasoningMode` and adds budget fields to `AnyTextFormat` and `AnyTokensFormat`.
 Existing `with_reasoning(bool)` calls continue to work; use `..Default::default()`
-with direct free-region struct literals. Generated JSON follows XGrammar 0.2.8,
-including reasoning-region exclusions and explicit embedded-tag discriminators.
+with direct free-region struct literals.
+
+### Updating from 0.4
+
+0.5 adds `GrammarFormat::syntax` (`GrammarSyntax::{Ebnf, Lark}`, serialized as
+`"syntax"`; an omitted field deserializes as EBNF): build grammar leaves with
+`Format::grammar(grammar, syntax)` (or `GrammarFormat::new`, `GrammarFormat::ebnf`,
+`GrammarFormat::lark`) instead of a struct literal.
+`StructuralTagOptions::with_token_markers(true)` matches the control markers of
+builders that declare `StructuralTagBuilder::marker_tokens` (GLM 4.7 and the
+Qwen 3 family) as their dedicated tokens. The new `gemma_4` model uses
+`JsonSchemaStyle::Gemma`, and DeepSeek V4/V4.1 `auto` output now ends after one
+calls block regardless of `parallel_tool_calls`. Generated JSON follows
+XGrammar 0.2.9.
 
 ## Development
 

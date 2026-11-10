@@ -1,10 +1,10 @@
 use crate::Result;
-use crate::format::{Format, JsonSchemaStyle, StructuralTag};
+use crate::format::{Format, JsonSchemaStyle, StructuralTag, TriggeredTagsFormat};
 use crate::tool::{BuilderToolChoice, FunctionToolParam};
 
 use super::{
     StructuralTagBuilder, StructuralTagContext, assemble, reasoning_prefix, schema, styled_schema,
-    tag, text_excludes, tools_with_separator, triggered_with_excludes,
+    tag, text_excludes, tools_with_separator,
 };
 
 /// DeepSeek V3.2 DSML structural-tag builder.
@@ -50,6 +50,9 @@ impl StructuralTagBuilder for DeepSeekV41Builder {
 }
 
 /// Build a DeepSeek DSML structural tag with model-specific markers and schema style.
+///
+/// With `single_calls_block`, `auto` ends generation after the first calls block regardless of
+/// `parallel_tool_calls` (V4 and V4.1 end the assistant turn after one block).
 fn build_deepseek_dsml(
     tools: &[FunctionToolParam],
     choice: BuilderToolChoice,
@@ -57,6 +60,7 @@ fn build_deepseek_dsml(
     calls: &str,
     invoke: &str,
     style: JsonSchemaStyle,
+    single_calls_block: bool,
 ) -> StructuralTag {
     const TOOL_CALLS_PREFIX: &str = "\n\n";
     const THINK_TAG_END: &str = "</think>";
@@ -76,20 +80,20 @@ fn build_deepseek_dsml(
         BuilderToolChoice::Auto => {
             let tags = tools.iter().map(tool_tag).collect::<Vec<_>>();
             if tags.is_empty() {
-                let excludes = if style == JsonSchemaStyle::DeepseekV4_1Xml {
-                    vec!["<think>", "</think>", &function_calls_trigger]
-                } else {
-                    THINK_EXCLUDES.to_vec()
-                };
-                Format::any_text_excluding(text_excludes(options, &excludes))
+                let mut excludes = text_excludes(options, THINK_EXCLUDES).to_vec();
+                if style == JsonSchemaStyle::DeepseekV4_1Xml {
+                    // With no available tools (including tool_choice=none), a calls block must
+                    // not slip through as unconstrained text.
+                    excludes.push(&function_calls_trigger);
+                }
+                Format::any_text_excluding(&excludes)
             } else {
                 let content = tools_with_separator(tags, "", true, options);
                 let outer = tag(function_calls_begin, content, function_calls_end);
-                triggered_with_excludes(
-                    &[&function_calls_trigger],
-                    vec![outer],
-                    text_excludes(options, THINK_EXCLUDES),
-                    options,
+                Format::TriggeredTags(
+                    TriggeredTagsFormat::new(&[&function_calls_trigger], vec![outer])
+                        .with_excludes(text_excludes(options, THINK_EXCLUDES))
+                        .with_stop_after_first(single_calls_block || !options.parallel_tool_calls),
                 )
             }
         }
@@ -128,6 +132,7 @@ pub(super) fn build_deepseek_v32(
         "function_calls",
         "invoke",
         JsonSchemaStyle::DeepseekXml,
+        false,
     )
 }
 
@@ -146,6 +151,7 @@ pub(super) fn build_deepseek_v4(
         "tool_calls",
         "invoke",
         JsonSchemaStyle::DeepseekXml,
+        true,
     )
 }
 
@@ -166,5 +172,6 @@ pub(super) fn build_deepseek_v41(
         " calls",
         " invoke",
         JsonSchemaStyle::DeepseekV4_1Xml,
+        true,
     )
 }

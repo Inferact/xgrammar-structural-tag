@@ -959,5 +959,276 @@
         }
       ]
     }
+  },
+  "token_markers_auto_one_tool": {
+    "type": "structural_tag",
+    "format": {
+      "type": "sequence",
+      "elements": [
+        {
+          "type": "sequence",
+          "elements": [
+            {
+              "type": "tag",
+              "begin": "",
+              "content": {
+                "type": "any_tokens",
+                "exclude_tokens": [
+                  "<think>",
+                  "</think>"
+                ],
+                "max_tokens": null
+              },
+              "end": {
+                "type": "token",
+                "token": "</think>"
+              }
+            },
+            {
+              "type": "const_string",
+              "value": "\n\n"
+            }
+          ]
+        },
+        {
+          "type": "token_triggered_tags",
+          "trigger_tokens": [
+            "<tool_call>"
+          ],
+          "tags": [
+            {
+              "type": "tag",
+              "begin": {
+                "type": "token",
+                "token": "<tool_call>"
+              },
+              "content": {
+                "type": "sequence",
+                "elements": [
+                  {
+                    "type": "const_string",
+                    "value": "\n{\"name\": \"search\", \"arguments\": "
+                  },
+                  {
+                    "type": "json_schema",
+                    "json_schema": {
+                      "type": "object",
+                      "properties": {
+                        "q": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "q"
+                      ]
+                    },
+                    "style": "json",
+                    "any_order": false,
+                    "max_whitespace_cnt": null,
+                    "excludes": []
+                  },
+                  {
+                    "type": "const_string",
+                    "value": "}\n"
+                  }
+                ]
+              },
+              "end": {
+                "type": "token",
+                "token": "</tool_call>"
+              }
+            }
+          ],
+          "exclude_tokens": [
+            "<think>",
+            "</think>"
+          ],
+          "at_least_one": false,
+          "stop_after_first": false
+        }
+      ]
+    }
+  },
+  "token_markers_adaptive_required_two_tools": {
+    "type": "structural_tag",
+    "format": {
+      "type": "sequence",
+      "elements": [
+        {
+          "type": "optional",
+          "content": {
+            "type": "sequence",
+            "elements": [
+              {
+                "type": "tag",
+                "begin": {
+                  "type": "token",
+                  "token": "<think>"
+                },
+                "content": {
+                  "type": "any_tokens",
+                  "exclude_tokens": [
+                    "<think>",
+                    "</think>"
+                  ],
+                  "max_tokens": null
+                },
+                "end": {
+                  "type": "token",
+                  "token": "</think>"
+                }
+              },
+              {
+                "type": "const_string",
+                "value": "\n\n"
+              }
+            ]
+          }
+        },
+        {
+          "type": "token_triggered_tags",
+          "trigger_tokens": [
+            "<tool_call>"
+          ],
+          "tags": [
+            {
+              "type": "tag",
+              "begin": {
+                "type": "token",
+                "token": "<tool_call>"
+              },
+              "content": {
+                "type": "sequence",
+                "elements": [
+                  {
+                    "type": "const_string",
+                    "value": "\n{\"name\": \"search\", \"arguments\": "
+                  },
+                  {
+                    "type": "json_schema",
+                    "json_schema": {
+                      "type": "object",
+                      "properties": {
+                        "q": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "q"
+                      ]
+                    },
+                    "style": "json",
+                    "any_order": false,
+                    "max_whitespace_cnt": null,
+                    "excludes": []
+                  },
+                  {
+                    "type": "const_string",
+                    "value": "}\n"
+                  }
+                ]
+              },
+              "end": {
+                "type": "token",
+                "token": "</tool_call>"
+              }
+            },
+            {
+              "type": "tag",
+              "begin": {
+                "type": "token",
+                "token": "<tool_call>"
+              },
+              "content": {
+                "type": "sequence",
+                "elements": [
+                  {
+                    "type": "const_string",
+                    "value": "\n{\"name\": \"alt\", \"arguments\": "
+                  },
+                  {
+                    "type": "json_schema",
+                    "json_schema": {
+                      "type": "object",
+                      "properties": {
+                        "q": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "q"
+                      ]
+                    },
+                    "style": "json",
+                    "any_order": false,
+                    "max_whitespace_cnt": null,
+                    "excludes": []
+                  },
+                  {
+                    "type": "const_string",
+                    "value": "}\n"
+                  }
+                ]
+              },
+              "end": {
+                "type": "token",
+                "token": "</tool_call>"
+              }
+            }
+          ],
+          "exclude_tokens": [
+            "<think>",
+            "</think>"
+          ],
+          "at_least_one": true,
+          "stop_after_first": false
+        }
+      ]
+    }
+  },
+  "token_markers_forced_search": {
+    "type": "structural_tag",
+    "format": {
+      "type": "tag",
+      "begin": {
+        "type": "token",
+        "token": "<tool_call>"
+      },
+      "content": {
+        "type": "sequence",
+        "elements": [
+          {
+            "type": "const_string",
+            "value": "\n{\"name\": \"search\", \"arguments\": "
+          },
+          {
+            "type": "json_schema",
+            "json_schema": {
+              "type": "object",
+              "properties": {
+                "q": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "q"
+              ]
+            },
+            "style": "json",
+            "any_order": false,
+            "max_whitespace_cnt": null,
+            "excludes": []
+          },
+          {
+            "type": "const_string",
+            "value": "}\n"
+          }
+        ]
+      },
+      "end": {
+        "type": "token",
+        "token": "</tool_call>"
+      }
+    }
   }
 }

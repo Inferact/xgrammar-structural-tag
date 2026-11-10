@@ -12,6 +12,17 @@ use super::{
 #[derive(Debug, Clone, Copy, Default)]
 pub struct Glm47Builder;
 
+const GLM_47_MARKER_TOKENS: &[&str] = &[
+    "<think>",
+    "</think>",
+    "<tool_call>",
+    "</tool_call>",
+    "<arg_key>",
+    "</arg_key>",
+    "<arg_value>",
+    "</arg_value>",
+];
+
 impl StructuralTagBuilder for Glm47Builder {
     fn build(&self, ctx: StructuralTagContext<'_>) -> Result<StructuralTag> {
         Ok(build_glm_47(
@@ -19,6 +30,9 @@ impl StructuralTagBuilder for Glm47Builder {
             ctx.tool_choice,
             ctx.options,
         ))
+    }
+    fn marker_tokens(&self) -> Option<&'static [&'static str]> {
+        Some(GLM_47_MARKER_TOKENS)
     }
 }
 

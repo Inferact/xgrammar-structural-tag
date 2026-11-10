@@ -13,6 +13,7 @@
       "deepseek_v3_2",
       "minimax",
       "glm_4_7",
+      "gemma_4",
       "deepseek_v4",
       "kimi_k3",
       "minimax_m3",
@@ -208,6 +209,33 @@
       "any_order": true,
       "exclude_special_tokens": false,
       "max_whitespace_cnt": 2
+    },
+    {
+      "name": "token_markers_auto_one_tool",
+      "models": ["qwen_3", "qwen_3_5", "qwen_3_coder", "glm_4_7"],
+      "tools": ["search"],
+      "tool_choice": "auto",
+      "reasoning": "enabled",
+      "token_markers": true
+    },
+    {
+      "name": "token_markers_adaptive_required_two_tools",
+      "models": ["qwen_3", "qwen_3_5", "qwen_3_coder", "glm_4_7"],
+      "tools": ["search", "alt"],
+      "tool_choice": "required",
+      "reasoning": "auto",
+      "token_markers": true
+    },
+    {
+      "name": "token_markers_forced_search",
+      "models": ["qwen_3", "qwen_3_5", "qwen_3_coder", "glm_4_7"],
+      "tools": ["search", "alt"],
+      "tool_choice": {
+        "type": "function",
+        "function": { "name": "search" }
+      },
+      "reasoning": "disabled",
+      "token_markers": true
     },
     {
       "name": "harmony_single_builtin",

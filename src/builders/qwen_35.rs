@@ -12,6 +12,10 @@ use super::{
 #[derive(Debug, Clone, Copy, Default)]
 pub struct Qwen35Builder;
 
+/// Qwen control markers that are single tokens in the Qwen tokenizers.
+pub(super) const QWEN_MARKER_TOKENS: &[&str] =
+    &["<think>", "</think>", "<tool_call>", "</tool_call>"];
+
 impl StructuralTagBuilder for Qwen35Builder {
     fn build(&self, ctx: StructuralTagContext<'_>) -> Result<StructuralTag> {
         Ok(build_qwen_35(
@@ -19,6 +23,9 @@ impl StructuralTagBuilder for Qwen35Builder {
             ctx.tool_choice,
             ctx.options,
         ))
+    }
+    fn marker_tokens(&self) -> Option<&'static [&'static str]> {
+        Some(QWEN_MARKER_TOKENS)
     }
 }
 

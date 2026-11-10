@@ -50,6 +50,18 @@ pub enum Error {
         names: Vec<String>,
     },
 
+    /// [`StructuralTagOptions::token_markers`](crate::builders::StructuralTagOptions::token_markers)
+    /// was requested from a builder that declares no marker tokens.
+    #[error("token markers are not supported by this structural tag builder")]
+    TokenMarkersUnsupported,
+
+    /// The built structural tag has a shape whose markers cannot be bound to tokens.
+    #[error("cannot bind token markers: {reason}")]
+    UnbindableTokenMarkers {
+        /// Why the shape cannot be bound.
+        reason: String,
+    },
+
     /// JSON serialization failed.
     #[error("failed to serialize structural tag")]
     Serialize(#[from] serde_json::Error),

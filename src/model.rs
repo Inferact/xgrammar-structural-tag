@@ -54,6 +54,8 @@ pub enum Model {
     MinimaxM3,
     /// GLM 4.7 / GLM 5 XML tool calling.
     Glm47,
+    /// Gemma 4 channel-marker tool calling.
+    Gemma4,
     /// DeepSeek V4 DSML tool calling.
     DeepSeekV4,
     /// DeepSeek V4.1 spaced-DSML tool calling.
@@ -86,6 +88,7 @@ impl Model {
             Self::Minimax => "minimax",
             Self::MinimaxM3 => "minimax_m3",
             Self::Glm47 => "glm_4_7",
+            Self::Gemma4 => "gemma_4",
             Self::DeepSeekV4 => "deepseek_v4",
             Self::DeepSeekV41 => "deepseek_v4_1",
             Self::Cohere => "cohere",
@@ -111,6 +114,7 @@ impl Model {
             Self::Minimax => &MinimaxBuilder,
             Self::MinimaxM3 => &MinimaxM3Builder,
             Self::Glm47 => &Glm47Builder,
+            Self::Gemma4 => &Gemma4Builder,
             Self::DeepSeekV4 => &DeepSeekV4Builder,
             Self::DeepSeekV41 => &DeepSeekV41Builder,
             Self::Cohere => &CohereBuilder,
@@ -126,6 +130,10 @@ impl Model {
 impl StructuralTagBuilder for Model {
     fn build(&self, ctx: StructuralTagContext<'_>) -> crate::Result<StructuralTag> {
         (*self).builder().build(ctx)
+    }
+
+    fn marker_tokens(&self) -> Option<&'static [&'static str]> {
+        (*self).builder().marker_tokens()
     }
 }
 
@@ -154,6 +162,7 @@ impl FromStr for Model {
             "minimax" => Self::Minimax,
             "minimax_m3" => Self::MinimaxM3,
             "glm_4_7" => Self::Glm47,
+            "gemma_4" => Self::Gemma4,
             "deepseek_v4" => Self::DeepSeekV4,
             "deepseek_v4_1" => Self::DeepSeekV41,
             "cohere" => Self::Cohere,

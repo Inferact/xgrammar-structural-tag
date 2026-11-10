@@ -92,5 +92,13 @@
         "token": "</think>"
       }
     }
+  },
+  "lark_grammar": {
+    "type": "structural_tag",
+    "format": {
+      "type": "grammar",
+      "grammar": "start: \"a\" b+\nb: \"b\"",
+      "syntax": "lark"
+    }
   }
 }

@@ -5,6 +5,7 @@ mod deepseek_dsml;
 mod deepseek_r1;
 mod deepseek_v31;
 mod exaone;
+mod gemma_4;
 mod glm_47;
 mod harmony;
 mod hermes;
@@ -32,6 +33,7 @@ pub use deepseek_dsml::{DeepSeekV4Builder, DeepSeekV32Builder, DeepSeekV41Builde
 pub use deepseek_r1::DeepSeekR1Builder;
 pub use deepseek_v31::DeepSeekV31Builder;
 pub use exaone::ExaoneBuilder;
+pub use gemma_4::Gemma4Builder;
 pub use glm_47::Glm47Builder;
 pub use harmony::HarmonyBuilder;
 pub use hermes::HermesBuilder;
@@ -85,6 +87,13 @@ pub struct StructuralTagOptions {
     pub exclude_special_tokens: bool,
     /// Maximum consecutive whitespace characters in JSON schema regions.
     pub max_whitespace_cnt: Option<i32>,
+    /// Whether to match the control markers (`<tool_call>`, `</think>`, ...) as their dedicated
+    /// tokens instead of as strings, for output parsers that recognize the markers by token ID.
+    ///
+    /// Requires a builder that declares [`StructuralTagBuilder::marker_tokens`] (built in:
+    /// `glm_4_7`, `qwen_3`, `qwen_3_5` and `qwen_3_coder`), and a tokenizer-configured grammar
+    /// compiler.
+    pub token_markers: bool,
 }
 
 impl StructuralTagOptions {
@@ -117,6 +126,12 @@ impl StructuralTagOptions {
         self.max_whitespace_cnt = max_whitespace_cnt;
         self
     }
+
+    /// Configure whether control markers match as their dedicated tokens.
+    pub const fn with_token_markers(mut self, token_markers: bool) -> Self {
+        self.token_markers = token_markers;
+        self
+    }
 }
 
 impl Default for StructuralTagOptions {
@@ -127,6 +142,7 @@ impl Default for StructuralTagOptions {
             any_order: false,
             exclude_special_tokens: true,
             max_whitespace_cnt: None,
+            token_markers: false,
         }
     }
 }
@@ -157,6 +173,14 @@ pub struct StructuralTagContext<'a> {
 pub trait StructuralTagBuilder {
     /// Build a structural tag from normalized tools and request flags.
     fn build(&self, ctx: StructuralTagContext<'_>) -> Result<StructuralTag>;
+
+    /// The model's control markers that are single tokens in its tokenizer.
+    ///
+    /// Declaring them enables [`StructuralTagOptions::token_markers`] in
+    /// [`build_structural_tag`]. Defaults to `None`.
+    fn marker_tokens(&self) -> Option<&'static [&'static str]> {
+        None
+    }
 }
 
 /// Build a structural tag for a model's reasoning and tool-call output format.
@@ -180,6 +204,9 @@ pub trait StructuralTagBuilder {
 /// block in [`ReasoningMode::Auto`]. Models without reasoning ignore the option;
 /// MiniMax M2 keeps its fixed empty-thinking prefix in disabled mode.
 ///
+/// [`StructuralTagOptions::token_markers`] rewrites the built tag so the builder's
+/// [`marker_tokens`](StructuralTagBuilder::marker_tokens) match as tokens.
+///
 /// A tool whose `parameters` are omitted, or a function tool with
 /// `strict = false`, produces unconstrained-JSON arguments. MiniMax M3's
 /// fixed-name XML converter rejects unconstrained schemas at grammar compilation.
@@ -188,8 +215,9 @@ pub trait StructuralTagBuilder {
 ///
 /// Returns an [`Error`](crate::Error) when the tools or tool choice are
 /// inconsistent — for example a named tool is missing, a builtin choice does
-/// not match exactly one tool, `required` leaves no tools, or a forced choice
-/// does not resolve to exactly one tool.
+/// not match exactly one tool, `required` leaves no tools, a forced choice
+/// does not resolve to exactly one tool, or token markers are requested from a
+/// builder without [`marker_tokens`](StructuralTagBuilder::marker_tokens).
 #[doc(alias = "get_model_structural_tag")]
 pub fn build_structural_tag(
     builder: impl StructuralTagBuilder,
@@ -197,13 +225,26 @@ pub fn build_structural_tag(
     tool_choice: ToolChoice,
     options: StructuralTagOptions,
 ) -> Result<StructuralTag> {
+    let markers = if options.token_markers {
+        Some(
+            builder
+                .marker_tokens()
+                .ok_or(crate::Error::TokenMarkersUnsupported)?,
+        )
+    } else {
+        None
+    };
     let normalized = normalize_tool_choice(tools, tool_choice)?;
-    builder.build(StructuralTagContext {
+    let tag = builder.build(StructuralTagContext {
         function_tools: &normalized.function_tools,
         builtin_tools: &normalized.builtin_tools,
         tool_choice: normalized.choice,
         options,
-    })
+    })?;
+    match markers {
+        Some(markers) => crate::token_markers::bind_marker_tokens(tag, markers),
+        None => Ok(tag),
+    }
 }
 
 /// Build a structural tag only when tool constraints should be sent downstream.
@@ -449,6 +490,28 @@ mod tests {
                 model: "minimax_m3"
             }
         ));
+    }
+
+    #[test]
+    fn token_markers_require_declared_markers() {
+        let options = StructuralTagOptions::default().with_token_markers(true);
+        assert!(matches!(
+            build_structural_tag(Model::Llama, &[tool("search")], ToolChoice::auto(), options),
+            Err(crate::Error::TokenMarkersUnsupported)
+        ));
+        for model in [Model::Qwen3, Model::Qwen35, Model::Qwen3Coder, Model::Glm47] {
+            let tag = build_structural_tag(
+                model.builder(),
+                &[tool("search")],
+                ToolChoice::auto(),
+                options,
+            )
+            .unwrap();
+            assert!(
+                tag.to_json_string().unwrap().contains(r#""type":"token""#),
+                "{model}"
+            );
+        }
     }
 
     #[test]

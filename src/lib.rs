@@ -104,6 +104,8 @@ pub mod format;
 pub mod model;
 pub mod tool;
 
+mod token_markers;
+
 pub use builders::{build_optional_structural_tag, build_structural_tag};
 pub use error::{Error, Result};
 pub use format::StructuralTag;
