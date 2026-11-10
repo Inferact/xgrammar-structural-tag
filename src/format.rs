@@ -246,23 +246,29 @@ pub struct GrammarFormat {
     /// Grammar text, written in [`syntax`](Self::syntax).
     pub grammar: String,
     /// Syntax of the grammar text.
+    // XGrammar reads an omitted `syntax` as EBNF, so payloads written before 0.2.9 keep their
+    // meaning.
     #[serde(default)]
     pub syntax: GrammarSyntax,
 }
 
 impl GrammarFormat {
-    /// Build an EBNF grammar format.
-    pub fn new(grammar: impl Into<String>) -> Self {
+    /// Build a grammar format from grammar text written in `syntax`.
+    pub fn new(grammar: impl Into<String>, syntax: GrammarSyntax) -> Self {
         Self {
             grammar: grammar.into(),
-            syntax: GrammarSyntax::Ebnf,
+            syntax,
         }
     }
 
-    /// Set the syntax of the grammar text.
-    pub fn with_syntax(mut self, syntax: GrammarSyntax) -> Self {
-        self.syntax = syntax;
-        self
+    /// Build an EBNF grammar format.
+    pub fn ebnf(grammar: impl Into<String>) -> Self {
+        Self::new(grammar, GrammarSyntax::Ebnf)
+    }
+
+    /// Build a Lark grammar format.
+    pub fn lark(grammar: impl Into<String>) -> Self {
+        Self::new(grammar, GrammarSyntax::Lark)
     }
 }
 
@@ -821,10 +827,8 @@ mod tests {
             exclude_tokens: vec![TokenValue::Id(2)],
             ..Default::default()
         }));
-        round_trip(Format::Grammar(GrammarFormat::new("root ::= \"x\"")));
-        round_trip(Format::Grammar(
-            GrammarFormat::new("start: \"x\"").with_syntax(GrammarSyntax::Lark),
-        ));
+        round_trip(Format::Grammar(GrammarFormat::ebnf("root ::= \"x\"")));
+        round_trip(Format::Grammar(GrammarFormat::lark("start: \"x\"")));
         round_trip(Format::regex("[a-z]+"));
         round_trip(Format::sequence(vec![Format::const_string("x")]));
         round_trip(Format::or(vec![
@@ -898,13 +902,12 @@ mod tests {
         let old: Format =
             serde_json::from_value(json!({"type": "grammar", "grammar": "root ::= \"x\""}))
                 .unwrap();
-        assert_eq!(old, Format::Grammar(GrammarFormat::new("root ::= \"x\"")));
+        assert_eq!(old, Format::Grammar(GrammarFormat::ebnf("root ::= \"x\"")));
         assert_eq!(
             serde_json::to_value(old).unwrap(),
             json!({"type": "grammar", "grammar": "root ::= \"x\"", "syntax": "ebnf"})
         );
-        let lark =
-            Format::Grammar(GrammarFormat::new("start: \"x\"").with_syntax(GrammarSyntax::Lark));
+        let lark = Format::Grammar(GrammarFormat::new("start: \"x\"", GrammarSyntax::Lark));
         assert_eq!(serde_json::to_value(lark).unwrap()["syntax"], "lark");
     }
 
