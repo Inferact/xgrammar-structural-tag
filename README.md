@@ -132,8 +132,8 @@ with direct free-region struct literals.
 
 0.5 adds `GrammarFormat::syntax` (`GrammarSyntax::{Ebnf, Lark}`, serialized as
 `"syntax"`; an omitted field deserializes as EBNF): build grammar leaves with
-`GrammarFormat::new(grammar, syntax)`, `GrammarFormat::ebnf` or
-`GrammarFormat::lark` instead of a struct literal.
+`Format::grammar(grammar, syntax)` (or `GrammarFormat::new`, `GrammarFormat::ebnf`,
+`GrammarFormat::lark`) instead of a struct literal.
 `StructuralTagOptions::with_token_markers(true)` matches the control markers of
 builders that declare `StructuralTagBuilder::marker_tokens` (GLM 4.7 and the
 Qwen 3 family) as their dedicated tokens. The new `gemma_4` model uses

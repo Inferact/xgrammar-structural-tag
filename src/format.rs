@@ -697,6 +697,11 @@ impl Format {
         })
     }
 
+    /// Build a grammar format from grammar text written in `syntax`.
+    pub fn grammar(grammar: impl Into<String>, syntax: GrammarSyntax) -> Self {
+        Self::Grammar(GrammarFormat::new(grammar, syntax))
+    }
+
     /// Build a sequence format.
     pub fn sequence(elements: Vec<Format>) -> Self {
         Self::Sequence(SequenceFormat { elements })
@@ -827,8 +832,8 @@ mod tests {
             exclude_tokens: vec![TokenValue::Id(2)],
             ..Default::default()
         }));
-        round_trip(Format::Grammar(GrammarFormat::ebnf("root ::= \"x\"")));
-        round_trip(Format::Grammar(GrammarFormat::lark("start: \"x\"")));
+        round_trip(Format::grammar("root ::= \"x\"", GrammarSyntax::Ebnf));
+        round_trip(Format::grammar("start: \"x\"", GrammarSyntax::Lark));
         round_trip(Format::regex("[a-z]+"));
         round_trip(Format::sequence(vec![Format::const_string("x")]));
         round_trip(Format::or(vec![
@@ -907,7 +912,7 @@ mod tests {
             serde_json::to_value(old).unwrap(),
             json!({"type": "grammar", "grammar": "root ::= \"x\"", "syntax": "ebnf"})
         );
-        let lark = Format::Grammar(GrammarFormat::new("start: \"x\"", GrammarSyntax::Lark));
+        let lark = Format::grammar("start: \"x\"", GrammarSyntax::Lark);
         assert_eq!(serde_json::to_value(lark).unwrap()["syntax"], "lark");
     }
 

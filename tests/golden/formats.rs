@@ -3,7 +3,7 @@ use serde_json::Value;
 /// Rust-emitted formats consumed by the real XGrammar compatibility test.
 pub fn build_cases() -> Value {
     use xgrammar_structural_tag::format::{
-        AnyTextFormat, AnyTokensFormat, Format, GrammarFormat, StructuralTag, TokenBoundary,
+        AnyTextFormat, AnyTokensFormat, Format, GrammarSyntax, StructuralTag, TokenBoundary,
     };
 
     let text = |tokens, chars| {
@@ -34,8 +34,9 @@ pub fn build_cases() -> Value {
         "any_text_zero": text(Some(0), None),
         "any_tokens": tokens(2),
         "any_tokens_zero": tokens(0),
-        "lark_grammar": StructuralTag::new(Format::Grammar(
-            GrammarFormat::lark("start: \"a\" b+\nb: \"b\""),
+        "lark_grammar": StructuralTag::new(Format::grammar(
+            "start: \"a\" b+\nb: \"b\"",
+            GrammarSyntax::Lark,
         )),
     })
 }
